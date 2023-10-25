@@ -67,7 +67,7 @@ function AuthShowcase() {
   return (
     <div className={styles.authContainer}>
       <p className={styles.showcaseText}>
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {sessionData && <span>Logged in as {sessionData.user?.email}</span>}
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button
