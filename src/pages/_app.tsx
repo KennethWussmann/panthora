@@ -1,20 +1,20 @@
 import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { type AppType } from "next/app";
 
 import { api } from "~/utils/api";
+import { AppType } from "next/app";
+import { Providers } from "./providers";
+import { DashboardLayout } from "~/components/layout/DashboardLayout";
 
-import "~/styles/globals.css";
-
-const MyApp: AppType<{ session: Session | null }> = ({
+const App: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <Providers session={session}>
+      <DashboardLayout>
+        <Component {...pageProps} />
+      </DashboardLayout>
+    </Providers>
   );
 };
-
-export default api.withTRPC(MyApp);
+export default api.withTRPC(App);
