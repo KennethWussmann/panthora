@@ -10,7 +10,7 @@ export const assetTypeRouter = createTRPCRouter({
     }),
   list: protectedProcedure
     .input(assetTypeListRequest)
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       return ctx.applicationContext.assetTypeService.getAssetTypes(input);
     }),
 });

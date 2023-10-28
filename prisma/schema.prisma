@@ -16,7 +16,7 @@ datasource db {
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
+    id                String  @id @default(uuid())
     userId            String
     type              String
     provider          String
@@ -34,7 +34,7 @@ model Account {
 }
 
 model Session {
-    id           String   @id @default(cuid())
+    id           String   @id @default(uuid())
     sessionToken String   @unique
     userId       String
     expires      DateTime
@@ -60,26 +60,24 @@ model UserTeamMembership {
 }
 
 model Team {
-    id                 String               @id @default(cuid())
-    name               String
-    members            User[]               @relation("UserToTeam")
+    id              String               @id @default(uuid())
+    name            String
     // Relate other data models to Team
-    tags               Tag[]
-    assetTypes         AssetType[]
-    customFields       CustomField[]
-    assets             Asset[]
-    UserTeamMembership UserTeamMembership[]
+    tags            Tag[]
+    assetTypes      AssetType[]
+    customFields    CustomField[]
+    assets          Asset[]
+    teamMemberships UserTeamMembership[]
 }
 
 model User {
-    id              String               @id @default(cuid())
+    id              String               @id @default(uuid())
     name            String?
     email           String?              @unique
     emailVerified   DateTime?
     image           String?
     accounts        Account[]
     sessions        Session[]
-    teams           Team[]               @relation("UserToTeam")
     teamMemberships UserTeamMembership[]
 }
 
@@ -93,9 +91,9 @@ model Tag {
     parentId    Int?
     parent      Tag?          @relation("TagToTag", fields: [parentId], references: [id])
     children    Tag[]         @relation("TagToTag")
-    CustomField CustomField[]
-    FieldValue  FieldValue[]
-    Team        Team?         @relation(fields: [teamId], references: [id])
+    customField CustomField[]
+    fieldValue  FieldValue[]
+    team        Team?         @relation(fields: [teamId], references: [id])
     teamId      String?
 }
 
@@ -108,8 +106,8 @@ model AssetType {
     parent    AssetType?    @relation("AssetTypeToAssetType", fields: [parentId], references: [id])
     children  AssetType[]   @relation("AssetTypeToAssetType")
     fields    CustomField[]
-    Asset     Asset[]
-    Team      Team?         @relation(fields: [teamId], references: [id])
+    asset     Asset[]
+    team      Team?         @relation(fields: [teamId], references: [id])
     teamId    String?
 }
 
@@ -124,8 +122,8 @@ model CustomField {
     assetType     AssetType    @relation(fields: [assetTypeId], references: [id])
     tagId         Int?
     tag           Tag?         @relation(fields: [tagId], references: [id])
-    FieldValue    FieldValue[]
-    Team          Team?        @relation(fields: [teamId], references: [id])
+    fieldValue    FieldValue[]
+    team          Team?        @relation(fields: [teamId], references: [id])
     teamId        String?
 }
 
@@ -147,7 +145,7 @@ model Asset {
     assetTypeId Int
     assetType   AssetType    @relation(fields: [assetTypeId], references: [id])
     fieldValues FieldValue[]
-    Team        Team?        @relation(fields: [teamId], references: [id])
+    team        Team?        @relation(fields: [teamId], references: [id])
     teamId      String?
 }
 

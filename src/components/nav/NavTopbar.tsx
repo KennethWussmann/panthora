@@ -11,6 +11,7 @@ import {
   Divider,
   useOutsideClick,
   useColorModeValue,
+  Flex,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
@@ -18,6 +19,7 @@ import { Logo } from "./Logo";
 import { NavItems } from "./NavItems";
 import { NavSearchBar } from "./NavSearchBar";
 import { NavLogout } from "./NavLogout";
+import { NavTeamSelector } from "./NavTeamSelector";
 
 export const NavTopbar = () => {
   const navRef = useRef<HTMLDivElement>(null);
@@ -42,7 +44,10 @@ export const NavTopbar = () => {
     >
       <Container maxW="container.xl">
         <HStack justifyContent={"space-between"}>
-          <Logo />
+          <Flex justify={"space-between"}>
+            <Logo />
+            <NavTeamSelector />
+          </Flex>
           <Spacer />
           <NavSearchBar hideShortcut />
           <Spacer />

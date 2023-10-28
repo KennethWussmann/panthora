@@ -5,14 +5,17 @@ import { NavTopbar } from "../nav/NavTopbar";
 
 const DesktopLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <Flex as="section" minH="100vh" flexDirection="row">
-      <NavSidebar />
-      <Flex flex="1" p={6} direction="column">
+    <Flex minH="100vh" flexDirection="row">
+      <Flex position="sticky" top="0" maxH="100vh" zIndex="1">
+        <NavSidebar />
+      </Flex>
+      <Flex flex="1" p={6} direction="column" overflowY="scroll">
         {children}
       </Flex>
     </Flex>
   );
 };
+
 const MobileLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>

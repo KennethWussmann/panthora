@@ -8,53 +8,36 @@ import {
   Button,
   Stack,
   Flex,
-  VStack,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
 } from "@chakra-ui/react";
-import { TagItem } from "./TagItem";
-import { TagRow } from "./TagRow";
-import { FiChevronRight, FiFilePlus, FiPlus } from "react-icons/fi";
+import { EmptyTagRow, TagRow } from "./TagRow";
+import { FiPlus } from "react-icons/fi";
 import { TagExplanation } from "./TagExplanation";
 import { useRouter } from "next/router";
 import { TagsBreadcrumbs } from "../TagsBreadcrumbs";
+import { api } from "~/utils/api";
+import { Tag } from "~/server/lib/tags/tag";
 
-const data: TagItem[] = [
-  {
-    id: "1",
-    name: "Root1",
-    children: [
-      {
-        id: "1.1",
-        name: "Child1",
-      },
-      {
-        id: "1.2",
-        name: "Child2",
-        children: [
-          {
-            id: "1.1",
-            name: "Child1",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Root2",
-    children: [
-      {
-        id: "2.1",
-        name: "Child1",
-      },
-    ],
-  },
-];
+const renderNestedTags = (
+  tags: Tag[],
+  refetchTags: VoidFunction,
+  level = 0
+) => {
+  return tags.map((tag) => (
+    <React.Fragment key={tag.id}>
+      <TagRow tag={tag} level={level} refetchTags={refetchTags} />
+      {tag.children && renderNestedTags(tag.children, refetchTags, level + 1)}
+    </React.Fragment>
+  ));
+};
 
 export const TagTable: React.FC = () => {
   const { push } = useRouter();
+  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const tagQuery = api.tag.list.useQuery(
+    { teamId: defaultTeam?.id ?? "" },
+    { enabled: !!defaultTeam }
+  );
+
   return (
     <Stack gap={2}>
       <TagsBreadcrumbs />
@@ -68,19 +51,21 @@ export const TagTable: React.FC = () => {
           Create
         </Button>
       </Flex>
-      <Table variant="simple" size={"sm"}>
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th textAlign="right">Action</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((item) => (
-            <TagRow key={item.id} item={item} level={0} />
-          ))}
-        </Tbody>
-      </Table>
+      {!tagQuery.isLoading && (
+        <Table variant="simple" size={"sm"}>
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th textAlign="right">Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {tagQuery?.data?.length === 0 && <EmptyTagRow />}
+            {tagQuery?.data &&
+              renderNestedTags(tagQuery.data, tagQuery.refetch)}
+          </Tbody>
+        </Table>
+      )}
     </Stack>
   );
 };

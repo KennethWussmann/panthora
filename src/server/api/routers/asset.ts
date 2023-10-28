@@ -10,7 +10,7 @@ export const assetRouter = createTRPCRouter({
     }),
   list: protectedProcedure
     .input(assetListRequest)
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       return ctx.applicationContext.assetService.getAssets(input);
     }),
 });

@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { TagCreateRequest } from "./tagCreateRequest";
 import { TagListRequest } from "./tagListRequest";
+import { Tag } from "./tag";
+import { TagDeleteRequest } from "./tagDeleteRequest";
 
 export class TagService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -17,18 +19,53 @@ export class TagService {
     return tag;
   };
 
-  public getTags = async (listRequest: TagListRequest) => {
-    const tags = await this.prisma.tag.findMany({
-      where: {
-        teamId: listRequest.teamId,
-      },
-      include: {
-        children: true,
-      },
-      take: listRequest.limit,
-      skip: listRequest.offset,
-    });
+  public getTags = async (listRequest: TagListRequest): Promise<Tag[]> => {
+    const fetchTagsAndChildren = async (
+      tagId: number | null
+    ): Promise<Tag[]> => {
+      const tags = (await this.prisma.tag.findMany({
+        where: {
+          teamId: listRequest.teamId,
+          parentId: tagId,
+        },
+      })) as Tag[];
 
-    return tags;
+      for (const tag of tags) {
+        tag.children = await fetchTagsAndChildren(tag.id);
+      }
+
+      return tags;
+    };
+
+    return await fetchTagsAndChildren(listRequest.parentId ?? null);
+  };
+
+  public deleteTag = async (deleteRequest: TagDeleteRequest) => {
+    const tag = await this.prisma.tag.findUnique({
+      where: {
+        teamId: deleteRequest.teamId,
+        id: deleteRequest.id,
+      },
+    });
+    if (!tag) {
+      throw new Error("Tag not found");
+    }
+    this.prisma.$transaction([
+      this.prisma.tag.updateMany({
+        data: {
+          parentId: tag.parentId,
+        },
+        where: {
+          teamId: deleteRequest.teamId,
+          parentId: deleteRequest.id,
+        },
+      }),
+      this.prisma.tag.delete({
+        where: {
+          teamId: deleteRequest.teamId,
+          id: deleteRequest.id,
+        },
+      }),
+    ]);
   };
 }

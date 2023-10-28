@@ -1,44 +1,80 @@
-import { Box, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { FiEdit, FiPrinter } from "react-icons/fi";
-import { TagItem } from "./TagItem";
+import {
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  Td,
+  Tooltip,
+  Tr,
+} from "@chakra-ui/react";
+import { FiEdit } from "react-icons/fi";
+import { BiSubdirectoryRight } from "react-icons/bi";
+import { Tag } from "@prisma/client";
+import { DeleteIconButton } from "~/components/common/DeleteIconButton";
+import { api } from "~/utils/api";
 
-type TagRowProps = {
-  item: TagItem;
-  level: number;
-};
+const TagActions = ({
+  tag,
+  onDelete,
+}: {
+  tag: Tag;
+  onDelete: VoidFunction;
+}) => {
+  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const deleteTag = api.tag.delete.useMutation();
 
-const TagActions = ({ tag }: { tag: TagItem }) => {
+  const handleDelete = async () => {
+    if (!defaultTeam) {
+      return;
+    }
+
+    await deleteTag.mutateAsync({ teamId: defaultTeam.id, id: tag.id });
+    onDelete();
+  };
+
   return (
     <>
       <Tooltip label="Edit">
         <IconButton variant={"ghost"} icon={<FiEdit />} aria-label="Edit" />
       </Tooltip>
-      <Tooltip label="Print label">
-        <IconButton
-          variant={"ghost"}
-          icon={<FiPrinter />}
-          aria-label="Print label"
-        />
+      <Tooltip label="Delete">
+        <DeleteIconButton itemName={tag.name} onConfirm={handleDelete} />
       </Tooltip>
     </>
   );
 };
 
-export const TagRow: React.FC<TagRowProps> = ({ item, level }) => {
+export const TagRow = ({
+  tag,
+  level,
+  refetchTags,
+}: {
+  tag: Tag;
+  level: number;
+  refetchTags: VoidFunction;
+}) => {
   return (
     <>
-      <Tr key={item.id}>
+      <Tr key={tag.id}>
         <Td>
-          <Box pl={`${level * 20}px`}>{item.name}</Box>
+          <Box pl={`${(level - 1) * 20}px`}>
+            <Flex alignItems={"center"} gap={2}>
+              {level > 0 && <BiSubdirectoryRight size={"20px"} />} {tag.name}
+            </Flex>
+          </Box>
         </Td>
         <Td textAlign="right">
-          <TagActions tag={item} />
+          <TagActions tag={tag} onDelete={refetchTags} />
         </Td>
       </Tr>
-      {item.children &&
-        item.children.map((child) => (
-          <TagRow key={child.id} item={child} level={level + 1} />
-        ))}
     </>
+  );
+};
+
+export const EmptyTagRow = () => {
+  return (
+    <Tr>
+      <Td colSpan={2}>No tags found</Td>
+    </Tr>
   );
 };

@@ -1,8 +1,15 @@
-import { Divider, Flex, Stack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Divider,
+  Flex,
+  HStack,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { NavItems } from "./NavItems";
 import { Logo } from "./Logo";
 import { NavSearchBar } from "./NavSearchBar";
 import { NavLogout } from "./NavLogout";
+import { NavTeamSelector } from "./NavTeamSelector";
 
 export const NavSidebar = () => {
   return (
@@ -14,7 +21,10 @@ export const NavSidebar = () => {
     >
       <Stack justify="space-between" spacing="1">
         <Stack spacing={{ base: "5", sm: "6" }} shouldWrapChildren>
-          <Logo w={"100%"} />
+          <Flex justify={"space-between"}>
+            <Logo />
+            <NavTeamSelector />
+          </Flex>
           <NavSearchBar />
           <Divider />
           <Stack spacing="1">
