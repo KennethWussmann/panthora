@@ -9,10 +9,11 @@ import {
   Heading,
   Input,
   Stack,
-  VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { FiSave } from "react-icons/fi";
+import { TeamUpdateRequest } from "~/server/lib/user/teamUpdateRequest";
 import { api } from "~/utils/api";
 
 export const SettingsForm = () => {
@@ -21,7 +22,12 @@ export const SettingsForm = () => {
     isLoading: isLoadingDefaultTeam,
     refetch,
   } = api.user.defaultTeam.useQuery();
-  const [name, setName] = useState<string>(defaultTeam?.name ?? "");
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+  } = useForm<TeamUpdateRequest>();
   const {
     mutateAsync: updateTeam,
     isLoading: isLoadingTeamUpdate,
@@ -29,20 +35,23 @@ export const SettingsForm = () => {
     isSuccess,
   } = api.user.updateTeam.useMutation();
 
-  const handleSave = async () => {
+  const onSubmit = async (data: TeamUpdateRequest) => {
     if (!defaultTeam) {
       throw new Error("No default team found");
     }
-    if (name.length === 0) {
-      return;
-    }
-    console.log("Saving settings");
     await updateTeam({
+      ...data,
       teamId: defaultTeam.id,
-      name,
     });
     void refetch();
   };
+
+  useEffect(() => {
+    if (defaultTeam) {
+      setValue("name", defaultTeam.name);
+    }
+  }, [defaultTeam]);
+
   return (
     <Stack gap={4}>
       <Heading size={"lg"}>Settings</Heading>
@@ -58,25 +67,22 @@ export const SettingsForm = () => {
           <AlertDescription>Settings saved</AlertDescription>
         </Alert>
       )}
-      <FormControl>
-        <FormLabel>Team Name</FormLabel>
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          isRequired
-        />
-      </FormControl>
-      <Flex justifyContent="flex-end">
-        <Button
-          leftIcon={<FiSave />}
-          colorScheme="green"
-          onClick={handleSave}
-          isLoading={isLoadingDefaultTeam || isLoadingTeamUpdate}
-        >
-          Save
-        </Button>
-      </Flex>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={!!errors.name}>
+          <FormLabel>Team Name</FormLabel>
+          <Input type="text" {...register("name")} />
+        </FormControl>
+        <Flex justifyContent="flex-end">
+          <Button
+            leftIcon={<FiSave />}
+            colorScheme="green"
+            type="submit"
+            isLoading={isLoadingDefaultTeam || isLoadingTeamUpdate}
+          >
+            Save
+          </Button>
+        </Flex>
+      </form>
     </Stack>
   );
 };

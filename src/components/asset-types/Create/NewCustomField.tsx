@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   AlertDescription,
@@ -18,13 +18,19 @@ import {
   Switch,
   VStack,
 } from "@chakra-ui/react";
-import { TemporaryCustomField } from "./CustomFieldCreationForm";
 import { FiTrash } from "react-icons/fi";
 import { FieldType } from "@prisma/client";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { BiMoveVertical } from "react-icons/bi";
+import {
+  AssetTypeCreateRequestWithTemporaryFields,
+  TemporaryCustomField,
+} from "./types";
+import { Control } from "react-hook-form";
+import { numberOrNull } from "~/lib/reactHookFormUtils";
+import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 
 const fieldTypeLabel: Record<FieldType, string> = {
   [FieldType.BOOLEAN]: "Boolean",
@@ -38,12 +44,20 @@ const fieldTypeLabel: Record<FieldType, string> = {
 };
 
 export const NewCustomFieldForm = ({
-  id,
+  index,
   onRemove,
+  field,
+  control: {
+    register,
+    _formState: { errors: formErrors },
+  },
 }: {
-  id: number;
+  index: number;
   onRemove: VoidFunction;
+  field: TemporaryCustomField;
+  control: Control<AssetTypeCreateRequestWithTemporaryFields, unknown>;
 }) => {
+  const errors = formErrors.fields?.[index];
   const {
     attributes,
     listeners,
@@ -51,25 +65,12 @@ export const NewCustomFieldForm = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
-  const [field, setField] = useState<TemporaryCustomField>({
-    id: 0,
-    type: FieldType.STRING,
-    name: "",
-    required: false,
-  });
+  } = useSortable({ id: field.id });
   const customTransitions =
     "box-shadow 0.3s ease, margin 0.3s ease, background-color 0.3s ease";
   const finalTransition = transition
     ? `${transition}, ${customTransitions}`
     : customTransitions;
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setField((prev) => ({ ...prev, [name]: value }));
-  };
 
   return (
     <Box
@@ -102,9 +103,8 @@ export const NewCustomFieldForm = ({
                 <FormControl>
                   <FormLabel>Type</FormLabel>
                   <Select
-                    name="type"
-                    onChange={handleChange}
                     isDisabled={isDragging}
+                    {...register(`fields.${index}.type`)}
                   >
                     {Object.values(FieldType).map((type) => (
                       <option key={type} value={type}>
@@ -117,14 +117,14 @@ export const NewCustomFieldForm = ({
                   </FormHelperText>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!errors?.name}>
                   <FormLabel>Name</FormLabel>
                   <Input
-                    name="name"
-                    onChange={handleChange}
                     isDisabled={isDragging}
                     isRequired
+                    {...register(`fields.${index}.name`, { required: true })}
                   />
+                  {errors?.name && <FormFieldRequiredErrorMessage />}
                   <FormHelperText>
                     The display name of this field when creating an asset
                   </FormHelperText>
@@ -136,15 +136,8 @@ export const NewCustomFieldForm = ({
                   Required
                 </FormLabel>
                 <Switch
-                  id="required"
-                  name="required"
                   isDisabled={isDragging}
-                  onChange={(e) =>
-                    setField((prev) => ({
-                      ...prev,
-                      required: e.target.checked,
-                    }))
-                  }
+                  {...register(`fields.${index}.required`)}
                 />
                 <FormHelperText>
                   Input in this custom field will be required when creating an
@@ -158,12 +151,13 @@ export const NewCustomFieldForm = ({
                 field.type === FieldType.TAG) && (
                 <HStack>
                   <FormControl>
-                    <FormLabel>Mininmum Length</FormLabel>
+                    <FormLabel>Minimum Length</FormLabel>
                     <NumberInput>
                       <NumberInputField
-                        name="min"
-                        onChange={handleChange}
                         disabled={isDragging}
+                        {...register(`fields.${index}.min`, {
+                          setValueAs: numberOrNull,
+                        })}
                       />
                     </NumberInput>
                   </FormControl>
@@ -172,9 +166,10 @@ export const NewCustomFieldForm = ({
                     <FormLabel>Maximum Length</FormLabel>
                     <NumberInput>
                       <NumberInputField
-                        name="max"
-                        onChange={handleChange}
                         disabled={isDragging}
+                        {...register(`fields.${index}.max`, {
+                          setValueAs: numberOrNull,
+                        })}
                       />
                     </NumberInput>
                   </FormControl>
@@ -185,9 +180,8 @@ export const NewCustomFieldForm = ({
                 <FormControl>
                   <FormLabel>Currency</FormLabel>
                   <Input
-                    name="currency"
-                    onChange={handleChange}
                     isDisabled={isDragging}
+                    {...register(`fields.${index}.currency`)}
                   />
                 </FormControl>
               )}
@@ -198,9 +192,11 @@ export const NewCustomFieldForm = ({
                     <FormLabel>Parent Tag ID</FormLabel>
                     <NumberInput>
                       <NumberInputField
-                        name="parentTagId"
-                        onChange={handleChange}
                         disabled={isDragging}
+                        {...register(`fields.${index}.parentTagId`, {
+                          setValueAs: numberOrNull,
+                          required: true,
+                        })}
                       />
                     </NumberInput>
                   </FormControl>

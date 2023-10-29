@@ -6,8 +6,8 @@ const baseCustomFieldCreateRequest = {
   required: z.boolean(),
 };
 const minMaxCustomFieldCreateRequest = {
-  min: z.number().optional(),
-  max: z.number().optional(),
+  min: z.number().nullable(),
+  max: z.number().nullable(),
 };
 
 const numberCustomFieldCreateRequest = z.object({
@@ -38,7 +38,7 @@ const datetimeCustomFieldCreateRequest = z.object({
 });
 const currencyCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.CURRENCY),
-  currency: z.string().optional(),
+  currency: z.string().nullable(),
   ...minMaxCustomFieldCreateRequest,
   ...baseCustomFieldCreateRequest,
 });
@@ -62,7 +62,7 @@ const customFieldCreateRequest = z.discriminatedUnion("type", [
 export const assetTypeCreateRequest = z.object({
   teamId: z.string(),
   name: z.string(),
-  parentId: z.number().optional(),
+  parentId: z.number().nullable(),
   fields: z.array(customFieldCreateRequest),
 });
 

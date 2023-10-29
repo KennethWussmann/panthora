@@ -5,6 +5,8 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Input,
   Select,
@@ -16,10 +18,11 @@ import React, { useState } from "react";
 import { CreateAssetTypeExplanation } from "./CreateAssetTypeExplanation";
 import { AssetTypeBreadcrumbs } from "../AssetTypeBreadcrumbs";
 import { AssetType } from "~/server/lib/asset-types/assetType";
-import {
-  CustomFieldCreationForm,
-  TemporaryCustomField,
-} from "./CustomFieldCreationForm";
+import { CustomFieldCreationForm } from "./CustomFieldCreationForm";
+import { useFieldArray, useForm } from "react-hook-form";
+import { AssetTypeCreateRequestWithTemporaryFields } from "./types";
+import { numberOrNull } from "~/lib/reactHookFormUtils";
+import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 
 const renderNestedAssetTypes = (assetTypes: AssetType[], level = 0) => {
   return assetTypes.map((assetType) => (
@@ -35,7 +38,20 @@ const renderNestedAssetTypes = (assetTypes: AssetType[], level = 0) => {
 };
 
 export const AssetTypeCreationForm = () => {
-  const [fields, setFields] = useState<TemporaryCustomField[]>([]);
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<AssetTypeCreateRequestWithTemporaryFields>({
+    defaultValues: { fields: [] },
+  });
+  const { fields, append, prepend, remove, move } = useFieldArray({
+    control,
+    name: "fields",
+  });
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
 
@@ -51,27 +67,20 @@ export const AssetTypeCreationForm = () => {
     isSuccess: assetTypeCreated,
   } = api.assetType.create.useMutation();
 
-  const [name, setName] = useState("");
-  const [parentTag, setParentTag] = useState<number>();
-
-  const handleAssetTypeCreation = async () => {
+  const onSubmit = async (data: AssetTypeCreateRequestWithTemporaryFields) => {
     if (!defaultTeam) {
       throw new Error("No default team found");
     }
-    if (name.length === 0) {
-      return;
-    }
     await createAssetType({
+      ...data,
       teamId: defaultTeam.id,
-      name,
-      parentId: parentTag,
-      fields,
     });
+    remove();
+    reset();
+    setValue("fields", []);
     void refetchTags();
-    setName("");
-    setParentTag(undefined);
-    setFields([]);
   };
+
   return (
     <Stack gap={2}>
       <AssetTypeBreadcrumbs create />
@@ -92,34 +101,41 @@ export const AssetTypeCreationForm = () => {
           </AlertDescription>
         </Alert>
       )}
-      <form onSubmit={handleAssetTypeCreation}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={2}>
           <FormControl>
             <FormLabel>Parent Asset Type</FormLabel>
             <Select
               placeholder="None"
-              value={parentTag}
-              onChange={(e) => setParentTag(parseInt(e.target.value, 10))}
+              {...register("parentId", {
+                setValueAs: numberOrNull,
+              })}
             >
               {assetTypes && renderNestedAssetTypes(assetTypes)}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               autoFocus
-              isRequired
+              {...register("name", { required: true })}
             />
+            {errors.name && <FormFieldRequiredErrorMessage />}
           </FormControl>
-          <CustomFieldCreationForm fields={fields} setFields={setFields} />
+          <CustomFieldCreationForm
+            control={control}
+            fields={fields}
+            append={append}
+            prepend={prepend}
+            remove={remove}
+            move={move}
+          />
           <Flex justifyContent="flex-end">
             <Button
               leftIcon={<FiSave />}
               colorScheme="green"
-              onClick={handleAssetTypeCreation}
+              type="submit"
               isLoading={isLoadingDefaultTeam || isLoadingCreation}
             >
               Create

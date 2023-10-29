@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import {
+  useForm,
+  SubmitHandler,
+  Control,
+  Controller,
+  UseFieldArrayMove,
+} from "react-hook-form";
+
+import {
   VStack,
   Button,
   Flex,
@@ -12,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { NewCustomFieldForm } from "./NewCustomField";
 import { FieldType } from "@prisma/client";
-import { CustomFieldCreateRequest } from "~/server/lib/asset-types/assetTypeCreateRequest";
 import { FiPlus } from "react-icons/fi";
 import {
   DndContext,
@@ -24,26 +31,31 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
-export type TemporaryCustomField = CustomFieldCreateRequest & {
-  id: number;
-};
+import {
+  AssetTypeCreateRequestWithTemporaryFields,
+  TemporaryCustomField,
+} from "./types";
+import { randomUUID } from "crypto";
 
 export const CustomFieldCreationForm = ({
   fields,
-  setFields,
+  append,
+  prepend,
+  remove,
+  move,
+  control,
 }: {
   fields: TemporaryCustomField[];
-  setFields: (
-    fn: (fields: TemporaryCustomField[]) => TemporaryCustomField[]
-  ) => void;
+  append: (field: TemporaryCustomField) => void;
+  prepend: (field: TemporaryCustomField) => void;
+  remove: (id: number) => void;
+  move: UseFieldArrayMove;
+  control: Control<AssetTypeCreateRequestWithTemporaryFields, unknown>;
 }) => {
-  const [incrementalId, setIncrementalId] = useState(1);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -52,28 +64,23 @@ export const CustomFieldCreationForm = ({
   );
 
   const addField = (where: "start" | "end") => {
-    setFields((prevFields) => [
-      ...(where === "start" ? [] : prevFields),
-      { id: incrementalId, type: FieldType.STRING, name: "", required: false },
-      ...(where === "end" ? [] : prevFields),
-    ]);
-    setIncrementalId((prev) => prev + 1);
-  };
-
-  const removeField = (index: number) => {
-    setFields((prevFields) => prevFields.filter((_, i) => i !== index));
+    (where === "start" ? prepend : append)({
+      id: new Date().getTime().toString(),
+      type: FieldType.STRING,
+      name: "",
+      required: false,
+      min: null,
+      max: null,
+    });
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (active.id !== over?.id && active.id && over?.id) {
-      setFields((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
+      const oldIndex = fields.findIndex((item) => item.id === active.id);
+      const newIndex = fields.findIndex((item) => item.id === over.id);
+      move(oldIndex, newIndex);
     }
   };
 
@@ -103,11 +110,13 @@ export const CustomFieldCreationForm = ({
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={fields} strategy={verticalListSortingStrategy}>
-          {fields.map(({ id }, index) => (
+          {fields.map((field, index) => (
             <NewCustomFieldForm
-              key={id}
-              id={id}
-              onRemove={() => removeField(index)}
+              key={field.id}
+              index={index}
+              onRemove={() => remove(index)}
+              field={field}
+              control={control}
             />
           ))}
         </SortableContext>
