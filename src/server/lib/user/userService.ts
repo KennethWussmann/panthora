@@ -20,17 +20,28 @@ export class UserService {
           teamId: team.id,
         },
       });
+    } else if (
+      existingTeams.length === 1 &&
+      existingTeams[0]?.teamMemberships?.some(
+        (membership) => membership.userId === userId
+      ) === false
+    ) {
+      // add the user to the one existing team
+      await this.prisma.userTeamMembership.create({
+        data: {
+          userId,
+          teamId: existingTeams[0]!.id,
+        },
+      });
     }
   };
 
-  public getTeams = async (userId: string) => {
+  public getTeams = async (_userId: string) => {
+    // Currently we only support multiple users that are all automatically in the same team.
+    // We can add full team support later, by allowing users to invite other users to their team.
     return this.prisma.team.findMany({
-      where: {
-        teamMemberships: {
-          some: {
-            userId,
-          },
-        },
+      include: {
+        teamMemberships: true,
       },
     });
   };

@@ -1,28 +1,42 @@
-# Create T3 App
+<div align="center">
+  <h1><code>tory</code></h1>
+  <p>
+    <strong>Simple and light-weight inventory system for literally anything</strong>
+  </p>
+</div>
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Features
 
-## What's next? How do I make an app with this?
+- [x] Multi-user support
+  - [ ] Multi-tenant support
+- [x] SSO login
+- [ ] Build your very own workflow
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Meet tory
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Existing inventory systems either enforce heavy bureaucracy and overhead onto their users. Which may be great for professional use-cases, but if simple personal use-cases this more work, less flexible and way to overpowered.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+The idea of tory is, to allow users to create their own workflow to create and manage their assets. This is accomplished by using only three concepts that can handle a lot of different requirements at once.
 
-## Learn More
+### Tags
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Tags can be added to assets. They can be hierarchical to establish your very own structure.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Asset Types
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Asset types are the blueprint for everything you want to inventorize. They can be hierarchical as well and allow to group different kinds of asset types.
 
-## How do I deploy this?
+They can have and inherit custom input fields that can be configured to the user's needs.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+This way a food item could have different set of fields than electronics.
+
+### Assets
+
+Assets are the parts and items you want to store in your inventory. They use one Asset Type to determine all the fields that should be filled.
+
+## Note on multi-user and multi-tenant support
+
+Multiple users can login to the same tory instance and will see all the same data. They also have all the permissions and may view, create, update and delete everything available. 
+
+Multi-tenant support is not ready yet, but already baked into the DNA of tory. Users will be able to create multiple teams and invite other's to their team to work on the same inventory.
+
