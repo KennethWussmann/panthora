@@ -1,4 +1,4 @@
 export type AssetItem = {
-  id: string;
+  id: number;
   name: string;
 };

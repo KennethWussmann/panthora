@@ -1,5 +1,11 @@
 import { As } from "@chakra-ui/react";
-import { FiBarChart2, FiBox, FiFolder, FiTag } from "react-icons/fi";
+import {
+  FiBarChart2,
+  FiBox,
+  FiFolder,
+  FiSettings,
+  FiTag,
+} from "react-icons/fi";
 import { NavButton } from "./NavButton";
 
 type NavigationItem = {
@@ -29,6 +35,11 @@ export const navigationItems: NavigationItem[] = [
     icon: FiTag,
     label: "Tags",
     href: "/tags",
+  },
+  {
+    icon: FiSettings,
+    label: "Settings",
+    href: "/settings",
   },
 ];
 

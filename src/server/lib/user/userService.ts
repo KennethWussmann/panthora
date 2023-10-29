@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
+import { TeamUpdateRequest } from "./teamUpdateRequest";
 
 export class UserService {
-  constructor(
-    private readonly prisma: PrismaClient,
-  ) {}
+  constructor(private readonly prisma: PrismaClient) {}
 
   public initialize = async (userId: string) => {
     const existingTeams = await this.getTeams(userId);
@@ -70,5 +69,26 @@ export class UserService {
         },
       })) > 0
     );
+  };
+
+  public requireTeamMembership = async (userId: string, teamId: string) => {
+    if (!(await this.isTeamMember(userId, teamId))) {
+      throw new Error("Team not found");
+    }
+  };
+
+  public updateTeam = async (userId: string, input: TeamUpdateRequest) => {
+    await this.requireTeamMembership(userId, input.teamId);
+
+    await this.prisma.team.update({
+      where: {
+        id: input.teamId,
+      },
+      data: {
+        name: input.name,
+      },
+    });
+
+    console.log("Updated Team");
   };
 }

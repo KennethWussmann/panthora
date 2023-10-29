@@ -118,6 +118,9 @@ model CustomField {
     name          String
     fieldType     FieldType
     inputRequired Boolean
+    inputMin      Int?
+    inputMax      Int?
+    currency      String?
     assetTypeId   Int
     assetType     AssetType    @relation(fields: [assetTypeId], references: [id])
     tagId         Int?

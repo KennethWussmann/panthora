@@ -50,7 +50,7 @@ export class TagService {
     if (!tag) {
       throw new Error("Tag not found");
     }
-    this.prisma.$transaction([
+    await this.prisma.$transaction([
       this.prisma.tag.updateMany({
         data: {
           parentId: tag.parentId,

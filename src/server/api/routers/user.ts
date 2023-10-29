@@ -1,4 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { teamUpdateRequest } from "~/server/lib/user/teamUpdateRequest";
 
 export const userRouter = createTRPCRouter({
   defaultTeam: protectedProcedure.query(async ({ ctx }) => {
@@ -10,4 +11,13 @@ export const userRouter = createTRPCRouter({
       return undefined;
     }
   }),
+  updateTeam: protectedProcedure
+    .input(teamUpdateRequest)
+    .mutation(async ({ ctx, input }) => {
+      console.log("Updating team ...");
+      await ctx.applicationContext.userService.updateTeam(
+        ctx.session.user.id,
+        input
+      );
+    }),
 });

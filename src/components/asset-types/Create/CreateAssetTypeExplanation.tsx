@@ -10,10 +10,15 @@ export const CreateAssetTypeExplanation = () => {
           <Heading size={"md"}>Create Asset Type</Heading>
         </HStack>
         <p>
-          Tags allow you to organise your assets. You can assign tags to assets,
-          create custom fields for tags and search by them. They are the basis
-          for a good inventory and allow you to structure your storage in a way
-          that makes sense to you.
+          Asset types are the templates that define the structure of your
+          assets. You can create as many asset types as you need, and each asset
+          type can have as many custom fields as you need.
+        </p>
+        <p>
+          Asset types can extend other asset types, which means that they will
+          inherit all of the custom fields of the asset type they extend. This
+          is useful for creating asset types that are very similar to each
+          other, but have a few differences.
         </p>
       </Stack>
     </Box>
