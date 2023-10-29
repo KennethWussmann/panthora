@@ -14,7 +14,6 @@ export const userRouter = createTRPCRouter({
   updateTeam: protectedProcedure
     .input(teamUpdateRequest)
     .mutation(async ({ ctx, input }) => {
-      console.log("Updating team ...");
       await ctx.applicationContext.userService.updateTeam(
         ctx.session.user.id,
         input

@@ -99,7 +99,5 @@ export class UserService {
         name: input.name,
       },
     });
-
-    console.log("Updated Team");
   };
 }
