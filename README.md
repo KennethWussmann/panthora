@@ -7,9 +7,9 @@
 
 ## Features
 
-- [x] Multi-user support
-  - [ ] Multi-tenant support
-- [x] SSO login
+- [x] Multi-user
+  - [ ] Multi-tenant
+- [x] Single sign-on
 - [ ] Build your very own workflow
 
 ## Meet tory
