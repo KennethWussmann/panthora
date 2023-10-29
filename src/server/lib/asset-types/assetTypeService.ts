@@ -150,7 +150,6 @@ export class AssetTypeService {
     await this.prisma.$transaction([
       this.prisma.customField.deleteMany({
         where: {
-          teamId: deleteRequest.teamId,
           assetTypeId: assetType.id,
         },
       }),
@@ -167,6 +166,9 @@ export class AssetTypeService {
         where: {
           teamId: deleteRequest.teamId,
           id: deleteRequest.id,
+        },
+        include: {
+          fields: true,
         },
       }),
     ]);

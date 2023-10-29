@@ -8,7 +8,7 @@ export class UserService {
     const existingTeams = await this.getTeams(userId);
     if (existingTeams.length === 0) {
       // create a default team
-      // we dont want full blown team support yet, but having a team for every user makes it easier to implement later.
+      // we dont want full blown team support yet, but having one team with every user in it makes it easier to implement later.
       const team = await this.prisma.team.create({
         data: {
           name: "My Team",

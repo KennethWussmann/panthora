@@ -126,7 +126,7 @@ model CustomField {
     tagId         Int?
     tag           Tag?         @relation(fields: [tagId], references: [id])
     fieldValue    FieldValue[]
-    team          Team?        @relation(fields: [teamId], references: [id])
+    Team          Team?        @relation(fields: [teamId], references: [id])
     teamId        String?
 }
 
