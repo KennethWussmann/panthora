@@ -1,55 +1,56 @@
 import { FieldType } from "@prisma/client";
 import { z } from "zod";
 
-const baseCustomFieldCreateRequest = {
+const baseCustomFieldCreateEditRequest = {
+  id: z.number(),
   name: z.string(),
-  required: z.boolean(),
+  inputRequired: z.boolean(),
 };
 const minMaxCustomFieldCreateRequest = {
-  min: z.number().nullable(),
-  max: z.number().nullable(),
+  inputMin: z.number().nullable().default(null),
+  inputMax: z.number().nullable().default(null),
 };
 
 const numberCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.NUMBER),
   ...minMaxCustomFieldCreateRequest,
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const stringCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.STRING),
   ...minMaxCustomFieldCreateRequest,
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const booleanCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.BOOLEAN),
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const dateCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.DATE),
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const timeCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.TIME),
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const datetimeCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.DATETIME),
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const currencyCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.CURRENCY),
-  currency: z.string().nullable(),
+  currency: z.string().nullable().default(null),
   ...minMaxCustomFieldCreateRequest,
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 const tagCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.TAG),
   parentTagId: z.number(),
   ...minMaxCustomFieldCreateRequest,
-  ...baseCustomFieldCreateRequest,
+  ...baseCustomFieldCreateEditRequest,
 });
 
-const customFieldCreateRequest = z.discriminatedUnion("type", [
+const customFieldCreateEditRequest = z.discriminatedUnion("type", [
   numberCustomFieldCreateRequest,
   stringCustomFieldCreateRequest,
   booleanCustomFieldCreateRequest,
@@ -59,12 +60,17 @@ const customFieldCreateRequest = z.discriminatedUnion("type", [
   currencyCustomFieldCreateRequest,
   tagCustomFieldCreateRequest,
 ]);
-export const assetTypeCreateRequest = z.object({
+export const assetTypeCreateEditRequest = z.object({
+  id: z.number().nullable().default(null),
   teamId: z.string(),
   name: z.string(),
-  parentId: z.number().nullable(),
-  fields: z.array(customFieldCreateRequest),
+  parentId: z.number().nullable().default(null),
+  fields: z.array(customFieldCreateEditRequest),
 });
 
-export type AssetTypeCreateRequest = z.infer<typeof assetTypeCreateRequest>;
-export type CustomFieldCreateRequest = z.infer<typeof customFieldCreateRequest>;
+export type AssetTypeCreateEditRequest = z.infer<
+  typeof assetTypeCreateEditRequest
+>;
+export type CustomFieldCreateEditRequest = z.infer<
+  typeof customFieldCreateEditRequest
+>;

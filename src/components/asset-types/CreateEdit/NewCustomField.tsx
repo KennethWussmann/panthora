@@ -28,7 +28,7 @@ import {
   AssetTypeCreateRequestWithTemporaryFields,
   TemporaryCustomField,
 } from "./types";
-import { Control } from "react-hook-form";
+import { Control, useWatch } from "react-hook-form";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 
@@ -47,16 +47,17 @@ export const NewCustomFieldForm = ({
   index,
   onRemove,
   field,
-  control: {
-    register,
-    _formState: { errors: formErrors },
-  },
+  control,
 }: {
   index: number;
   onRemove: VoidFunction;
   field: TemporaryCustomField;
   control: Control<AssetTypeCreateRequestWithTemporaryFields, unknown>;
 }) => {
+  const {
+    register,
+    _formState: { errors: formErrors },
+  } = control;
   const errors = formErrors.fields?.[index];
   const {
     attributes,
@@ -71,6 +72,7 @@ export const NewCustomFieldForm = ({
   const finalTransition = transition
     ? `${transition}, ${customTransitions}`
     : customTransitions;
+  const fieldType = useWatch({ control, name: `fields.${index}.type` });
 
   return (
     <Box
@@ -137,7 +139,7 @@ export const NewCustomFieldForm = ({
                 </FormLabel>
                 <Switch
                   isDisabled={isDragging}
-                  {...register(`fields.${index}.required`)}
+                  {...register(`fields.${index}.inputRequired`)}
                 />
                 <FormHelperText>
                   Input in this custom field will be required when creating an
@@ -145,17 +147,17 @@ export const NewCustomFieldForm = ({
                 </FormHelperText>
               </FormControl>
 
-              {(field.type === FieldType.NUMBER ||
-                field.type === FieldType.STRING ||
-                field.type === FieldType.CURRENCY ||
-                field.type === FieldType.TAG) && (
+              {(fieldType === FieldType.NUMBER ||
+                fieldType === FieldType.STRING ||
+                fieldType === FieldType.CURRENCY ||
+                fieldType === FieldType.TAG) && (
                 <HStack>
                   <FormControl>
                     <FormLabel>Minimum Length</FormLabel>
                     <NumberInput>
                       <NumberInputField
                         disabled={isDragging}
-                        {...register(`fields.${index}.min`, {
+                        {...register(`fields.${index}.inputMin`, {
                           setValueAs: numberOrNull,
                         })}
                       />
@@ -167,7 +169,7 @@ export const NewCustomFieldForm = ({
                     <NumberInput>
                       <NumberInputField
                         disabled={isDragging}
-                        {...register(`fields.${index}.max`, {
+                        {...register(`fields.${index}.inputMax`, {
                           setValueAs: numberOrNull,
                         })}
                       />
@@ -176,7 +178,7 @@ export const NewCustomFieldForm = ({
                 </HStack>
               )}
 
-              {field.type === FieldType.CURRENCY && (
+              {fieldType === FieldType.CURRENCY && (
                 <FormControl>
                   <FormLabel>Currency</FormLabel>
                   <Input
@@ -186,7 +188,7 @@ export const NewCustomFieldForm = ({
                 </FormControl>
               )}
 
-              {field.type === FieldType.TAG && (
+              {fieldType === FieldType.TAG && (
                 <>
                   <FormControl>
                     <FormLabel>Parent Tag ID</FormLabel>

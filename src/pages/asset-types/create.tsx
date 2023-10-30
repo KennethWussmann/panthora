@@ -1,5 +1,5 @@
-import { AssetTypeCreationForm } from "~/components/asset-types/Create/AssetTypeCreationForm";
+import { AssetTypeCreateEditForm } from "~/components/asset-types/CreateEdit/AssetTypeCreateEditForm";
 
 export default function CreateAssetType() {
-  return <AssetTypeCreationForm />;
+  return <AssetTypeCreateEditForm />;
 }

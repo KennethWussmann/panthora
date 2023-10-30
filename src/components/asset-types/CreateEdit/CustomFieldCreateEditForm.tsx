@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  useForm,
-  SubmitHandler,
-  Control,
-  Controller,
-  UseFieldArrayMove,
-} from "react-hook-form";
+import React from "react";
+import { Control, UseFieldArrayMove } from "react-hook-form";
 
 import {
   VStack,
@@ -39,7 +33,6 @@ import {
   AssetTypeCreateRequestWithTemporaryFields,
   TemporaryCustomField,
 } from "./types";
-import { randomUUID } from "crypto";
 
 export const CustomFieldCreationForm = ({
   fields,
@@ -65,12 +58,12 @@ export const CustomFieldCreationForm = ({
 
   const addField = (where: "start" | "end") => {
     (where === "start" ? prepend : append)({
-      id: new Date().getTime().toString(),
+      id: new Date().getTime(),
       type: FieldType.STRING,
       name: "",
-      required: false,
-      min: null,
-      max: null,
+      inputRequired: false,
+      inputMin: null,
+      inputMax: null,
     });
   };
 

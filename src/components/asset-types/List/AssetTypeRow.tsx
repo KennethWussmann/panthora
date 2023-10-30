@@ -1,4 +1,5 @@
 import { Box, Flex, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { BiSubdirectoryRight } from "react-icons/bi";
 import { FiEdit, FiPrinter } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
@@ -18,6 +19,7 @@ const AssetTypeActions = ({
   assetType: AssetType;
   onDelete: VoidFunction;
 }) => {
+  const { push } = useRouter();
   const { data: defaultTeam } = api.user.defaultTeam.useQuery();
   const deleteAssetType = api.assetType.delete.useMutation();
 
@@ -36,7 +38,12 @@ const AssetTypeActions = ({
   return (
     <>
       <Tooltip label="Edit">
-        <IconButton variant={"ghost"} icon={<FiEdit />} aria-label="Edit" />
+        <IconButton
+          variant={"ghost"}
+          icon={<FiEdit />}
+          aria-label="Edit"
+          onClick={() => push(`/asset-types/edit/${assetType.id}`)}
+        />
       </Tooltip>
       <Tooltip label="Delete">
         <DeleteIconButton itemName={assetType.name} onConfirm={handleDelete} />
