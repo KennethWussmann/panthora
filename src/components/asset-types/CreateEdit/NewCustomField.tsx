@@ -11,8 +11,11 @@ import {
   FormLabel,
   HStack,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
+  NumberInputStepper,
   Select,
   Stack,
   Switch,
@@ -31,17 +34,7 @@ import {
 import { Control, useWatch } from "react-hook-form";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
-
-const fieldTypeLabel: Record<FieldType, string> = {
-  [FieldType.BOOLEAN]: "Boolean",
-  [FieldType.CURRENCY]: "Currency",
-  [FieldType.DATE]: "Date",
-  [FieldType.TIME]: "Time",
-  [FieldType.DATETIME]: "Date & Time",
-  [FieldType.NUMBER]: "Number",
-  [FieldType.STRING]: "String",
-  [FieldType.TAG]: "Tag",
-};
+import { fieldTypeLabel } from "~/lib/fieldTypeLabel";
 
 export const NewCustomFieldForm = ({
   index,
@@ -161,6 +154,10 @@ export const NewCustomFieldForm = ({
                           setValueAs: numberOrNull,
                         })}
                       />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
                     </NumberInput>
                   </FormControl>
 
@@ -173,6 +170,10 @@ export const NewCustomFieldForm = ({
                           setValueAs: numberOrNull,
                         })}
                       />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
                     </NumberInput>
                   </FormControl>
                 </HStack>
@@ -200,6 +201,10 @@ export const NewCustomFieldForm = ({
                           required: true,
                         })}
                       />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
                     </NumberInput>
                   </FormControl>
                   <Alert status="info">

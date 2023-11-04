@@ -12,12 +12,14 @@ import {
 import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
 import { CreateEditAssetExplanation } from "./CreateEditAssetExplanation";
 import { AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { Asset } from "@prisma/client";
 import { AssetTypeSelector } from "~/components/asset-types/AssetTypeSelector";
 import { FiSave } from "react-icons/fi";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
+import { AssetCreateEditCustomFieldsForm } from "./AssetCreateEditCustomFieldsForm";
+import { useEffect } from "react";
 
 export const AssetCreateEditForm = ({
   asset,
@@ -35,6 +37,10 @@ export const AssetCreateEditForm = ({
     watch,
     formState: { errors },
   } = useForm<AssetCreateEditRequest>();
+  const { fields: customFieldValues } = useFieldArray({
+    control,
+    name: "customFieldValues",
+  });
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
   const {
@@ -91,6 +97,20 @@ export const AssetCreateEditForm = ({
     refetch?.();
   };
 
+  useEffect(() => {
+    if (!assetType?.fields) {
+      setValue("customFieldValues", []);
+      return;
+    }
+    setValue(
+      "customFieldValues",
+      assetType.fields.map((field) => ({
+        fieldId: field.id,
+        value: "",
+      }))
+    );
+  }, [assetType?.fields]);
+
   return (
     <Stack gap={2}>
       <AssetBreadcrumbs create />
@@ -143,13 +163,13 @@ export const AssetCreateEditForm = ({
               </AlertDescription>
             </Alert>
           )}
-          <ul>
-            {assetType?.fields.map((field) => (
-              <li key={field.id}>
-                {field.name} - {field.fieldType}
-              </li>
-            ))}
-          </ul>
+          {assetType?.fields && assetType.fields.length > 0 && (
+            <AssetCreateEditCustomFieldsForm
+              assetType={assetType}
+              control={control}
+              customFieldValues={customFieldValues}
+            />
+          )}
           <Flex justifyContent="flex-end">
             <Button
               leftIcon={<FiSave />}
@@ -159,9 +179,9 @@ export const AssetCreateEditForm = ({
                 isLoadingDefaultTeam ||
                 isLoadingCreate ||
                 isLoadingUpdate ||
-                isLoadingAssetType
+                (selectedAssetTypeId ? isLoadingAssetType : false)
               }
-              isDisabled={hasNoFields}
+              isDisabled={hasNoFields || !assetType || !selectedAssetTypeId}
             >
               {asset ? "Save" : "Create"}
             </Button>

@@ -11,4 +11,6 @@ export const assetCreateEditRequest = z.object({
   customFieldValues: z.array(customFieldValue),
 });
 
+export type AssetCreateEditCustomFieldValue = z.infer<typeof customFieldValue>;
+
 export type AssetCreateEditRequest = z.infer<typeof assetCreateEditRequest>;
