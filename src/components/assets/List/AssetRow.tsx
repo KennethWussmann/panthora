@@ -1,13 +1,12 @@
-import { Box, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
+import { IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { FiEdit, FiPrinter } from "react-icons/fi";
-import { AssetItem } from "./AssetItem";
+import { AssetWithFields } from "~/server/lib/assets/asset";
 
 type AssetRowProps = {
-  item: AssetItem;
-  level: number;
+  asset: AssetWithFields;
 };
 
-const AssetActions = ({ asset }: { asset: AssetItem }) => {
+const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
   return (
     <>
       <Tooltip label="Edit">
@@ -24,17 +23,23 @@ const AssetActions = ({ asset }: { asset: AssetItem }) => {
   );
 };
 
-export const AssetRow: React.FC<AssetRowProps> = ({ item, level }) => {
+export const AssetRow = ({ asset }: AssetRowProps) => {
   return (
     <>
-      <Tr key={item.id}>
-        <Td>
-          <Box pl={`${level * 20}px`}>{item.name}</Box>
-        </Td>
+      <Tr key={asset.id}>
+        <Td>{asset.assetType.fields.length}</Td>
         <Td textAlign="right">
-          <AssetActions asset={item} />
+          <AssetActions asset={asset} />
         </Td>
       </Tr>
     </>
+  );
+};
+
+export const EmptyAssetRow = () => {
+  return (
+    <Tr>
+      <Td colSpan={2}>No assets found</Td>
+    </Tr>
   );
 };

@@ -8,7 +8,13 @@ import {
 import Link from "next/link";
 import { FiChevronRight } from "react-icons/fi";
 
-export const AssetBreadcrumbs = ({ create }: { create?: true }) => {
+export const AssetBreadcrumbs = ({
+  create,
+  edit,
+}: {
+  create?: true;
+  edit?: string;
+}) => {
   return (
     <Stack gap={2}>
       <Breadcrumb separator={<FiChevronRight color="gray.500" />}>
@@ -21,6 +27,13 @@ export const AssetBreadcrumbs = ({ create }: { create?: true }) => {
           <BreadcrumbItem>
             <BreadcrumbLink href="/assets/create" as={Link}>
               Create new Asset
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        )}
+        {edit && (
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/assets/edit/${edit}`} as={Link}>
+              Edit Asset
             </BreadcrumbLink>
           </BreadcrumbItem>
         )}

@@ -10,10 +10,11 @@ export const AssetExplanation = () => {
           <Heading size={"md"}>Assets</Heading>
         </HStack>
         <p>
-          Tags allow you to organise your assets. You can assign tags to assets,
-          create custom fields for tags and search by them. They are the basis
-          for a good inventory and allow you to structure your storage in a way
-          that makes sense to you.
+          Assets are the things you want to keep track of. They can be anything
+          and can have any number of custom fields. You can assign tags to them
+          and search by them. To get started with creating assets you first need
+          to create an asset type. They are the basis for your assets and define
+          which fields assets have.
         </p>
       </Stack>
     </Box>

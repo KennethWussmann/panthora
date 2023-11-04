@@ -1,16 +1,34 @@
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { assetCreateRequest } from "~/server/lib/assets/assetCreateRequest";
+import { assetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { assetListRequest } from "~/server/lib/assets/assetListRequest";
 
 export const assetRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(assetCreateRequest)
+    .input(assetCreateEditRequest)
     .mutation(async ({ ctx, input }) => {
-      return ctx.applicationContext.assetService.createAsset(input);
+      return ctx.applicationContext.assetService.createAsset(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  update: protectedProcedure
+    .input(assetCreateEditRequest)
+    .mutation(async ({ ctx, input }) => {
+      throw new Error("Not implemented");
     }),
   list: protectedProcedure
     .input(assetListRequest)
     .query(async ({ ctx, input }) => {
-      return ctx.applicationContext.assetService.getAssets(input);
+      return ctx.applicationContext.assetService.getAssets(
+        ctx.session.user.id,
+        input
+      );
     }),
+  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+    return ctx.applicationContext.assetService.getById(
+      ctx.session.user.id,
+      input
+    );
+  }),
 });

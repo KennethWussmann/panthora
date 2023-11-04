@@ -5,16 +5,13 @@ import {
   Button,
   Flex,
   FormControl,
-  FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
-  Select,
   Stack,
 } from "@chakra-ui/react";
 import { FiSave } from "react-icons/fi";
 import { api } from "~/utils/api";
-import React, { useState } from "react";
+import React from "react";
 import { CreateAssetTypeExplanation } from "./CreateAssetTypeExplanation";
 import { AssetTypeBreadcrumbs } from "../AssetTypeBreadcrumbs";
 import { AssetType } from "~/server/lib/asset-types/assetType";
@@ -23,19 +20,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { AssetTypeCreateRequestWithTemporaryFields } from "./types";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
-
-const renderNestedAssetTypes = (assetTypes: AssetType[], level = 0) => {
-  return assetTypes.map((assetType) => (
-    <React.Fragment key={assetType.id}>
-      <option value={assetType.id}>
-        {String.fromCharCode(160).repeat(level * 4)}
-        {assetType.name}
-      </option>
-      {assetType.children &&
-        renderNestedAssetTypes(assetType.children, level + 1)}
-    </React.Fragment>
-  ));
-};
+import { AssetTypeSelector } from "../AssetTypeSelector";
 
 export const AssetTypeCreateEditForm = ({
   assetType,
@@ -70,11 +55,6 @@ export const AssetTypeCreateEditForm = ({
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
 
-  const { data: assetTypes, refetch: refetchTags } =
-    api.assetType.list.useQuery(
-      { teamId: defaultTeam?.id ?? "" },
-      { enabled: !!defaultTeam }
-    );
   const {
     mutateAsync: createAssetType,
     isError: isErrorCreation,
@@ -98,7 +78,6 @@ export const AssetTypeCreateEditForm = ({
     } else {
       onCreate(data);
     }
-    refetchTags();
   };
 
   const onCreate = async (data: AssetTypeCreateRequestWithTemporaryFields) => {
@@ -113,7 +92,6 @@ export const AssetTypeCreateEditForm = ({
     remove();
     reset();
     setValue("fields", []);
-    refetchTags();
   };
 
   const onUpdate = async (data: AssetTypeCreateRequestWithTemporaryFields) => {
@@ -125,7 +103,6 @@ export const AssetTypeCreateEditForm = ({
       teamId: defaultTeam.id,
     });
     refetch?.();
-    refetchTags();
   };
 
   return (
@@ -166,17 +143,12 @@ export const AssetTypeCreateEditForm = ({
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={2}>
-          <FormControl>
-            <FormLabel>Parent Asset Type</FormLabel>
-            <Select
-              placeholder="None"
-              {...register("parentId", {
-                setValueAs: numberOrNull,
-              })}
-            >
-              {assetTypes && renderNestedAssetTypes(assetTypes)}
-            </Select>
-          </FormControl>
+          <AssetTypeSelector
+            label="Parent Asset Type"
+            {...register("parentId", {
+              setValueAs: numberOrNull,
+            })}
+          />
           <FormControl isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
             <Input

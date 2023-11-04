@@ -8,36 +8,58 @@ import {
   Button,
   Stack,
   Flex,
+  Tooltip,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
-import { AssetItem } from "./AssetItem";
 import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
-import { AssetRow } from "./AssetRow";
-
-const data: AssetItem[] = [
-  {
-    id: "1",
-    name: "Root1",
-  },
-  {
-    id: "2",
-    name: "Root2",
-  },
-];
+import { AssetRow, EmptyAssetRow } from "./AssetRow";
+import { api } from "~/utils/api";
+import { Link } from "@chakra-ui/next-js";
 
 export const AssetTable: React.FC = () => {
   const { push } = useRouter();
+  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { data: assets } = api.asset.list.useQuery(
+    { teamId: defaultTeam?.id ?? "" },
+    { enabled: !!defaultTeam }
+  );
+  const { data: assetTypes, isLoading: isLoadingAssetTypes } =
+    api.assetType.list.useQuery(
+      { teamId: defaultTeam?.id ?? "" },
+      { enabled: !!defaultTeam }
+    );
+
+  const showAssetTypeMissingNotice = assetTypes?.length === 0;
+
   return (
     <Stack gap={2}>
       <AssetBreadcrumbs />
       <AssetExplanation />
+      {showAssetTypeMissingNotice && (
+        <Alert status="info">
+          <AlertIcon />
+          <AlertDescription>
+            You don't have any asset types yet.{" "}
+            <Link href="/asset-types/create" textDecor={"underline"}>
+              Create one first
+            </Link>{" "}
+            to be able to create assets.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Flex justify="end">
         <Button
           leftIcon={<FiPlus />}
           colorScheme="green"
           onClick={() => push("/assets/create")}
+          isLoading={isLoadingAssetTypes}
+          isDisabled={showAssetTypeMissingNotice}
         >
           Create
         </Button>
@@ -50,8 +72,9 @@ export const AssetTable: React.FC = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((item) => (
-            <AssetRow key={item.id} item={item} level={0} />
+          {assets?.length === 0 && <EmptyAssetRow />}
+          {assets?.map((asset) => (
+            <AssetRow key={asset.id} asset={asset} />
           ))}
         </Tbody>
       </Table>

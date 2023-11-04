@@ -11,7 +11,11 @@ export class ApplicationContext {
     this.prismaClient,
     this.userService
   );
-  public readonly assetService = new AssetService(this.prismaClient);
+  public readonly assetService = new AssetService(
+    this.prismaClient,
+    this.userService,
+    this.assetTypeService
+  );
   public readonly tagService = new TagService(this.prismaClient);
 }
 
