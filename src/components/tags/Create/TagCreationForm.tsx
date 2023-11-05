@@ -16,6 +16,7 @@ import { FiSave } from "react-icons/fi";
 import { api } from "~/utils/api";
 import React, { useState } from "react";
 import { Tag } from "~/server/lib/tags/tag";
+import { TagSelector } from "~/components/common/TagSelector";
 
 const renderNestedTags = (tags: Tag[], level = 0) => {
   return tags.map((tag) => (
@@ -45,7 +46,7 @@ export const TagCreationForm = () => {
   } = api.tag.create.useMutation();
 
   const [name, setName] = useState("");
-  const [parentTag, setParentTag] = useState<number>();
+  const [parentTag, setParentTag] = useState<string>();
 
   const handleTagCreation = async () => {
     if (!defaultTeam) {
@@ -85,13 +86,7 @@ export const TagCreationForm = () => {
         <Stack gap={2}>
           <FormControl>
             <FormLabel>Parent Tag</FormLabel>
-            <Select
-              placeholder="None"
-              value={parentTag}
-              onChange={(e) => setParentTag(parseInt(e.target.value, 10))}
-            >
-              {tags && renderNestedTags(tags)}
-            </Select>
+            <TagSelector value={parentTag} onChange={setParentTag} />
           </FormControl>
           <FormControl>
             <FormLabel>Name</FormLabel>

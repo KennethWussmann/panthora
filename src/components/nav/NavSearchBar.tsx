@@ -9,12 +9,9 @@ import { FiSearch } from "react-icons/fi";
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   return (
     <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        color="gray.300"
-        fontSize="1.2em"
-        children={<FiSearch />}
-      />
+      <InputLeftElement pointerEvents="none" color="gray.300" fontSize="1.2em">
+        <FiSearch />
+      </InputLeftElement>
       <Input placeholder="Search" variant={"outline"} />
       {!hideShortcut && (
         <InputRightElement
@@ -22,7 +19,6 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
           color="gray.300"
           fontSize="1.2em"
           marginRight={2}
-          children="⌘K"
         />
       )}
     </InputGroup>

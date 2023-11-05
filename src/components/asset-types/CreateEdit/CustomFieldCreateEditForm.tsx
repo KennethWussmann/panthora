@@ -1,6 +1,6 @@
 import React from "react";
 import { Control, UseFieldArrayMove } from "react-hook-form";
-
+import { v4 as uuid } from "uuid";
 import {
   VStack,
   Button,
@@ -58,7 +58,7 @@ export const CustomFieldCreationForm = ({
 
   const addField = (where: "start" | "end") => {
     (where === "start" ? prepend : append)({
-      id: new Date().getTime(),
+      id: uuid(),
       type: FieldType.STRING,
       name: "",
       inputRequired: false,

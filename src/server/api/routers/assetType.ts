@@ -29,14 +29,14 @@ export const assetTypeRouter = createTRPCRouter({
         input
       );
     }),
-  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return ctx.applicationContext.assetTypeService.getById(
       ctx.session.user.id,
       input
     );
   }),
   getWithFields: protectedProcedure
-    .input(z.number())
+    .input(z.string())
     .query(async ({ ctx, input }) => {
       return ctx.applicationContext.assetTypeService.getByIdWithFieldsAndChildren(
         ctx.session.user.id,

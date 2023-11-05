@@ -14,8 +14,11 @@ export const assetRouter = createTRPCRouter({
     }),
   update: protectedProcedure
     .input(assetCreateEditRequest)
-    .mutation(async ({ ctx, input }) => {
-      throw new Error("Not implemented");
+    .mutation(({ ctx, input }) => {
+      return ctx.applicationContext.assetService.updateAsset(
+        ctx.session.user.id,
+        input
+      );
     }),
   list: protectedProcedure
     .input(assetListRequest)
@@ -25,7 +28,7 @@ export const assetRouter = createTRPCRouter({
         input
       );
     }),
-  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return ctx.applicationContext.assetService.getById(
       ctx.session.user.id,
       input

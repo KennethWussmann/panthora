@@ -2,7 +2,7 @@ import { FieldType } from "@prisma/client";
 import { z } from "zod";
 
 const baseCustomFieldCreateEditRequest = {
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   inputRequired: z.boolean(),
 };
@@ -45,7 +45,7 @@ const currencyCustomFieldCreateRequest = z.object({
 });
 const tagCustomFieldCreateRequest = z.object({
   type: z.literal(FieldType.TAG),
-  parentTagId: z.number(),
+  parentTagId: z.string(),
   ...minMaxCustomFieldCreateRequest,
   ...baseCustomFieldCreateEditRequest,
 });
@@ -61,10 +61,10 @@ const customFieldCreateEditRequest = z.discriminatedUnion("type", [
   tagCustomFieldCreateRequest,
 ]);
 export const assetTypeCreateEditRequest = z.object({
-  id: z.number().nullable().default(null),
+  id: z.string().nullable().default(null),
   teamId: z.string(),
   name: z.string(),
-  parentId: z.number().nullable().default(null),
+  parentId: z.string().nullable().default(null),
   fields: z.array(customFieldCreateEditRequest),
 });
 

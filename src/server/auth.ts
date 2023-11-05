@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
         id: token.sub,
       },
     }),
-    redirect: async ({ url, baseUrl }) => {
+    redirect: ({ url, baseUrl }) => {
       return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`;
     },
   },
@@ -58,7 +58,6 @@ export const authOptions: NextAuthOptions = {
       clientId: env.COGNITO_CLIENT_ID,
       clientSecret: env.COGNITO_CLIENT_SECRET,
       issuer: env.COGNITO_ISSUER,
-      
     }),
   ],
 };

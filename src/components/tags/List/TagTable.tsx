@@ -62,6 +62,7 @@ export const TagTable: React.FC = () => {
           <Tbody>
             {tagQuery?.data?.length === 0 && <EmptyTagRow />}
             {tagQuery?.data &&
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               renderNestedTags(tagQuery.data, tagQuery.refetch)}
           </Tbody>
         </Table>

@@ -1,13 +1,20 @@
 import { z } from "zod";
 
 const customFieldValue = z.object({
-  fieldId: z.number(),
-  value: z.union([z.string(), z.number(), z.boolean(), z.null()]),
+  fieldId: z.string(),
+  value: z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.null(),
+    z.array(z.string()),
+  ]),
 });
 
 export const assetCreateEditRequest = z.object({
+  id: z.string().optional(),
   teamId: z.string(),
-  assetTypeId: z.number(),
+  assetTypeId: z.string(),
   customFieldValues: z.array(customFieldValue),
 });
 

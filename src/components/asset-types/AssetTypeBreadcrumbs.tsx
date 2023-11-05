@@ -13,7 +13,7 @@ export const AssetTypeBreadcrumbs = ({
   edit,
 }: {
   create?: boolean;
-  edit?: number;
+  edit?: string;
 }) => {
   return (
     <Stack gap={2}>

@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { TagCreateRequest } from "./tagCreateRequest";
-import { TagListRequest } from "./tagListRequest";
-import { Tag } from "./tag";
-import { TagDeleteRequest } from "./tagDeleteRequest";
+import type { TagCreateRequest } from "./tagCreateRequest";
+import type { TagListRequest } from "./tagListRequest";
+import type { Tag } from "./tag";
+import type { TagDeleteRequest } from "./tagDeleteRequest";
 
 export class TagService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -21,7 +21,7 @@ export class TagService {
 
   public getTags = async (listRequest: TagListRequest): Promise<Tag[]> => {
     const fetchTagsAndChildren = async (
-      tagId: number | null
+      tagId: string | null
     ): Promise<Tag[]> => {
       const tags = (await this.prisma.tag.findMany({
         where: {

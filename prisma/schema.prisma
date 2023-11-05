@@ -84,11 +84,11 @@ model User {
 // Data users create
 
 model Tag {
-    id          Int           @id @default(autoincrement())
+    id          String        @id @default(uuid())
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
     name        String
-    parentId    Int?
+    parentId    String?
     parent      Tag?          @relation("TagToTag", fields: [parentId], references: [id])
     children    Tag[]         @relation("TagToTag")
     customField CustomField[]
@@ -98,11 +98,11 @@ model Tag {
 }
 
 model AssetType {
-    id        Int           @id @default(autoincrement())
+    id        String        @id @default(uuid())
     createdAt DateTime      @default(now())
     updatedAt DateTime      @updatedAt
     name      String
-    parentId  Int?
+    parentId  String?
     parent    AssetType?    @relation("AssetTypeToAssetType", fields: [parentId], references: [id])
     children  AssetType[]   @relation("AssetTypeToAssetType")
     fields    CustomField[]
@@ -112,7 +112,7 @@ model AssetType {
 }
 
 model CustomField {
-    id            Int          @id @default(autoincrement())
+    id            String       @id @default(uuid())
     createdAt     DateTime     @default(now())
     updatedAt     DateTime     @updatedAt
     name          String
@@ -121,9 +121,9 @@ model CustomField {
     inputMin      Int?
     inputMax      Int?
     currency      String?
-    assetTypeId   Int
+    assetTypeId   String
     assetType     AssetType    @relation(fields: [assetTypeId], references: [id])
-    tagId         Int?
+    tagId         String?
     tag           Tag?         @relation(fields: [tagId], references: [id])
     fieldValue    FieldValue[]
     Team          Team?        @relation(fields: [teamId], references: [id])
@@ -142,10 +142,10 @@ enum FieldType {
 }
 
 model Asset {
-    id          Int          @id @default(autoincrement())
+    id          String       @id @default(uuid())
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
-    assetTypeId Int
+    assetTypeId String
     assetType   AssetType    @relation(fields: [assetTypeId], references: [id])
     fieldValues FieldValue[]
     team        Team?        @relation(fields: [teamId], references: [id])
@@ -153,14 +153,14 @@ model Asset {
 }
 
 model FieldValue {
-    id            Int         @id @default(autoincrement())
+    id            String      @id @default(uuid())
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
     value         String
-    assetId       Int
+    assetId       String
     asset         Asset       @relation(fields: [assetId], references: [id])
-    customFieldId Int
+    customFieldId String
     customField   CustomField @relation(fields: [customFieldId], references: [id])
-    tagId         Int?
+    tagId         String?
     tag           Tag?        @relation(fields: [tagId], references: [id])
 }

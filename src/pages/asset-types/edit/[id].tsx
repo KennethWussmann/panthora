@@ -15,7 +15,7 @@ export default function EditAssetType() {
     data: assetType,
     refetch,
     isLoading,
-  } = api.assetType.get.useQuery(parseInt(assetTypeId, 10));
+  } = api.assetType.get.useQuery(assetTypeId);
 
   if (isLoading) {
     return null;

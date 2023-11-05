@@ -4,6 +4,7 @@ import { AssetListRequest } from "./assetListRequest";
 import { AssetTypeService } from "../asset-types/assetTypeService";
 import { UserService } from "../user/userService";
 import { AssetWithFields } from "./asset";
+import { randomUUID } from "crypto";
 
 export class AssetService {
   constructor(
@@ -44,6 +45,60 @@ export class AssetService {
     );
   };
 
+  updateAsset = async (
+    userId: string,
+    updateRequest: AssetCreateEditRequest
+  ) => {
+    if (!updateRequest.id) {
+      throw new Error("Asset ID is required");
+    }
+    const oldAsset = await this.prisma.asset.findUnique({
+      where: {
+        id: updateRequest.id,
+      },
+      include: {
+        fieldValues: true,
+      },
+    });
+
+    if (!oldAsset?.teamId) {
+      throw new Error("Asset not found");
+    }
+
+    await this.userService.requireTeamMembership(userId, oldAsset.teamId);
+    await this.userService.requireTeamMembership(userId, updateRequest.teamId);
+
+    await this.prisma.$transaction([
+      this.prisma.asset.update({
+        data: {
+          teamId: updateRequest.teamId,
+        },
+        where: { id: oldAsset.id },
+      }),
+      ...updateRequest.customFieldValues.map((fieldValue) =>
+        this.prisma.fieldValue.upsert({
+          where: {
+            id:
+              oldAsset.fieldValues.find(
+                (oldFieldValue) =>
+                  oldFieldValue.customFieldId == fieldValue.fieldId
+              )?.id ?? randomUUID(),
+          },
+          create: {
+            value: String(fieldValue.value),
+            customFieldId: fieldValue.fieldId,
+            assetId: oldAsset.id,
+          },
+          update: {
+            value: String(fieldValue.value),
+            customFieldId: fieldValue.fieldId,
+            assetId: oldAsset.id,
+          },
+        })
+      ),
+    ]);
+  };
+
   public getAssets = async (
     userId: string,
     listRequest: AssetListRequest
@@ -72,10 +127,25 @@ export class AssetService {
     return assets;
   };
 
-  public getById = async (userId: string, id: number) => {
+  public getById = async (
+    userId: string,
+    id: string
+  ): Promise<AssetWithFields> => {
     const asset = await this.prisma.asset.findUnique({
       where: {
         id,
+      },
+      include: {
+        assetType: {
+          include: {
+            fields: true,
+          },
+        },
+        fieldValues: {
+          include: {
+            customField: true,
+          },
+        },
       },
     });
     if (!asset) {
@@ -83,11 +153,6 @@ export class AssetService {
     }
 
     await this.userService.requireTeamMembership(userId, asset.teamId!);
-
-    const assetType = await this.assetTypeService.getByIdWithFieldsAndChildren(
-      userId,
-      asset.assetTypeId
-    );
 
     return asset;
   };

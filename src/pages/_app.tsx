@@ -1,5 +1,6 @@
 import { type Session } from "next-auth";
 
+import "../styles/globals.css";
 import { api } from "~/utils/api";
 import { AppType } from "next/app";
 import { Providers } from "./providers";

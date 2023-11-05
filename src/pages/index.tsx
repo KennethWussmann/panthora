@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     if (session.data?.user) {
-      router.push("/dashboard");
+      void router.push("/dashboard");
     } else {
       void signIn(undefined, { callbackUrl: "/dashboard" });
     }

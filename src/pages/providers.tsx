@@ -5,21 +5,26 @@ import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
-export const theme = extendTheme();
+const theme = extendTheme({
+  config: {
+    initialColorMode: "system",
+    useSystemColorMode: true,
+  },
+});
 
-export function Providers({
+export const Providers = ({
   children,
   session,
 }: {
   children: React.ReactNode;
   session: Session | null;
-}) {
+}) => {
   return (
     <CacheProvider>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <SessionProvider session={session}>{children}</SessionProvider>
       </ChakraProvider>
     </CacheProvider>
   );
-}
+};

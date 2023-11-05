@@ -35,7 +35,7 @@ export const AssetTypeCreateEditForm = ({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<AssetTypeCreateRequestWithTemporaryFields>({
     defaultValues: assetType
       ? {
@@ -174,6 +174,7 @@ export const AssetTypeCreateEditForm = ({
               isLoading={
                 isLoadingDefaultTeam || isLoadingCreation || isLoadingUpdate
               }
+              isDisabled={!isDirty}
             >
               {assetType ? "Save" : "Create"}
             </Button>

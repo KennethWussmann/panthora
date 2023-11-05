@@ -12,7 +12,7 @@ export const AssetBreadcrumbs = ({
   create,
   edit,
 }: {
-  create?: true;
+  create?: boolean;
   edit?: string;
 }) => {
   return (

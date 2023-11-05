@@ -10,10 +10,18 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { CustomField, FieldType } from "@prisma/client";
-import { Control } from "react-hook-form";
+import { Control, Controller, useWatch } from "react-hook-form";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
+import { DateTimePicker } from "~/components/common/DateTimePicker";
+import { TagSearchInput } from "~/components/common/TagSearchInput";
+
+const suggestions = [
+  { id: "1", name: "apple" },
+  { id: "2", name: "banana" },
+  { id: "3", name: "cherry" },
+];
 
 const getRegisterOptions = (customField: CustomField) => {
   const registerOptions: Record<string, unknown> = {
@@ -58,6 +66,11 @@ export const AssetCreateEditCustomFieldInput = ({
   const errors = formErrors.customFieldValues?.[index];
   const formFieldName = `customFieldValues.${index}.value` as const;
   const inputProps = register(formFieldName, getRegisterOptions(customField));
+  const value = useWatch({
+    control,
+    name: formFieldName,
+  });
+
   return (
     <>
       <FormControl>
@@ -81,7 +94,64 @@ export const AssetCreateEditCustomFieldInput = ({
         {customField.fieldType === FieldType.BOOLEAN && (
           <Switch {...inputProps} />
         )}
-
+        {customField.fieldType === FieldType.DATE && (
+          <Controller
+            name={formFieldName}
+            control={control}
+            render={({ field }) => (
+              <DateTimePicker
+                mode="date"
+                value={
+                  field.value ? new Date(String(field.value)) : new Date(1000)
+                }
+                onChange={(date) => field.onChange(date?.toISOString())}
+              />
+            )}
+          />
+        )}
+        {customField.fieldType === FieldType.TIME && (
+          <Controller
+            name={formFieldName}
+            control={control}
+            render={({ field }) => (
+              <DateTimePicker
+                mode="time"
+                value={field.value ? new Date(String(field.value)) : new Date()}
+                onChange={(date) => field.onChange(date?.toISOString())}
+              />
+            )}
+          />
+        )}
+        {customField.fieldType === FieldType.DATETIME && (
+          <Controller
+            name={formFieldName}
+            control={control}
+            render={({ field }) => (
+              <DateTimePicker
+                mode="datetime"
+                value={field.value ? new Date(String(field.value)) : new Date()}
+                onChange={(date) => field.onChange(date?.toISOString())}
+              />
+            )}
+          />
+        )}
+        {customField.fieldType === FieldType.TAG && (
+          <Controller
+            name={formFieldName}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TagSearchInput
+                suggestions={suggestions}
+                onTagsChange={(tagIds) => {
+                  onChange(tagIds);
+                }}
+                value={value && Array.isArray(value) ? value : []}
+                setValue={onChange}
+                max={1}
+              />
+            )}
+          />
+        )}
         {errors?.value && <FormFieldRequiredErrorMessage />}
       </FormControl>
     </>

@@ -14,18 +14,17 @@ import { CreateEditAssetExplanation } from "./CreateEditAssetExplanation";
 import { AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { useFieldArray, useForm } from "react-hook-form";
 import { api } from "~/utils/api";
-import { Asset } from "@prisma/client";
 import { AssetTypeSelector } from "~/components/asset-types/AssetTypeSelector";
 import { FiSave } from "react-icons/fi";
-import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { AssetCreateEditCustomFieldsForm } from "./AssetCreateEditCustomFieldsForm";
 import { useEffect } from "react";
+import { AssetWithFields } from "~/server/lib/assets/asset";
 
 export const AssetCreateEditForm = ({
   asset,
   refetch,
 }: {
-  asset?: Asset;
+  asset?: AssetWithFields;
   refetch?: VoidFunction;
 }) => {
   const {
@@ -35,8 +34,22 @@ export const AssetCreateEditForm = ({
     reset,
     setValue,
     watch,
-    formState: { errors },
-  } = useForm<AssetCreateEditRequest>();
+    formState: { errors, isDirty },
+  } = useForm<AssetCreateEditRequest>(
+    asset
+      ? {
+          defaultValues: {
+            id: asset.id,
+            assetTypeId: asset.assetTypeId,
+            teamId: asset.teamId ?? undefined,
+            customFieldValues: asset.fieldValues?.map((customFieldValue) => ({
+              fieldId: customFieldValue.customFieldId,
+              value: customFieldValue.value,
+            })),
+          },
+        }
+      : undefined
+  );
   const { fields: customFieldValues } = useFieldArray({
     control,
     name: "customFieldValues",
@@ -98,6 +111,9 @@ export const AssetCreateEditForm = ({
   };
 
   useEffect(() => {
+    if (asset) {
+      return;
+    }
     if (!assetType?.fields) {
       setValue("customFieldValues", []);
       return;
@@ -109,11 +125,14 @@ export const AssetCreateEditForm = ({
         value: "",
       }))
     );
-  }, [assetType?.fields]);
+  }, [asset, assetType?.fields]);
 
   return (
     <Stack gap={2}>
-      <AssetBreadcrumbs create />
+      <AssetBreadcrumbs
+        create={!asset}
+        edit={asset?.id ? String(asset.id) : undefined}
+      />
       <CreateEditAssetExplanation />
       {isErrorCreate && (
         <Alert status="error">
@@ -147,19 +166,28 @@ export const AssetCreateEditForm = ({
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={2}>
-          <AssetTypeSelector
-            label="Asset Type"
-            {...register("assetTypeId", {
-              required: true,
-              setValueAs: numberOrNull,
-            })}
-          />
+          {!asset && (
+            <AssetTypeSelector
+              label="Asset Type"
+              {...register("assetTypeId", {
+                required: true,
+              })}
+            />
+          )}
           {hasNoFields && (
             <Alert status="error">
               <AlertIcon />
               <AlertDescription>
                 Creating an asset of this asset type is not possible. The
                 selected asset type does not have any fields.
+              </AlertDescription>
+            </Alert>
+          )}
+          {!assetType && (
+            <Alert status="info">
+              <AlertIcon />
+              <AlertDescription>
+                Select an asset type to get started
               </AlertDescription>
             </Alert>
           )}
@@ -181,7 +209,9 @@ export const AssetCreateEditForm = ({
                 isLoadingUpdate ||
                 (selectedAssetTypeId ? isLoadingAssetType : false)
               }
-              isDisabled={hasNoFields || !assetType || !selectedAssetTypeId}
+              isDisabled={
+                hasNoFields || !assetType || !selectedAssetTypeId || !isDirty
+              }
             >
               {asset ? "Save" : "Create"}
             </Button>

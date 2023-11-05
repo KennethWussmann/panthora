@@ -1,4 +1,4 @@
-import { Asset, CustomField, Prisma, User } from "@prisma/client";
+import { CustomField, Prisma } from "@prisma/client";
 import { FieldType, PrismaClient } from "@prisma/client";
 import {
   AssetTypeCreateEditRequest,
@@ -82,7 +82,7 @@ export class AssetTypeService {
 
   public getByIdWithFieldsAndChildren = async (
     userId: string,
-    assetTypeId: number
+    assetTypeId: string
   ): Promise<AssetType> => {
     // Ensure the user has access
     const assetTypeBasicInfo = await this.prisma.assetType.findUnique({
@@ -101,7 +101,7 @@ export class AssetTypeService {
 
     // Fetch AssetTypes and Children
     const fetchAssetTypesAndChildren = async (
-      parentId: number | null
+      parentId: string | null
     ): Promise<AssetType[]> => {
       const assetTypes = (await this.prisma.assetType.findMany({
         where: {
@@ -157,7 +157,7 @@ export class AssetTypeService {
 
   public getById = async (
     userId: string,
-    assetTypeId: number
+    assetTypeId: string
   ): Promise<AssetType> => {
     // Ensure the user has access
     const assetType = (await this.prisma.assetType.findUnique({
@@ -258,7 +258,7 @@ export class AssetTypeService {
   ) => {
     await this.userService.requireTeamMembership(userId, listRequest.teamId);
     const fetchAssetTypesAndChildren = async (
-      assetTypeId: number | null
+      assetTypeId: string | null
     ): Promise<AssetType[]> => {
       const assetTypes = (await this.prisma.assetType.findMany({
         where: {

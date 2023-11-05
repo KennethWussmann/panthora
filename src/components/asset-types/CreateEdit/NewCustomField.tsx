@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Alert,
   AlertDescription,
@@ -31,10 +31,11 @@ import {
   AssetTypeCreateRequestWithTemporaryFields,
   TemporaryCustomField,
 } from "./types";
-import { Control, useWatch } from "react-hook-form";
+import { Control, Controller, useWatch } from "react-hook-form";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { fieldTypeLabel } from "~/lib/fieldTypeLabel";
+import { TagSelector } from "~/components/common/TagSelector";
 
 export const NewCustomFieldForm = ({
   index,
@@ -70,8 +71,8 @@ export const NewCustomFieldForm = ({
   return (
     <Box
       border={"1px"}
-      borderColor={"gray.200"}
-      bg={isDragging ? "gray.50" : "white"}
+      borderColor={["gray.200", "gray.900"]}
+      bg={isDragging ? ["gray.50", "gray.600"] : ["white", "gray.800"]}
       p={4}
       rounded={"lg"}
       style={{
@@ -193,19 +194,17 @@ export const NewCustomFieldForm = ({
                 <>
                   <FormControl>
                     <FormLabel>Parent Tag ID</FormLabel>
-                    <NumberInput>
-                      <NumberInputField
-                        disabled={isDragging}
-                        {...register(`fields.${index}.parentTagId`, {
-                          setValueAs: numberOrNull,
-                          required: true,
-                        })}
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                    <Controller
+                      name={`fields.${index}.parentTagId`}
+                      control={control}
+                      render={({ field }) => (
+                        <TagSelector
+                          value={field.value}
+                          onChange={(tagId) => field.onChange(tagId)}
+                          allowParentsOnly
+                        />
+                      )}
+                    />
                   </FormControl>
                   <Alert status="info">
                     <AlertIcon />
