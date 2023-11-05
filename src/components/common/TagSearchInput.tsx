@@ -132,7 +132,9 @@ export const TagSearchInput: React.FC<TagSearchInputProps> = ({
                   px={4}
                   py={2}
                   bg={
-                    activeSuggestionIndex === index ? "gray.100" : "transparent"
+                    activeSuggestionIndex === index
+                      ? ["gray.100", "gray.600"]
+                      : "transparent"
                   }
                   cursor="pointer"
                   onMouseEnter={() => setActiveSuggestionIndex(index)}

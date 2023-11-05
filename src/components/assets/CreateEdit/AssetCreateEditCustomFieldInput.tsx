@@ -16,12 +16,8 @@ import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { DateTimePicker } from "~/components/common/DateTimePicker";
 import { TagSearchInput } from "~/components/common/TagSearchInput";
-
-const suggestions = [
-  { id: "1", name: "apple" },
-  { id: "2", name: "banana" },
-  { id: "3", name: "cherry" },
-];
+import { api } from "~/utils/api";
+import { useEffect } from "react";
 
 const getRegisterOptions = (customField: CustomField) => {
   const registerOptions: Record<string, unknown> = {
@@ -66,10 +62,17 @@ export const AssetCreateEditCustomFieldInput = ({
   const errors = formErrors.customFieldValues?.[index];
   const formFieldName = `customFieldValues.${index}.value` as const;
   const inputProps = register(formFieldName, getRegisterOptions(customField));
-  const value = useWatch({
-    control,
-    name: formFieldName,
-  });
+  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
+    api.user.defaultTeam.useQuery();
+  const { data: tags } = api.tag.list.useQuery(
+    {
+      teamId: defaultTeam?.id!,
+      parentId: customField.tagId!,
+    },
+    {
+      enabled: defaultTeam && customField.fieldType === FieldType.TAG,
+    }
+  );
 
   return (
     <>
@@ -141,7 +144,7 @@ export const AssetCreateEditCustomFieldInput = ({
             control={control}
             render={({ field: { onChange, value } }) => (
               <TagSearchInput
-                suggestions={suggestions}
+                suggestions={tags ?? []}
                 onTagsChange={(tagIds) => {
                   onChange(tagIds);
                 }}
