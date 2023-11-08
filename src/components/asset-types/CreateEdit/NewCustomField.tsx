@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Alert,
   AlertDescription,
@@ -28,10 +28,10 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { BiMoveVertical } from "react-icons/bi";
 import {
-  AssetTypeCreateRequestWithTemporaryFields,
-  TemporaryCustomField,
+  type AssetTypeCreateRequestWithTemporaryFields,
+  type TemporaryCustomField,
 } from "./types";
-import { Control, Controller, useWatch } from "react-hook-form";
+import { type Control, Controller, useWatch } from "react-hook-form";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { fieldTypeLabel } from "~/lib/fieldTypeLabel";
@@ -81,9 +81,9 @@ export const NewCustomFieldForm = ({
       style={{
         transform: CSS.Transform.toString({
           x: 0,
-          y: transform?.y || 0,
-          scaleX: transform?.scaleX || 1,
-          scaleY: transform?.scaleY || 1,
+          y: transform?.y ?? 0,
+          scaleX: transform?.scaleX ?? 1,
+          scaleY: transform?.scaleY ?? 1,
         }),
         transition: finalTransition,
         boxShadow: isDragging ? "0px 8px 16px rgba(0,0,0,0.2)" : "none",

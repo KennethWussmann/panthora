@@ -1,4 +1,4 @@
-import { Flex, HStack, IconButton, Text, Tooltip } from "@chakra-ui/react";
+import { Flex, IconButton, Text, Tooltip } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
 

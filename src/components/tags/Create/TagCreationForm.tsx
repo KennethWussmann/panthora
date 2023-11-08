@@ -7,7 +7,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
   Stack,
 } from "@chakra-ui/react";
 import { TagsBreadcrumbs } from "../TagsBreadcrumbs";
@@ -15,29 +14,12 @@ import { CreateTagExplanation } from "./CreateTagExplanation";
 import { FiSave } from "react-icons/fi";
 import { api } from "~/utils/api";
 import React, { useState } from "react";
-import { Tag } from "~/server/lib/tags/tag";
 import { TagSelector } from "~/components/common/TagSelector";
-
-const renderNestedTags = (tags: Tag[], level = 0) => {
-  return tags.map((tag) => (
-    <React.Fragment key={tag.id}>
-      <option value={tag.id}>
-        {String.fromCharCode(160).repeat(level * 4)}
-        {tag.name}
-      </option>
-      {tag.children && renderNestedTags(tag.children, level + 1)}
-    </React.Fragment>
-  ));
-};
 
 export const TagCreationForm = () => {
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
 
-  const { data: tags, refetch: refetchTags } = api.tag.list.useQuery(
-    { teamId: defaultTeam?.id ?? "" },
-    { enabled: !!defaultTeam }
-  );
   const {
     mutateAsync: createTag,
     isError,
@@ -60,7 +42,6 @@ export const TagCreationForm = () => {
       name,
       parentId: parentTag,
     });
-    void refetchTags();
     setName("");
     setParentTag(undefined);
   };

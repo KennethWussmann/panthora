@@ -1,9 +1,9 @@
-import { HStack, Heading, Spacer, VStack } from "@chakra-ui/react";
-import { Control, UseFieldArrayMove } from "react-hook-form";
-import { AssetType } from "~/server/lib/asset-types/assetType";
+import { HStack, Heading, VStack } from "@chakra-ui/react";
+import { type Control } from "react-hook-form";
+import { type AssetType } from "~/server/lib/asset-types/assetType";
 import {
-  AssetCreateEditCustomFieldValue,
-  AssetCreateEditRequest,
+  type AssetCreateEditCustomFieldValue,
+  type AssetCreateEditRequest,
 } from "~/server/lib/assets/assetCreateEditRequest";
 import { AssetCreateEditCustomFieldInput } from "./AssetCreateEditCustomFieldInput";
 

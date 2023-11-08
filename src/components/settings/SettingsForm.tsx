@@ -13,7 +13,7 @@ import {
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiSave } from "react-icons/fi";
-import { TeamUpdateRequest } from "~/server/lib/user/teamUpdateRequest";
+import { type TeamUpdateRequest } from "~/server/lib/user/teamUpdateRequest";
 import { api } from "~/utils/api";
 
 export const SettingsForm = () => {
@@ -50,7 +50,7 @@ export const SettingsForm = () => {
     if (defaultTeam) {
       setValue("name", defaultTeam.name);
     }
-  }, [defaultTeam]);
+  }, [defaultTeam, setValue]);
 
   return (
     <Stack gap={4}>

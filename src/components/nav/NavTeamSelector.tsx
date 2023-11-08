@@ -1,5 +1,4 @@
-import { Box, Flex, HStack, Select, Text, Tooltip } from "@chakra-ui/react";
-import { FiChevronRight } from "react-icons/fi";
+import { HStack, Select, Text, Tooltip } from "@chakra-ui/react";
 import { api } from "~/utils/api";
 
 export const NavTeamSelector = () => {

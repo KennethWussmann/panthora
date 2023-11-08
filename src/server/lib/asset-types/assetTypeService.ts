@@ -1,14 +1,14 @@
-import { CustomField, Prisma } from "@prisma/client";
-import { FieldType, PrismaClient } from "@prisma/client";
+import { type CustomField, type Prisma } from "@prisma/client";
+import { FieldType, type PrismaClient } from "@prisma/client";
 import {
-  AssetTypeCreateEditRequest,
-  CustomFieldCreateEditRequest,
+  type AssetTypeCreateEditRequest,
+  type CustomFieldCreateEditRequest,
 } from "./assetTypeCreateEditRequest";
-import { AssetTypeListRequest } from "./assetTypeListRequest";
-import { AssetType } from "./assetType";
-import { AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
-import { UserService } from "../user/userService";
-import { Logger } from "winston";
+import { type AssetTypeListRequest } from "./assetTypeListRequest";
+import { type AssetType } from "./assetType";
+import { type AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
+import { type UserService } from "../user/userService";
+import { type Logger } from "winston";
 
 export class AssetTypeService {
   constructor(

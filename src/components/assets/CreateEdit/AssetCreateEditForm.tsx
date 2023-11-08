@@ -4,21 +4,18 @@ import {
   AlertIcon,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
-  Select,
   Stack,
 } from "@chakra-ui/react";
 import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
 import { CreateEditAssetExplanation } from "./CreateEditAssetExplanation";
-import { AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
+import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { useFieldArray, useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { AssetTypeSelector } from "~/components/asset-types/AssetTypeSelector";
 import { FiSave } from "react-icons/fi";
 import { AssetCreateEditCustomFieldsForm } from "./AssetCreateEditCustomFieldsForm";
 import { useEffect } from "react";
-import { AssetWithFields } from "~/server/lib/assets/asset";
+import { type AssetWithFields } from "~/server/lib/assets/asset";
 
 export const AssetCreateEditForm = ({
   asset,
@@ -34,7 +31,7 @@ export const AssetCreateEditForm = ({
     reset,
     setValue,
     watch,
-    formState: { errors, isDirty },
+    formState: { isDirty },
   } = useForm<AssetCreateEditRequest>(
     asset
       ? {
@@ -82,9 +79,9 @@ export const AssetCreateEditForm = ({
     }
 
     if (asset) {
-      onUpdate(data);
+      void onUpdate(data);
     } else {
-      onCreate(data);
+      void onCreate(data);
     }
   };
 
@@ -125,7 +122,7 @@ export const AssetCreateEditForm = ({
         value: "",
       }))
     );
-  }, [asset, assetType?.fields]);
+  }, [asset, assetType?.fields, setValue]);
 
   return (
     <Stack gap={2}>

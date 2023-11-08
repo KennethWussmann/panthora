@@ -1,9 +1,7 @@
 import {
   Button,
-  Flex,
   HStack,
   IconButton,
-  IconButtonProps,
   Modal,
   ModalBody,
   ModalCloseButton,

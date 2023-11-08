@@ -1,6 +1,6 @@
 import { Select } from "@chakra-ui/react";
 import React from "react";
-import { Tag } from "~/server/lib/tags/tag";
+import { type Tag } from "~/server/lib/tags/tag";
 import { api } from "~/utils/api";
 
 const renderNestedTags = (tags: Tag[], level = 0) => {
@@ -18,7 +18,7 @@ const renderNestedTags = (tags: Tag[], level = 0) => {
 export const TagSelector = ({
   value,
   onChange,
-  isDisabled,
+  isDisabled = false,
   allowParentsOnly,
 }: {
   value: string | undefined;

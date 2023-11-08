@@ -1,6 +1,6 @@
 import {
-  AssetTypeCreateEditRequest,
-  CustomFieldCreateEditRequest,
+  type AssetTypeCreateEditRequest,
+  type CustomFieldCreateEditRequest,
 } from "~/server/lib/asset-types/assetTypeCreateEditRequest";
 
 export type TemporaryCustomField = CustomFieldCreateEditRequest;

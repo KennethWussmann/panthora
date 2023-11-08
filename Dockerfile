@@ -38,6 +38,8 @@ RUN \
 ##### RUNNER
 
 FROM --platform=linux/amd64 node:16-alpine AS runner
+LABEL org.opencontainers.image.source https://github.com/KennethWussmann/tory
+
 WORKDIR /app
 
 ENV NODE_ENV production

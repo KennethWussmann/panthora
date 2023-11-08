@@ -9,15 +9,14 @@ import {
   NumberInputStepper,
   Switch,
 } from "@chakra-ui/react";
-import { CustomField, FieldType } from "@prisma/client";
-import { Control, Controller, useWatch } from "react-hook-form";
+import { type CustomField, FieldType } from "@prisma/client";
+import { type Control, Controller } from "react-hook-form";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
-import { AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
+import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { DateTimePicker } from "~/components/common/DateTimePicker";
 import { TagSearchInput } from "~/components/common/TagSearchInput";
 import { api } from "~/utils/api";
-import { useEffect } from "react";
 
 const getRegisterOptions = (customField: CustomField) => {
   const registerOptions: Record<string, unknown> = {
@@ -62,11 +61,10 @@ export const AssetCreateEditCustomFieldInput = ({
   const errors = formErrors.customFieldValues?.[index];
   const formFieldName = `customFieldValues.${index}.value` as const;
   const inputProps = register(formFieldName, getRegisterOptions(customField));
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
   const { data: tags } = api.tag.list.useQuery(
     {
-      teamId: defaultTeam?.id!,
+      teamId: defaultTeam!.id,
       parentId: customField.tagId!,
     },
     {

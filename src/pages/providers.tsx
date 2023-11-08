@@ -2,7 +2,7 @@
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
-import { Session } from "next-auth";
+import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
 const theme = extendTheme({
@@ -22,6 +22,7 @@ export const Providers = ({
   return (
     <CacheProvider>
       <ChakraProvider theme={theme}>
+        {/* eslint-disable-next-line */}
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <SessionProvider session={session}>{children}</SessionProvider>
       </ChakraProvider>

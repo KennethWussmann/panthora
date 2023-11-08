@@ -1,9 +1,9 @@
 import { Box, Flex, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { BiSubdirectoryRight } from "react-icons/bi";
-import { FiEdit, FiPrinter } from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
-import { AssetType } from "~/server/lib/asset-types/assetType";
+import { type AssetType } from "~/server/lib/asset-types/assetType";
 import { api } from "~/utils/api";
 
 type AssetTypeRowProps = {

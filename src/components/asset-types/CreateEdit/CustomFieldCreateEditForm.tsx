@@ -1,5 +1,5 @@
 import React from "react";
-import { Control, UseFieldArrayMove } from "react-hook-form";
+import { type Control, type UseFieldArrayMove } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import {
   VStack,
@@ -22,7 +22,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
+  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -30,8 +30,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {
-  AssetTypeCreateRequestWithTemporaryFields,
-  TemporaryCustomField,
+  type AssetTypeCreateRequestWithTemporaryFields,
+  type TemporaryCustomField,
 } from "./types";
 
 export const CustomFieldCreationForm = ({

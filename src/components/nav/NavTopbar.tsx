@@ -1,8 +1,6 @@
 import {
   Box,
-  Button,
   Container,
-  Heading,
   HStack,
   Spacer,
   VStack,

@@ -1,4 +1,4 @@
-import { Button, ButtonProps, HStack, Text } from "@chakra-ui/react";
+import { Button, type ButtonProps, HStack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 export const Logo = (props: ButtonProps) => {

@@ -8,7 +8,6 @@ import {
   Button,
   Stack,
   Flex,
-  Tooltip,
   Alert,
   AlertIcon,
   AlertDescription,
@@ -49,7 +48,7 @@ export const AssetTable: React.FC = () => {
         <Alert status="info">
           <AlertIcon />
           <AlertDescription>
-            You don't have any asset types yet.{" "}
+            You don&apos;t have any asset types yet.{" "}
             <Link href="/asset-types/create" textDecor={"underline"}>
               Create one first
             </Link>{" "}

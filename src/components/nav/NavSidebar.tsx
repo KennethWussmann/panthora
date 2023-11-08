@@ -1,10 +1,4 @@
-import {
-  Divider,
-  Flex,
-  HStack,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Divider, Flex, Stack, useColorModeValue } from "@chakra-ui/react";
 import { NavItems } from "./NavItems";
 import { Logo } from "./Logo";
 import { NavSearchBar } from "./NavSearchBar";

@@ -1,6 +1,6 @@
 import {
-  AssetType as AssetTypeRelation,
-  CustomField as CustomFieldRelation,
+  type AssetType as AssetTypeRelation,
+  type CustomField as CustomFieldRelation,
 } from "@prisma/client";
 
 export type AssetType = AssetTypeRelation & {

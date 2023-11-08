@@ -1,8 +1,8 @@
 import { IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { CustomField } from "@prisma/client";
+import { type CustomField } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit, FiPrinter } from "react-icons/fi";
-import { AssetWithFields } from "~/server/lib/assets/asset";
+import { type AssetWithFields } from "~/server/lib/assets/asset";
 
 type AssetRowProps = {
   asset: AssetWithFields;
@@ -40,7 +40,7 @@ export const AssetRow = ({ asset, uniqueFieldsToShow }: AssetRowProps) => {
           const fieldValue = asset.fieldValues.find(
             (fv) => fv.customFieldId === field.id
           );
-          return <Td key={field.id}>{fieldValue?.value || ""}</Td>;
+          return <Td key={field.id}>{fieldValue?.value ?? ""}</Td>;
         })}
         <Td textAlign="right">
           <AssetActions asset={asset} />

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { NavSidebar } from "../nav/NavSidebar";
 import { Container, Flex, Show, Spacer } from "@chakra-ui/react";
 import { NavTopbar } from "../nav/NavTopbar";

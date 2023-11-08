@@ -15,7 +15,7 @@ import { TagExplanation } from "./TagExplanation";
 import { useRouter } from "next/router";
 import { TagsBreadcrumbs } from "../TagsBreadcrumbs";
 import { api } from "~/utils/api";
-import { Tag } from "~/server/lib/tags/tag";
+import { type Tag } from "~/server/lib/tags/tag";
 
 const renderNestedTags = (
   tags: Tag[],

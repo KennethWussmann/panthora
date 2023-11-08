@@ -1,4 +1,4 @@
-import { As } from "@chakra-ui/react";
+import { type As } from "@chakra-ui/react";
 import {
   FiBarChart2,
   FiBox,

@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-import { AssetCreateEditRequest } from "./assetCreateEditRequest";
-import { AssetListRequest } from "./assetListRequest";
-import { AssetTypeService } from "../asset-types/assetTypeService";
-import { UserService } from "../user/userService";
-import { AssetWithFields } from "./asset";
+import { type PrismaClient } from "@prisma/client";
+import { type AssetCreateEditRequest } from "./assetCreateEditRequest";
+import { type AssetListRequest } from "./assetListRequest";
+import { type AssetTypeService } from "../asset-types/assetTypeService";
+import { type UserService } from "../user/userService";
+import { type AssetWithFields } from "./asset";
 import { randomUUID } from "crypto";
-import { Logger } from "winston";
+import { type Logger } from "winston";
 
 export class AssetService {
   constructor(

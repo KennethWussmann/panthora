@@ -1,10 +1,10 @@
-import React, { forwardRef, ForwardedRef } from "react";
-import DatePicker, { ReactDatePickerProps } from "react-datepicker";
+import React, { forwardRef, type ForwardedRef } from "react";
+import DatePicker, { type ReactDatePickerProps } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   Input,
   InputGroup,
-  InputProps,
+  type InputProps,
   InputRightElement,
 } from "@chakra-ui/react";
 import { FiCalendar, FiClock } from "react-icons/fi";
@@ -60,6 +60,7 @@ type ChakraInputProps = InputProps & {
   value: string | null;
 };
 
+// eslint-disable-next-line react/display-name
 const ChakraInput = forwardRef(
   (props: ChakraInputProps, ref: ForwardedRef<HTMLInputElement>) => (
     <InputGroup>

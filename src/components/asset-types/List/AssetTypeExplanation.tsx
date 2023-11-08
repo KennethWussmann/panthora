@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Stack, VStack } from "@chakra-ui/react";
+import { Box, HStack, Heading, Stack } from "@chakra-ui/react";
 import { FiFolder } from "react-icons/fi";
 
 export const AssetTypeExplanation = () => {

@@ -12,7 +12,7 @@ import {
   PopoverBody,
   HStack,
 } from "@chakra-ui/react";
-import { useState, useRef, KeyboardEvent } from "react";
+import { useState, useRef, type KeyboardEvent } from "react";
 
 type Tag = {
   id: string;
@@ -33,7 +33,6 @@ export const TagSearchInput: React.FC<TagSearchInputProps> = ({
   onTagsChange,
   value,
   setValue,
-  min = 0,
   max,
 }) => {
   const [inputValue, setInputValue] = useState("");

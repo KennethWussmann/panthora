@@ -14,11 +14,10 @@ import { api } from "~/utils/api";
 import React from "react";
 import { CreateAssetTypeExplanation } from "./CreateAssetTypeExplanation";
 import { AssetTypeBreadcrumbs } from "../AssetTypeBreadcrumbs";
-import { AssetType } from "~/server/lib/asset-types/assetType";
+import { type AssetType } from "~/server/lib/asset-types/assetType";
 import { CustomFieldCreationForm } from "./CustomFieldCreateEditForm";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AssetTypeCreateRequestWithTemporaryFields } from "./types";
-import { numberOrNull } from "~/lib/reactHookFormUtils";
+import { type AssetTypeCreateRequestWithTemporaryFields } from "./types";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { AssetTypeSelector } from "../AssetTypeSelector";
 
@@ -44,10 +43,12 @@ export const AssetTypeCreateEditForm = ({
           parentId: assetType.parentId,
           fields: assetType.fields.map(
             (field) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
               ({
                 ...field,
                 type: field.fieldType,
                 parentTagId: field.tagId,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } as any)
           ),
         }
@@ -81,9 +82,9 @@ export const AssetTypeCreateEditForm = ({
     }
 
     if (assetType) {
-      onUpdate(data);
+      void onUpdate(data);
     } else {
-      onCreate(data);
+      void onCreate(data);
     }
   };
 

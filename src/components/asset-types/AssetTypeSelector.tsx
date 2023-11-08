@@ -1,6 +1,6 @@
-import { FormControl, FormLabel, Select, SelectProps } from "@chakra-ui/react";
+import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import React, { forwardRef } from "react";
-import { AssetType } from "~/server/lib/asset-types/assetType";
+import { type AssetType } from "~/server/lib/asset-types/assetType";
 import { api } from "~/utils/api";
 
 const renderNestedAssetTypes = (assetTypes: AssetType[], level = 0) => {
@@ -18,6 +18,7 @@ const renderNestedAssetTypes = (assetTypes: AssetType[], level = 0) => {
   ));
 };
 
+// eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
 export const AssetTypeSelector = forwardRef<HTMLSelectElement, any>(
   ({ label, ...selectProps }, ref) => {
     const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =

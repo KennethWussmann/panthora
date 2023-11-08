@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { TeamUpdateRequest } from "./teamUpdateRequest";
-import { Logger } from "winston";
+import { type PrismaClient } from "@prisma/client";
+import { type TeamUpdateRequest } from "./teamUpdateRequest";
+import { type Logger } from "winston";
 
 export class UserService {
   constructor(

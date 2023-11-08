@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@prisma/client";
 import type { TagCreateRequest } from "./tagCreateRequest";
 import type { TagListRequest } from "./tagListRequest";
 import type { Tag } from "./tag";
 import type { TagDeleteRequest } from "./tagDeleteRequest";
-import { Logger } from "winston";
+import { type Logger } from "winston";
 
 export class TagService {
   constructor(

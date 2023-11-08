@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  HStack,
   IconButton,
   Td,
   Tooltip,
@@ -9,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { BiSubdirectoryRight } from "react-icons/bi";
-import { Tag } from "@prisma/client";
+import { type Tag } from "@prisma/client";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { api } from "~/utils/api";
 

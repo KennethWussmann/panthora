@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Table,
   Thead,
@@ -15,7 +15,7 @@ import { AssetTypeBreadcrumbs } from "../AssetTypeBreadcrumbs";
 import { AssetTypeExplanation } from "./AssetTypeExplanation";
 import { AssetTypeRow, EmptyAssetTypeRow } from "./AssetTypeRow";
 import { api } from "~/utils/api";
-import { AssetType } from "~/server/lib/asset-types/assetType";
+import { type AssetType } from "~/server/lib/asset-types/assetType";
 
 const renderNestedAssetTypes = (
   assetTypes: AssetType[],
@@ -46,7 +46,7 @@ export const AssetTypeTable: React.FC = () => {
     { teamId: defaultTeam?.id ?? "" },
     { enabled: !!defaultTeam }
   );
-  
+
   return (
     <Stack gap={2}>
       <AssetTypeBreadcrumbs />
@@ -73,6 +73,7 @@ export const AssetTypeTable: React.FC = () => {
             {assetTypeQuery?.data &&
               renderNestedAssetTypes(
                 assetTypeQuery.data,
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 assetTypeQuery.refetch
               )}
           </Tbody>
