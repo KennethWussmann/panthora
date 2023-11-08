@@ -1,0 +1,16 @@
+name: npm-install
+description: Install Node, npm and dependencies
+runs:
+  using: "composite"
+  steps:
+    - name: Install Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+        cache: npm
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Install dependencies
+      run: pnpm i --frozen-lockfile
+      shell: bash
