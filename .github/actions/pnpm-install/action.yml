@@ -1,5 +1,5 @@
-name: npm-install
-description: Install Node, npm and dependencies
+name: pnpm-install
+description: Install Node, pnpm and dependencies
 runs:
   using: "composite"
   steps:
