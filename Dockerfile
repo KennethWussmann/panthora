@@ -1,4 +1,9 @@
 FROM node:16-alpine AS builder
+ARG DATABASE_URL
+ARG NEXT_PUBLIC_CLIENTVAR
+ENV SKIP_ENV_VALIDATION true
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
@@ -7,6 +12,8 @@ COPY prisma ./
 
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml* ./
+
+COPY . .
 
 RUN npm i -g pnpm@8
 RUN pnpm install --frozen-lockfile
