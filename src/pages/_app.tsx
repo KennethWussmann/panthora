@@ -3,7 +3,7 @@ import { type Session } from "next-auth";
 import "../styles/globals.css";
 import { api } from "~/utils/api";
 import { type AppType } from "next/app";
-import { Providers } from "./providers";
+import Providers from "./_providers";
 import { DashboardLayout } from "~/components/layout/DashboardLayout";
 import Head from "next/head";
 

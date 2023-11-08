@@ -12,13 +12,13 @@ const theme = extendTheme({
   },
 });
 
-export const Providers = ({
+function Providers({
   children,
   session,
 }: {
   children: React.ReactNode;
   session: Session | null;
-}) => {
+}) {
   return (
     <CacheProvider>
       <ChakraProvider theme={theme}>
@@ -28,4 +28,6 @@ export const Providers = ({
       </ChakraProvider>
     </CacheProvider>
   );
-};
+}
+
+export default Providers;

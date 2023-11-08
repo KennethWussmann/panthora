@@ -22,20 +22,14 @@ RUN \
 FROM --platform=linux/amd64 node:16-alpine AS builder
 ARG DATABASE_URL
 ARG NEXT_PUBLIC_CLIENTVAR
-ENV SKIP_ENV_VALIDATION=true
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV SKIP_ENV_VALIDATION true
+ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN \
-  if [ -f yarn.lock ]; then yarn build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+RUN npm i -g pnpm@8
+RUN pnpm build
 
 ##### RUNNER
 
