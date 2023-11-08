@@ -1,18 +1,31 @@
 import { PrismaClient } from "@prisma/client";
 import { TeamUpdateRequest } from "./teamUpdateRequest";
+import { Logger } from "winston";
 
 export class UserService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly prisma: PrismaClient
+  ) {}
 
   public initialize = async (userId: string) => {
     const existingTeams = await this.getTeams(userId);
+    this.logger.debug(
+      `Found ${existingTeams.length} teams for user ${userId}`,
+      { existingTeams }
+    );
     if (existingTeams.length === 0) {
       // create a default team
       // we dont want full blown team support yet, but having one team with every user in it makes it easier to implement later.
+      this.logger.info("Creating initial team");
       const team = await this.prisma.team.create({
         data: {
           name: "My Team",
         },
+      });
+      this.logger.info("Assigning user to initial team", {
+        teamId: team.id,
+        userId,
       });
       await this.prisma.userTeamMembership.create({
         data: {
@@ -26,6 +39,10 @@ export class UserService {
         (membership) => membership.userId === userId
       ) === false
     ) {
+      this.logger.info("Assigning user to existing team", {
+        teamId: existingTeams[0].id,
+        userId,
+      });
       // add the user to the one existing team
       await this.prisma.userTeamMembership.create({
         data: {
@@ -84,6 +101,10 @@ export class UserService {
 
   public requireTeamMembership = async (userId: string, teamId: string) => {
     if (!(await this.isTeamMember(userId, teamId))) {
+      this.logger.error("User is not a member of required team", {
+        userId,
+        teamId,
+      });
       throw new Error("Team not found");
     }
   };
@@ -98,6 +119,10 @@ export class UserService {
       data: {
         name: input.name,
       },
+    });
+    this.logger.info("Updated team", {
+      userId,
+      teamId: input.teamId,
     });
   };
 }

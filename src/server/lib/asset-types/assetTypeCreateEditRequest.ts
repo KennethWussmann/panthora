@@ -5,6 +5,7 @@ const baseCustomFieldCreateEditRequest = {
   id: z.string(),
   name: z.string(),
   inputRequired: z.boolean(),
+  showInTable: z.boolean(),
 };
 const minMaxCustomFieldCreateRequest = {
   inputMin: z.number().nullable().default(null),

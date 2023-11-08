@@ -121,6 +121,7 @@ model CustomField {
     inputMin      Int?
     inputMax      Int?
     currency      String?
+    showInTable   Boolean      @default(false)
     assetTypeId   String
     assetType     AssetType    @relation(fields: [assetTypeId], references: [id])
     tagId         String?

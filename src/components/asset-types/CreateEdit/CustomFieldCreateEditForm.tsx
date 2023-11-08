@@ -64,6 +64,7 @@ export const CustomFieldCreationForm = ({
       inputRequired: false,
       inputMin: null,
       inputMax: null,
+      showInTable: false,
     });
   };
 

@@ -42,7 +42,14 @@ export const AssetTypeCreateEditForm = ({
           id: assetType.id,
           name: assetType.name,
           parentId: assetType.parentId,
-          fields: assetType.fields,
+          fields: assetType.fields.map(
+            (field) =>
+              ({
+                ...field,
+                type: field.fieldType,
+                parentTagId: field.tagId,
+              } as any)
+          ),
         }
       : {
           fields: [],
@@ -145,9 +152,7 @@ export const AssetTypeCreateEditForm = ({
         <Stack gap={2}>
           <AssetTypeSelector
             label="Parent Asset Type"
-            {...register("parentId", {
-              setValueAs: numberOrNull,
-            })}
+            {...register("parentId")}
           />
           <FormControl isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>

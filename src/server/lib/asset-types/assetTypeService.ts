@@ -8,9 +8,11 @@ import { AssetTypeListRequest } from "./assetTypeListRequest";
 import { AssetType } from "./assetType";
 import { AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
 import { UserService } from "../user/userService";
+import { Logger } from "winston";
 
 export class AssetTypeService {
   constructor(
+    private readonly logger: Logger,
     private readonly prisma: PrismaClient,
     private readonly userService: UserService
   ) {}
@@ -52,6 +54,7 @@ export class AssetTypeService {
     userId: string,
     createRequest: AssetTypeCreateEditRequest
   ) => {
+    this.logger.debug("Creating new asset type", { createRequest, userId });
     await this.userService.requireTeamMembership(userId, createRequest.teamId);
     const assetType = await this.prisma.assetType.create({
       data: {
@@ -60,6 +63,7 @@ export class AssetTypeService {
         parentId: createRequest.parentId,
       },
     });
+    this.logger.info("Created asset type", { assetTypeId: assetType.id });
 
     const fields = await this.prisma.$transaction(
       createRequest.fields.map((field) =>
@@ -68,6 +72,7 @@ export class AssetTypeService {
             fieldType: field.type,
             name: field.name,
             inputRequired: field.inputRequired,
+            showInTable: field.showInTable,
             assetType: {
               connect: assetType,
             },
@@ -76,6 +81,10 @@ export class AssetTypeService {
         })
       )
     );
+    this.logger.debug("Created custom fields", {
+      fieldIds: fields.map((field) => field.id),
+      userId,
+    });
 
     return { assetType, fields };
   };
@@ -178,10 +187,15 @@ export class AssetTypeService {
     userId: string,
     updateRequest: AssetTypeCreateEditRequest
   ) => {
+    this.logger.debug("Updating asset type", { updateRequest, userId });
     await this.userService.requireTeamMembership(userId, updateRequest.teamId);
 
     const assetTypeId = updateRequest.id;
     if (!assetTypeId) {
+      this.logger.error("Update request did not have an asset type id", {
+        updateRequest,
+        userId,
+      });
       throw new Error("Asset type not found");
     }
 
@@ -191,6 +205,10 @@ export class AssetTypeService {
     });
 
     if (!existingAssetType || !existingAssetType.teamId) {
+      this.logger.error("Update request did not have a valid asset type id", {
+        updateRequest,
+        userId,
+      });
       throw new Error("Asset type not found");
     }
 
@@ -208,6 +226,13 @@ export class AssetTypeService {
         },
         where: { id: assetTypeId },
       }),
+      this.prisma.fieldValue.deleteMany({
+        where: {
+          customFieldId: {
+            notIn: updateRequest.fields.map((f) => f.id).filter(Boolean),
+          },
+        },
+      }),
       this.prisma.customField.deleteMany({
         where: {
           assetTypeId: assetTypeId,
@@ -224,6 +249,7 @@ export class AssetTypeService {
               fieldType: field.type,
               name: field.name,
               inputRequired: field.inputRequired,
+              showInTable: field.showInTable,
               assetType: {
                 connect: { id: assetTypeId },
               },
@@ -233,6 +259,7 @@ export class AssetTypeService {
               fieldType: field.type,
               name: field.name,
               inputRequired: field.inputRequired,
+              showInTable: field.showInTable,
               ...this.getAssetTypeUpdateFields(field),
             },
           });
@@ -242,6 +269,7 @@ export class AssetTypeService {
             fieldType: field.type,
             name: field.name,
             inputRequired: field.inputRequired,
+            showInTable: field.showInTable,
             assetType: {
               connect: { id: assetTypeId },
             },
@@ -250,6 +278,10 @@ export class AssetTypeService {
         });
       }),
     ]);
+    this.logger.error("Updated asset type", {
+      assetTypeId,
+      userId,
+    });
   };
 
   public getAssetTypes = async (
@@ -301,6 +333,10 @@ export class AssetTypeService {
     userId: string,
     deleteRequest: AssetTypeDeleteRequest
   ) => {
+    this.logger.debug("Deleting asset type", {
+      deleteRequest,
+      userId,
+    });
     await this.userService.requireTeamMembership(userId, deleteRequest.teamId);
     const assetType = await this.prisma.assetType.findUnique({
       where: {
@@ -313,10 +349,22 @@ export class AssetTypeService {
     });
 
     if (!assetType) {
+      this.logger.error("Delete request did not have a valid asset type id", {
+        deleteRequest,
+        userId,
+      });
       throw new Error("Asset type not found");
     }
 
     if (assetType.asset.length > 0) {
+      this.logger.error(
+        "Cannot delete asset type because it still has assets assigned",
+        {
+          assetIds: assetType.asset.map((a) => a.id),
+          deleteRequest,
+          userId,
+        }
+      );
       throw new Error("Asset type is in use");
     }
 
@@ -345,5 +393,9 @@ export class AssetTypeService {
         },
       }),
     ]);
+    this.logger.info("Deleted asset", {
+      assetTypeId: deleteRequest.id,
+      userId,
+    });
   };
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Alert,
   AlertDescription,
@@ -66,12 +66,15 @@ export const NewCustomFieldForm = ({
   const finalTransition = transition
     ? `${transition}, ${customTransitions}`
     : customTransitions;
-  const fieldType = useWatch({ control, name: `fields.${index}.type` });
+  const fieldType = useWatch({
+    control,
+    name: `fields.${index}.type`,
+  });
 
   return (
     <Box
       border={"1px"}
-      borderColor={["gray.200", "gray.900"]}
+      borderColor={["gray.200", "gray.600"]}
       bg={isDragging ? ["gray.50", "gray.600"] : ["white", "gray.800"]}
       p={4}
       rounded={"lg"}
@@ -127,19 +130,32 @@ export const NewCustomFieldForm = ({
                 </FormControl>
               </HStack>
 
-              <FormControl>
-                <FormLabel htmlFor="required" mb="0">
-                  Required
-                </FormLabel>
-                <Switch
-                  isDisabled={isDragging}
-                  {...register(`fields.${index}.inputRequired`)}
-                />
-                <FormHelperText>
-                  Input in this custom field will be required when creating an
-                  asset of this asset type
-                </FormHelperText>
-              </FormControl>
+              <HStack align={"stretch"}>
+                <FormControl>
+                  <FormLabel htmlFor="required" mb="0">
+                    Required
+                  </FormLabel>
+                  <Switch
+                    isDisabled={isDragging}
+                    {...register(`fields.${index}.inputRequired`)}
+                  />
+                  <FormHelperText>
+                    Input in this custom field will be required when creating an
+                    asset of this asset type
+                  </FormHelperText>
+                </FormControl>
+                <FormControl isInvalid={!!errors?.name}>
+                  <FormLabel>Show in table</FormLabel>
+                  <Switch
+                    isDisabled={isDragging}
+                    {...register(`fields.${index}.showInTable`)}
+                  />
+                  {errors?.showInTable && <FormFieldRequiredErrorMessage />}
+                  <FormHelperText>
+                    The value of this field will appear in table views
+                  </FormHelperText>
+                </FormControl>
+              </HStack>
 
               {(fieldType === FieldType.NUMBER ||
                 fieldType === FieldType.STRING ||
@@ -193,7 +209,7 @@ export const NewCustomFieldForm = ({
               {fieldType === FieldType.TAG && (
                 <>
                   <FormControl>
-                    <FormLabel>Parent Tag ID</FormLabel>
+                    <FormLabel>Parent Tag</FormLabel>
                     <Controller
                       name={`fields.${index}.parentTagId`}
                       control={control}

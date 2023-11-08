@@ -35,6 +35,11 @@ export const AssetTable: React.FC = () => {
     );
 
   const showAssetTypeMissingNotice = assetTypes?.length === 0;
+  const uniqueFieldsToShow = assets
+    ? [...new Set(assets.flatMap((asset) => asset.assetType.fields))].filter(
+        (field) => field.showInTable
+      )
+    : [];
 
   return (
     <Stack gap={2}>
@@ -67,14 +72,20 @@ export const AssetTable: React.FC = () => {
       <Table variant="simple" size={"sm"}>
         <Thead>
           <Tr>
-            <Th>Name</Th>
+            {uniqueFieldsToShow.map((field) => (
+              <Th key={field.id}>{field.name}</Th>
+            ))}
             <Th textAlign="right">Action</Th>
           </Tr>
         </Thead>
         <Tbody>
           {assets?.length === 0 && <EmptyAssetRow />}
           {assets?.map((asset) => (
-            <AssetRow key={asset.id} asset={asset} />
+            <AssetRow
+              key={asset.id}
+              asset={asset}
+              uniqueFieldsToShow={uniqueFieldsToShow}
+            />
           ))}
         </Tbody>
       </Table>

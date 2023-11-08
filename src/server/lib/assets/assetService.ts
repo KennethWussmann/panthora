@@ -5,9 +5,11 @@ import { AssetTypeService } from "../asset-types/assetTypeService";
 import { UserService } from "../user/userService";
 import { AssetWithFields } from "./asset";
 import { randomUUID } from "crypto";
+import { Logger } from "winston";
 
 export class AssetService {
   constructor(
+    private readonly logger: Logger,
     private readonly prisma: PrismaClient,
     private readonly userService: UserService,
     private readonly assetTypeService: AssetTypeService
@@ -17,6 +19,7 @@ export class AssetService {
     userId: string,
     createRequest: AssetCreateEditRequest
   ) => {
+    this.logger.debug("Creating asset", { createRequest, userId });
     const assetType = await this.assetTypeService.getByIdWithFieldsAndChildren(
       userId,
       createRequest.assetTypeId
@@ -29,6 +32,7 @@ export class AssetService {
         assetTypeId: createRequest.assetTypeId,
       },
     });
+    this.logger.info("Created asset", { assetId: asset.id, userId });
 
     await this.prisma.$transaction(
       createRequest.customFieldValues
@@ -43,13 +47,19 @@ export class AssetService {
           })
         )
     );
+    this.logger.info("Created custom fields", { assetId: asset.id, userId });
   };
 
   updateAsset = async (
     userId: string,
     updateRequest: AssetCreateEditRequest
   ) => {
+    this.logger.debug("Updating asset", { updateRequest, userId });
     if (!updateRequest.id) {
+      this.logger.error("User did not specify an asset id", {
+        updateRequest,
+        userId,
+      });
       throw new Error("Asset ID is required");
     }
     const oldAsset = await this.prisma.asset.findUnique({
@@ -62,6 +72,10 @@ export class AssetService {
     });
 
     if (!oldAsset?.teamId) {
+      this.logger.error("User did not specify a valid asset id", {
+        updateRequest,
+        userId,
+      });
       throw new Error("Asset not found");
     }
 
@@ -97,6 +111,10 @@ export class AssetService {
         })
       ),
     ]);
+    this.logger.info("Updated asset and custom field values", {
+      assetId: oldAsset.id,
+      userId,
+    });
   };
 
   public getAssets = async (

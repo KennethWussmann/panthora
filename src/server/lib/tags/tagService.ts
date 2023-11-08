@@ -3,11 +3,16 @@ import type { TagCreateRequest } from "./tagCreateRequest";
 import type { TagListRequest } from "./tagListRequest";
 import type { Tag } from "./tag";
 import type { TagDeleteRequest } from "./tagDeleteRequest";
+import { Logger } from "winston";
 
 export class TagService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly prisma: PrismaClient
+  ) {}
 
   public createTag = async (createRequest: TagCreateRequest) => {
+    this.logger.debug("Creating tag", { createRequest });
     const tag = await this.prisma.tag.create({
       data: {
         teamId: createRequest.teamId,
@@ -15,6 +20,7 @@ export class TagService {
         parentId: createRequest.parentId,
       },
     });
+    this.logger.info("Created tag", { tagId: tag.id });
 
     return tag;
   };
@@ -41,6 +47,7 @@ export class TagService {
   };
 
   public deleteTag = async (deleteRequest: TagDeleteRequest) => {
+    this.logger.debug("Deleting tag", { deleteRequest });
     const tag = await this.prisma.tag.findUnique({
       where: {
         teamId: deleteRequest.teamId,
@@ -48,6 +55,7 @@ export class TagService {
       },
     });
     if (!tag) {
+      this.logger.error("User specified an invalid tag id", { deleteRequest });
       throw new Error("Tag not found");
     }
     await this.prisma.$transaction([
@@ -67,5 +75,6 @@ export class TagService {
         },
       }),
     ]);
+    this.logger.info("Deleted tag", { tagId: tag.id });
   };
 }
