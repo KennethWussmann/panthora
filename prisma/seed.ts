@@ -19,7 +19,7 @@ const seed = async () => {
   const electronicsLocationTag = await prismaClient.tag.create({
     data: {
       teamId: team.id,
-      name: "Electronics",
+      name: "Location",
       parentId: electronicsTag.id,
     },
   });

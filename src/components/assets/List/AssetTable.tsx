@@ -12,7 +12,7 @@ import {
   AlertIcon,
   AlertDescription,
 } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiPrinter } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
 import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
@@ -57,7 +57,16 @@ export const AssetTable: React.FC = () => {
         </Alert>
       )}
 
-      <Flex justify="end">
+      <Flex justify="end" gap={2}>
+        <Button
+          leftIcon={<FiPrinter />}
+          variant={"outline"}
+          onClick={() => push("/assets/print")}
+          isLoading={isLoadingAssetTypes}
+          isDisabled={showAssetTypeMissingNotice}
+        >
+          Print
+        </Button>
         <Button
           leftIcon={<FiPlus />}
           colorScheme="green"

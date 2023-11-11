@@ -23,6 +23,7 @@ const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
       </Tooltip>
       <Tooltip label="Print label">
         <IconButton
+          onClick={() => push(`/assets/print/${asset.id}`)}
           variant={"ghost"}
           icon={<FiPrinter />}
           aria-label="Print label"

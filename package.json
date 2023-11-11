@@ -34,6 +34,8 @@
     "framer-motion": "^10.16.4",
     "next": "^13.5.4",
     "next-auth": "^4.23.0",
+    "pdfjs": "^2.5.2",
+    "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-datepicker": "^4.21.0",
     "react-dom": "18.2.0",
@@ -48,6 +50,7 @@
   "devDependencies": {
     "@types/eslint": "^8.44.2",
     "@types/node": "^18.16.0",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.20",
     "@types/react-datepicker": "^4.19.1",
     "@types/react-dom": "^18.2.7",

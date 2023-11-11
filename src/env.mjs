@@ -26,6 +26,7 @@ export const env = createEnv({
     COGNITO_CLIENT_ID: z.string(),
     COGNITO_CLIENT_SECRET: z.string(),
     COGNITO_ISSUER: z.string(),
+    APP_BASE_URL: z.string().url(),
   },
 
   /**
@@ -46,6 +47,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    APP_BASE_URL: process.env.APP_BASE_URL,
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
     COGNITO_ISSUER: process.env.COGNITO_ISSUER,
