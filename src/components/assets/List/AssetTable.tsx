@@ -19,6 +19,7 @@ import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
 import { AssetRow, EmptyAssetRow } from "./AssetRow";
 import { api } from "~/utils/api";
 import { Link } from "@chakra-ui/next-js";
+import { uniqBy } from "lodash";
 
 export const AssetTable: React.FC = () => {
   const { push } = useRouter();
@@ -34,11 +35,14 @@ export const AssetTable: React.FC = () => {
     );
 
   const showAssetTypeMissingNotice = assetTypes?.length === 0;
-  const uniqueFieldsToShow = assets
-    ? [...new Set(assets.flatMap((asset) => asset.assetType.fields))].filter(
-        (field) => field.showInTable
-      )
-    : [];
+
+  const uniqueFieldsToShow =
+    uniqBy(
+      assets
+        ?.flatMap((asset) => asset.assetType.fields)
+        ?.filter((field) => field.showInTable),
+      (field) => field.id
+    ) ?? [];
 
   return (
     <Stack gap={2}>
