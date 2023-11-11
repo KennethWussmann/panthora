@@ -1,27 +1,13 @@
-import { Progress } from "@chakra-ui/react";
 import Error from "next/error";
+import { useSelectedAssets } from "~/lib/SelectedAssetsProvider";
 import { LabelPDF } from "~/lib/pdf/LabelPDF";
-import { api } from "~/utils/api";
 
 export default function PrintAssets() {
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
-  const { data: assets, isLoading } = api.asset.list.useQuery(
-    {
-      teamId: defaultTeam?.id ?? "",
-    },
-    {
-      enabled: !!defaultTeam,
-    }
-  );
+  const { selectedAssets } = useSelectedAssets();
 
-  if (isLoading || isLoadingDefaultTeam || !assets) {
-    return <Progress size="xs" isIndeterminate />;
-  }
-
-  if (!assets) {
+  if (selectedAssets.length === 0) {
     return <Error statusCode={404} />;
   }
 
-  return <LabelPDF assets={assets} />;
+  return <LabelPDF assets={selectedAssets} showPrintDialog />;
 }

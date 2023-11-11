@@ -1,4 +1,4 @@
-import { IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
+import { Checkbox, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { type CustomField } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit, FiPrinter } from "react-icons/fi";
@@ -8,6 +8,8 @@ import { type AssetWithFields } from "~/server/lib/assets/asset";
 type AssetRowProps = {
   asset: AssetWithFields;
   uniqueFieldsToShow: CustomField[];
+  selected: boolean;
+  setSelected: (selected: boolean) => void;
 };
 
 const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
@@ -42,10 +44,22 @@ const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
   );
 };
 
-export const AssetRow = ({ asset, uniqueFieldsToShow }: AssetRowProps) => {
+export const AssetRow = ({
+  selected,
+  setSelected,
+  asset,
+  uniqueFieldsToShow,
+}: AssetRowProps) => {
   return (
     <>
       <Tr key={asset.id}>
+        <Td>
+          <Checkbox
+            isChecked={selected}
+            onChange={(e) => setSelected(e.target.checked)}
+          />
+        </Td>
+        <Td>{asset.createdAt.toISOString()}</Td>
         {uniqueFieldsToShow.map((field) => {
           const fieldValue = asset.fieldValues.find(
             (fv) => fv.customFieldId === field.id

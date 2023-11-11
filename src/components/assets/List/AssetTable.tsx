@@ -11,6 +11,8 @@ import {
   Alert,
   AlertIcon,
   AlertDescription,
+  Checkbox,
+  useBoolean,
 } from "@chakra-ui/react";
 import { FiPlus, FiPrinter } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
@@ -20,8 +22,12 @@ import { AssetRow, EmptyAssetRow } from "./AssetRow";
 import { api } from "~/utils/api";
 import { Link } from "@chakra-ui/next-js";
 import { uniqBy } from "lodash";
+import { useSelectedAssets } from "~/lib/SelectedAssetsProvider";
+import { AssetWithFields } from "~/server/lib/assets/asset";
 
 export const AssetTable: React.FC = () => {
+  const { selectedAssets, setSelectedAssets } = useSelectedAssets();
+  const [isLoadingPrintView, setLoadingPrintView] = useBoolean();
   const { push } = useRouter();
   const { data: defaultTeam } = api.user.defaultTeam.useQuery();
   const { data: assets } = api.asset.list.useQuery(
@@ -65,11 +71,18 @@ export const AssetTable: React.FC = () => {
         <Button
           leftIcon={<FiPrinter />}
           variant={"outline"}
-          onClick={() => push("/assets/print")}
-          isLoading={isLoadingAssetTypes}
-          isDisabled={showAssetTypeMissingNotice}
+          onClick={() => {
+            void push("/assets/print");
+            setLoadingPrintView.on();
+          }}
+          isLoading={isLoadingAssetTypes || isLoadingPrintView}
+          isDisabled={selectedAssets.length === 0}
         >
-          Print
+          {selectedAssets.length === 0
+            ? "Print"
+            : `Print ${selectedAssets.length} ${
+                selectedAssets.length === 1 ? "label" : "labels"
+              }`}
         </Button>
         <Button
           leftIcon={<FiPlus />}
@@ -84,6 +97,19 @@ export const AssetTable: React.FC = () => {
       <Table variant="simple" size={"sm"}>
         <Thead>
           <Tr>
+            <Th>
+              <Checkbox
+                isChecked={selectedAssets.length === assets?.length}
+                onChange={() => {
+                  if (selectedAssets.length === assets?.length) {
+                    setSelectedAssets([]);
+                  } else {
+                    setSelectedAssets(assets ?? []);
+                  }
+                }}
+              />
+            </Th>
+            <Th>Created at</Th>
             {uniqueFieldsToShow.map((field) => (
               <Th key={field.id}>{field.name}</Th>
             ))}
@@ -97,6 +123,19 @@ export const AssetTable: React.FC = () => {
               key={asset.id}
               asset={asset}
               uniqueFieldsToShow={uniqueFieldsToShow}
+              selected={selectedAssets.includes(asset)}
+              setSelected={(selected) => {
+                if (selected) {
+                  setSelectedAssets((selected: AssetWithFields[]) => [
+                    ...selected,
+                    asset,
+                  ]);
+                } else {
+                  setSelectedAssets((selected) =>
+                    selected.filter((a) => a.id !== asset.id)
+                  );
+                }
+              }}
             />
           ))}
         </Tbody>

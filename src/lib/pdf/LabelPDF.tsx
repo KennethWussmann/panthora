@@ -5,6 +5,7 @@ import { type AssetWithFields } from "~/server/lib/assets/asset";
 import { dataURLtoUint8Array } from "./dataUrlToUint8Array";
 import { appUrl } from "../appUrl";
 import QRCode from "qrcode";
+import { useEffect, useRef } from "react";
 
 const baseDocument = () =>
   new Document({
@@ -37,7 +38,14 @@ const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
   table.row().cell().text(asset.id, { fontSize: 5 });
 };
 
-export const LabelPDF = ({ assets }: { assets: AssetWithFields[] }) => {
+export const LabelPDF = ({
+  assets,
+  showPrintDialog = false,
+}: {
+  assets: AssetWithFields[];
+  showPrintDialog?: boolean;
+}) => {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const pdfUrl = usePDF({
     document: async () => {
       const doc = baseDocument();
@@ -63,12 +71,26 @@ export const LabelPDF = ({ assets }: { assets: AssetWithFields[] }) => {
     skip: assets.length === 0,
   });
 
+  useEffect(() => {
+    if (!showPrintDialog || !iframeRef.current || !pdfUrl) {
+      return;
+    }
+
+    const iframeWindow = iframeRef.current.contentWindow;
+    if (!iframeWindow) {
+      return;
+    }
+
+    iframeWindow.print();
+  }, [showPrintDialog, pdfUrl]);
+
   if (!pdfUrl) {
     return null;
   }
 
   return (
     <iframe
+      ref={iframeRef}
       src={pdfUrl}
       width="100%"
       height="100%"
