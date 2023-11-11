@@ -40,7 +40,7 @@ const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
 
 export const LabelPDF = ({
   assets,
-  showPrintDialog = false,
+  showPrintDialog = true,
 }: {
   assets: AssetWithFields[];
   showPrintDialog?: boolean;

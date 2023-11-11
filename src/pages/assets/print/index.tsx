@@ -9,5 +9,5 @@ export default function PrintAssets() {
     return <Error statusCode={404} />;
   }
 
-  return <LabelPDF assets={selectedAssets} showPrintDialog />;
+  return <LabelPDF assets={selectedAssets} />;
 }
