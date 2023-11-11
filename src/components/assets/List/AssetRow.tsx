@@ -2,6 +2,7 @@ import { IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { type CustomField } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit, FiPrinter } from "react-icons/fi";
+import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
 
 type AssetRowProps = {
@@ -27,6 +28,14 @@ const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
           variant={"ghost"}
           icon={<FiPrinter />}
           aria-label="Print label"
+        />
+      </Tooltip>
+      <Tooltip label="Delete">
+        <DeleteIconButton
+          itemName={asset.id}
+          onConfirm={() => {
+            //
+          }}
         />
       </Tooltip>
     </>
