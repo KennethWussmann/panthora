@@ -4,11 +4,13 @@ import type { TagListRequest } from "./tagListRequest";
 import type { Tag } from "./tag";
 import type { TagDeleteRequest } from "./tagDeleteRequest";
 import { type Logger } from "winston";
+import { TagSearchService } from "../search/tagSearchService";
 
 export class TagService {
   constructor(
     private readonly logger: Logger,
-    private readonly prisma: PrismaClient
+    private readonly prisma: PrismaClient,
+    private readonly tagSearchService: TagSearchService
   ) {}
 
   public createTag = async (createRequest: TagCreateRequest) => {
@@ -21,7 +23,7 @@ export class TagService {
       },
     });
     this.logger.info("Created tag", { tagId: tag.id });
-
+    void this.tagSearchService.indexTag(tag);
     return tag;
   };
 
@@ -76,5 +78,6 @@ export class TagService {
       }),
     ]);
     this.logger.info("Deleted tag", { tagId: tag.id });
+    void this.tagSearchService.deleteTag(tag);
   };
 }

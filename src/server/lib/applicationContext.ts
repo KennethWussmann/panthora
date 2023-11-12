@@ -7,6 +7,7 @@ import { createLogger } from "./utils/logger";
 import { SearchService } from "./search/searchService";
 import { AssetSearchService } from "./search/assetSearchService";
 import MeiliSearch from "meilisearch";
+import { TagSearchService } from "./search/tagSearchService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -30,6 +31,11 @@ export class ApplicationContext {
     this.userService,
     this.assetTypeService
   );
+  public readonly tagSearchService = new TagSearchService(
+    this.logger.child({ name: "AssetSearchService" }),
+    this.meiliSearch,
+    this.userService
+  );
   public readonly assetService = new AssetService(
     this.logger.child({ name: "AssetService" }),
     this.prismaClient,
@@ -39,12 +45,14 @@ export class ApplicationContext {
   );
   public readonly tagService = new TagService(
     this.logger.child({ name: "TagService" }),
-    this.prismaClient
+    this.prismaClient,
+    this.tagSearchService
   );
   public readonly searchService = new SearchService(
     this.logger.child({ name: "SearchService" }),
     this.userService,
-    this.assetSearchService
+    this.assetSearchService,
+    this.tagSearchService
   );
 }
 
