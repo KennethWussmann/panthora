@@ -73,11 +73,3 @@ export const AssetRow = ({
     </>
   );
 };
-
-export const EmptyAssetRow = () => {
-  return (
-    <Tr>
-      <Td colSpan={2}>No assets found</Td>
-    </Tr>
-  );
-};
