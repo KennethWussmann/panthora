@@ -6,13 +6,15 @@ import { type UserService } from "../user/userService";
 import { type AssetWithFields } from "./asset";
 import { randomUUID } from "crypto";
 import { type Logger } from "winston";
+import type { AssetSearchService } from "../search/assetSearchService";
 
 export class AssetService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
     private readonly userService: UserService,
-    private readonly assetTypeService: AssetTypeService
+    private readonly assetTypeService: AssetTypeService,
+    private readonly assetSearchService: AssetSearchService
   ) {}
 
   public createAsset = async (
@@ -48,6 +50,9 @@ export class AssetService {
         )
     );
     this.logger.info("Created custom fields", { assetId: asset.id, userId });
+    void this.assetSearchService.indexAsset(
+      await this.getById(userId, asset.id)
+    );
   };
 
   updateAsset = async (
@@ -115,6 +120,9 @@ export class AssetService {
       assetId: oldAsset.id,
       userId,
     });
+    void this.assetSearchService.indexAsset(
+      await this.getById(userId, oldAsset.id)
+    );
   };
 
   public getAssets = async (
@@ -139,6 +147,7 @@ export class AssetService {
             customField: true,
           },
         },
+        team: true,
       },
     });
 
@@ -164,6 +173,7 @@ export class AssetService {
             customField: true,
           },
         },
+        team: true,
       },
     });
     if (!asset) {

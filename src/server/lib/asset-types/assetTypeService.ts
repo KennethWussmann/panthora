@@ -398,4 +398,7 @@ export class AssetTypeService {
       userId,
     });
   };
+
+  public getSearchableCustomFields = async (): Promise<CustomField[]> =>
+    this.prisma.customField.findMany();
 }

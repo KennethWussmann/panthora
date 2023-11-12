@@ -33,6 +33,7 @@
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
+    "meilisearch": "^0.35.0",
     "next": "^13.5.4",
     "next-auth": "^4.23.0",
     "pdfjs": "^2.5.2",

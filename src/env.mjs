@@ -27,6 +27,8 @@ export const env = createEnv({
     COGNITO_CLIENT_SECRET: z.string(),
     COGNITO_ISSUER: z.string(),
     APP_BASE_URL: z.string().url(),
+    MEILI_URL: z.string().url(),
+    MEILI_MASTER_KEY: z.string(),
   },
 
   /**
@@ -51,6 +53,8 @@ export const env = createEnv({
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
     COGNITO_ISSUER: process.env.COGNITO_ISSUER,
+    MEILI_URL: process.env.MEILI_URL,
+    MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -2,24 +2,40 @@ version: "3.9"
 services:
   database:
     image: postgres:15
-    tmpfs:
-      - /var/lib/postgresql/data
+    volumes:
+      - database:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: tory
       POSTGRES_USER: tory
       POSTGRES_DB: tory
-  app:
-    platform: "linux/amd64"
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_CLIENTVAR: "clientvar"
-    working_dir: /app
+  search:
+    image: getmeili/meilisearch:v1.4.2
+    volumes:
+      - search:/meili_data
     ports:
-      - "3000:3000"
-    image: t3-app
+      - 7700:7700
     environment:
-      - DATABASE_URL=database_url_goes_here
+      #MEILI_ENV: production
+      MEILI_NO_ANALYTICS: true
+      MEILI_MASTER_KEY: rjzMJ0waScOlLGpEjRwy8Zx7fOlN06ZcZXcEhGvnYeFuiJuqPgpxGWv7IK5Gqw9h
+  #app:
+  #  platform: "linux/amd64"
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #    args:
+  #      NEXT_PUBLIC_CLIENTVAR: "clientvar"
+  #  working_dir: /app
+  #  ports:
+  #    - "3000:3000"
+  #  image: t3-app
+  #  environment:
+  #    - DATABASE_URL=database_url_goes_here
+
+volumes:
+  database:
+    driver: local
+  search:
+    driver: local
