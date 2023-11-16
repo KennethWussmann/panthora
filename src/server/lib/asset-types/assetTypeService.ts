@@ -9,12 +9,14 @@ import { type AssetType } from "./assetType";
 import { type AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
 import { type UserService } from "../user/userService";
 import { type Logger } from "winston";
+import { type AssetTypeSearchService } from "../search/assetTypeSearchService";
 
 export class AssetTypeService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly assetTypeSearchService: AssetTypeSearchService
   ) {}
 
   private getAssetTypeUpdateFields = (
@@ -85,6 +87,9 @@ export class AssetTypeService {
       fieldIds: fields.map((field) => field.id),
       userId,
     });
+    void this.assetTypeSearchService.indexAssetType(
+      await this.getByIdWithFieldsAndChildren(userId, assetType.id)
+    );
 
     return { assetType, fields };
   };
@@ -282,6 +287,9 @@ export class AssetTypeService {
       assetTypeId,
       userId,
     });
+    void this.assetTypeSearchService.indexAssetType(
+      await this.getByIdWithFieldsAndChildren(userId, assetTypeId)
+    );
   };
 
   public getAssetTypes = async (
@@ -325,6 +333,45 @@ export class AssetTypeService {
     const rootAssetTypes = await fetchAssetTypesAndChildren(
       listRequest.parentId ?? null
     );
+    populateParentFields(rootAssetTypes);
+    return rootAssetTypes;
+  };
+
+  public getSearchableAsssetTypes = async (teamId: string) => {
+    const fetchAssetTypesAndChildren = async (
+      assetTypeId: string | null
+    ): Promise<AssetType[]> => {
+      const assetTypes = (await this.prisma.assetType.findMany({
+        where: {
+          teamId,
+          parentId: assetTypeId,
+        },
+        include: {
+          fields: true,
+        },
+      })) as AssetType[];
+
+      for (const assetType of assetTypes) {
+        assetType.children = await fetchAssetTypesAndChildren(assetType.id);
+      }
+
+      return assetTypes;
+    };
+
+    const populateParentFields = (
+      assetTypes: AssetType[],
+      parentFields: CustomField[] = []
+    ) => {
+      for (const assetType of assetTypes) {
+        // Merge fields from parent asset types
+        assetType.fields = [...parentFields, ...assetType.fields];
+
+        // Populate children with the merged fields
+        populateParentFields(assetType.children, assetType.fields);
+      }
+    };
+
+    const rootAssetTypes = await fetchAssetTypesAndChildren(null);
     populateParentFields(rootAssetTypes);
     return rootAssetTypes;
   };
@@ -393,10 +440,13 @@ export class AssetTypeService {
         },
       }),
     ]);
-    this.logger.info("Deleted asset", {
+    this.logger.info("Deleted asset type", {
       assetTypeId: deleteRequest.id,
       userId,
     });
+    void this.assetTypeSearchService.deleteAssetType(
+      await this.getByIdWithFieldsAndChildren(userId, assetType.id)
+    );
   };
 
   public getSearchableCustomFields = async (): Promise<CustomField[]> =>

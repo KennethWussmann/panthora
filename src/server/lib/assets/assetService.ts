@@ -154,6 +154,29 @@ export class AssetService {
     return assets;
   };
 
+  public getSearchableAssets = async (teamId: string) => {
+    const assets = await this.prisma.asset.findMany({
+      where: {
+        teamId,
+      },
+      include: {
+        assetType: {
+          include: {
+            fields: true,
+          },
+        },
+        fieldValues: {
+          include: {
+            customField: true,
+          },
+        },
+        team: true,
+      },
+    });
+
+    return assets;
+  };
+
   public getById = async (
     userId: string,
     id: string

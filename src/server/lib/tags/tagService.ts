@@ -1,10 +1,10 @@
 import { type PrismaClient } from "@prisma/client";
-import type { TagCreateRequest } from "./tagCreateRequest";
-import type { TagListRequest } from "./tagListRequest";
-import type { Tag } from "./tag";
-import type { TagDeleteRequest } from "./tagDeleteRequest";
+import { type TagCreateRequest } from "./tagCreateRequest";
+import { type TagListRequest } from "./tagListRequest";
+import { type Tag } from "./tag";
+import { type TagDeleteRequest } from "./tagDeleteRequest";
 import { type Logger } from "winston";
-import { TagSearchService } from "../search/tagSearchService";
+import { type TagSearchService } from "../search/tagSearchService";
 
 export class TagService {
   constructor(
@@ -47,6 +47,13 @@ export class TagService {
 
     return await fetchTagsAndChildren(listRequest.parentId ?? null);
   };
+
+  public getSearchableTags = async (teamId: string) =>
+    this.prisma.tag.findMany({
+      where: {
+        teamId,
+      },
+    });
 
   public deleteTag = async (deleteRequest: TagDeleteRequest) => {
     this.logger.debug("Deleting tag", { deleteRequest });

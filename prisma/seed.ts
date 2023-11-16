@@ -1,14 +1,22 @@
 import { FieldType } from "@prisma/client";
 import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
-const { prismaClient } = defaultApplicationContext;
+const {
+  prismaClient,
+  searchService,
+  logger: rootLogger,
+} = defaultApplicationContext;
+
+const logger = rootLogger.child({ name: "PrismaSeed" });
 
 const seed = async () => {
+  logger.info("Seeding database");
   const team = await prismaClient.team.create({
     data: {
       name: "Prisma Seed",
     },
   });
+  logger.info("Created team", { teamId: team.id });
 
   const electronicsTag = await prismaClient.tag.create({
     data: {
@@ -16,12 +24,16 @@ const seed = async () => {
       name: "Electronics",
     },
   });
+  logger.info("Created Electronics tag", { tagId: electronicsTag.id });
   const electronicsLocationTag = await prismaClient.tag.create({
     data: {
       teamId: team.id,
       name: "Location",
       parentId: electronicsTag.id,
     },
+  });
+  logger.info("Created Electronics/Location tag", {
+    tagId: electronicsLocationTag.id,
   });
   await prismaClient.$transaction(
     ["Living Room", "Office", "Bedroom", "Kitchen", "Hallway", "Basement"].map(
@@ -35,6 +47,7 @@ const seed = async () => {
         })
     )
   );
+  logger.info("Created location tags");
 
   const electronicsAssetType = await prismaClient.assetType.create({
     data: {
@@ -42,11 +55,17 @@ const seed = async () => {
       name: "Electronics",
     },
   });
+  logger.info("Created Electronics asset type", {
+    assetTypeId: electronicsAssetType.id,
+  });
   const allFieldTypesAssetType = await prismaClient.assetType.create({
     data: {
       teamId: team.id,
       name: "All Field Types Example",
     },
+  });
+  logger.info("Created All Fields asset type", {
+    assetTypeId: allFieldTypesAssetType.id,
   });
 
   await prismaClient.$transaction([
@@ -158,6 +177,11 @@ const seed = async () => {
       },
     }),
   ]);
+  logger.info("Created custom fields");
+
+  logger.info("Seeding done, rebuilding search indexes");
+  await defaultApplicationContext.searchService.rebuildIndexes(team.id);
+  logger.info("Indexes rebuilt");
 };
 
 seed()

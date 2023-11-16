@@ -6,6 +6,7 @@ import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type UserService } from "../user/userService";
 import { type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
+import { waitForTasks } from "../user/meiliSearchUtils";
 
 const assetDocumentSchema = z.record(
   z.union([z.string(), z.number(), z.boolean(), z.null()])
@@ -22,23 +23,16 @@ const baseAttributes: string[] = [
 ];
 
 export class AssetSearchService {
-  private initialized = false;
-
   constructor(
     private logger: Logger,
     private meilisearch: MeiliSearch,
     private userService: UserService,
     private assetTypeService: AssetTypeService
-  ) {
-    void this.initialize();
-  }
+  ) {}
 
   private getIndexName = (teamId: string) => `assets_${teamId}`;
 
-  private initialize = async () => {
-    if (this.initialized) {
-      return;
-    }
+  public initialize = async () => {
     this.logger.debug("Initializing asset search indexes");
 
     const teams = await this.userService.getAllTeams();
@@ -46,29 +40,42 @@ export class AssetSearchService {
     await this.syncFilterableAttributes(teams);
 
     this.logger.debug("Initializing asset search indexes done");
-    this.initialized = true;
   };
 
   private createMissingIndexes = async (teams: Team[]) => {
-    const { results: indexes } = await this.meilisearch.getIndexes();
+    const { results: indexes } = await this.meilisearch.getIndexes({
+      limit: Number.MAX_SAFE_INTEGER,
+    });
 
-    const indexesMissing = teams.filter(
-      (team) =>
-        !indexes.some(
-          (index: Index<AssetSearchDocument>) =>
-            index.uid === this.getIndexName(team.id)
-        )
-    );
+    const indexesMissing = teams.filter((team) => {
+      const exists = indexes.some((index: Index<AssetSearchDocument>) => {
+        const compare = index.uid === this.getIndexName(team.id);
+        this.logger.debug("Index compare", {
+          indexId: index.uid,
+          compare,
+          name: this.getIndexName(team.id),
+        });
+        return compare;
+      });
+      this.logger.debug("Index existance", {
+        teamId: team.id,
+        exists,
+        name: this.getIndexName(team.id),
+      });
 
-    await Promise.all(
+      return !exists;
+    });
+
+    await waitForTasks(
+      this.meilisearch,
       indexesMissing.map(async (team) => {
-        this.logger.debug("Creating missing index", { teamId: team.id });
-        await this.meilisearch.createIndex(this.getIndexName(team.id), {
+        this.logger.info("Creating missing index", { teamId: team.id });
+        return this.meilisearch.createIndex(this.getIndexName(team.id), {
           primaryKey: "id",
         });
-        this.logger.info("Created missing index", { teamId: team.id });
       })
     );
+    this.logger.debug("Creating missing indexes done");
   };
 
   public syncFilterableAttributes = async (teams: Team[]) => {
@@ -167,5 +174,23 @@ export class AssetSearchService {
       response,
       document,
     });
+  };
+
+  public rebuildIndex = async (team: Team, assets: AssetWithFields[]) => {
+    this.logger.debug("Rebuilding index", { teamId: team.id });
+    try {
+      const index = await this.meilisearch.getIndex<AssetSearchDocument>(
+        this.getIndexName(team.id)
+      );
+      await index.deleteAllDocuments();
+      const documents = assets.map(this.mapAssetToSearchDocument);
+      await index.addDocuments(documents);
+      this.logger.info("Rebuilding index done", { teamId: team.id });
+    } catch (error) {
+      this.logger.error(
+        "Rebuilding index failed. This may be fine if no index exists.",
+        { teamId: team.id, error }
+      );
+    }
   };
 }

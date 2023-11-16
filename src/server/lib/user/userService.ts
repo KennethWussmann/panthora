@@ -63,6 +63,13 @@ export class UserService {
     });
   };
 
+  public getById = async (teamId: string) =>
+    this.prisma.team.findUnique({
+      where: {
+        id: teamId,
+      },
+    });
+
   public getAllTeams = async () => this.prisma.team.findMany();
 
   public getDefaultTeam = async (userId: string) => {

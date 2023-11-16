@@ -8,10 +8,11 @@ import { SearchService } from "./search/searchService";
 import { AssetSearchService } from "./search/assetSearchService";
 import MeiliSearch from "meilisearch";
 import { TagSearchService } from "./search/tagSearchService";
+import { AssetTypeSearchService } from "./search/assetTypeSearchService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
-  private readonly logger = createLogger({});
+  public readonly logger = createLogger({});
   private readonly meiliSearch = new MeiliSearch({
     host: process.env.MEILI_URL!,
     apiKey: process.env.MEILI_MASTER_KEY!,
@@ -20,10 +21,16 @@ export class ApplicationContext {
     this.logger.child({ name: "UserService" }),
     this.prismaClient
   );
+  public readonly assetTypeSearchService = new AssetTypeSearchService(
+    this.logger.child({ name: "AssetTypeSearchService" }),
+    this.meiliSearch,
+    this.userService
+  );
   public readonly assetTypeService = new AssetTypeService(
     this.logger.child({ name: "AssetTypeService" }),
     this.prismaClient,
-    this.userService
+    this.userService,
+    this.assetTypeSearchService
   );
   public readonly assetSearchService = new AssetSearchService(
     this.logger.child({ name: "AssetSearchService" }),
@@ -32,7 +39,7 @@ export class ApplicationContext {
     this.assetTypeService
   );
   public readonly tagSearchService = new TagSearchService(
-    this.logger.child({ name: "AssetSearchService" }),
+    this.logger.child({ name: "TagSearchService" }),
     this.meiliSearch,
     this.userService
   );
@@ -50,9 +57,14 @@ export class ApplicationContext {
   );
   public readonly searchService = new SearchService(
     this.logger.child({ name: "SearchService" }),
+    this.meiliSearch,
     this.userService,
+    this.assetService,
+    this.assetTypeService,
+    this.tagService,
     this.assetSearchService,
-    this.tagSearchService
+    this.tagSearchService,
+    this.assetTypeSearchService
   );
 }
 

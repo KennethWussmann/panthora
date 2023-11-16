@@ -1,14 +1,17 @@
-import MeiliSearch, { Index } from "meilisearch";
-import { Logger } from "winston";
-import { UserService } from "../user/userService";
-import { Team, Tag } from "@prisma/client";
+import { type Index } from "meilisearch";
+import type MeiliSearch from "meilisearch";
+import { type Logger } from "winston";
+import { type UserService } from "../user/userService";
+import { type Team, type Tag } from "@prisma/client";
 import { z } from "zod";
+import { waitForTasks } from "../user/meiliSearchUtils";
 
 const tagSearchDocument = z.object({
   id: z.string(),
   createdAt: z.number(),
   teamId: z.string().nullable(),
   name: z.string(),
+  parentId: z.string(),
 });
 
 export type TagSearchDocument = z.infer<typeof tagSearchDocument>;
@@ -18,25 +21,19 @@ const baseAttributes: (keyof TagSearchDocument)[] = [
   "createdAt",
   "teamId",
   "name",
+  "parentId",
 ];
 
 export class TagSearchService {
-  private initialized = false;
-
   constructor(
     private logger: Logger,
     private meilisearch: MeiliSearch,
     private userService: UserService
-  ) {
-    void this.initialize();
-  }
+  ) {}
 
   private getIndexName = (teamId: string) => `tags_${teamId}`;
 
-  private initialize = async () => {
-    if (this.initialized) {
-      return;
-    }
+  public initialize = async () => {
     this.logger.debug("Initializing tag search indexes");
 
     const teams = await this.userService.getAllTeams();
@@ -44,11 +41,12 @@ export class TagSearchService {
     await this.syncFilterableAttributes(teams);
 
     this.logger.debug("Initializing tag search indexes done");
-    this.initialized = true;
   };
 
   private createMissingIndexes = async (teams: Team[]) => {
-    const { results: indexes } = await this.meilisearch.getIndexes();
+    const { results: indexes } = await this.meilisearch.getIndexes({
+      limit: Number.MAX_SAFE_INTEGER,
+    });
 
     const indexesMissing = teams.filter(
       (team) =>
@@ -58,15 +56,16 @@ export class TagSearchService {
         )
     );
 
-    await Promise.all(
+    await waitForTasks(
+      this.meilisearch,
       indexesMissing.map(async (team) => {
-        this.logger.debug("Creating missing index", { teamId: team.id });
-        await this.meilisearch.createIndex(this.getIndexName(team.id), {
+        this.logger.info("Creating missing index", { teamId: team.id });
+        return this.meilisearch.createIndex(this.getIndexName(team.id), {
           primaryKey: "id",
         });
-        this.logger.info("Created missing index", { teamId: team.id });
       })
     );
+    this.logger.debug("Creating missing indexes done");
   };
 
   public syncFilterableAttributes = async (teams: Team[]) => {
@@ -128,6 +127,7 @@ export class TagSearchService {
     createdAt: tag.createdAt.getTime(),
     teamId: tag.teamId,
     name: tag.name,
+    parentId: tag.parentId,
   });
 
   public indexTag = async (tag: Tag) => {
@@ -157,5 +157,23 @@ export class TagSearchService {
     );
     const response = await index.deleteDocument(tag.id);
     this.logger.debug("Deleted tag", { tagId: tag.id, response });
+  };
+
+  public rebuildIndex = async (team: Team, tags: Tag[]) => {
+    this.logger.debug("Rebuilding index", { teamId: team.id });
+    try {
+      const index = await this.meilisearch.getIndex<TagSearchDocument>(
+        this.getIndexName(team.id)
+      );
+      await index.deleteAllDocuments();
+      const documents = tags.map(this.mapTagToSearchDocument);
+      await index.addDocuments(documents);
+      this.logger.info("Rebuilding index done", { teamId: team.id });
+    } catch (error) {
+      this.logger.error(
+        "Rebuilding index failed. This may be fine if no index exists.",
+        { teamId: team.id, error }
+      );
+    }
   };
 }
