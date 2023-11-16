@@ -77,7 +77,7 @@ export class SearchService {
   public getTasks = async (userId: string, teamId: string) => {
     await this.userService.requireTeamMembership(userId, teamId);
     const { results: tasks } = await this.meiliSearch.getTasks({
-      limit: 10,
+      limit: 20,
       indexUids: [
         this.assetSearchService.getIndexName(teamId),
         this.assetTypeSearchService.getIndexName(teamId),

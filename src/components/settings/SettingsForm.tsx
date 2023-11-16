@@ -1,5 +1,5 @@
 import { Heading, Stack } from "@chakra-ui/react";
-import { SearchSettingsForm } from "./SearchSettingsForm";
+import { SearchSettingsForm } from "./SearchSettings/SearchSettingsForm";
 import { TeamSettingsForm } from "./TeamSettingsForm";
 import { api } from "~/utils/api";
 
