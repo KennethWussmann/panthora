@@ -154,8 +154,8 @@ export class AssetService {
     return assets;
   };
 
-  public getSearchableAssets = async (teamId: string) => {
-    const assets = await this.prisma.asset.findMany({
+  public getSearchableAssets = async (teamId: string) =>
+    this.prisma.asset.findMany({
       where: {
         teamId,
       },
@@ -173,9 +173,6 @@ export class AssetService {
         team: true,
       },
     });
-
-    return assets;
-  };
 
   public getById = async (
     userId: string,

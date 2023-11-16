@@ -30,7 +30,7 @@ export class AssetSearchService {
     private assetTypeService: AssetTypeService
   ) {}
 
-  private getIndexName = (teamId: string) => `assets_${teamId}`;
+  public getIndexName = (teamId: string) => `assets_${teamId}`;
 
   public initialize = async () => {
     this.logger.debug("Initializing asset search indexes");
@@ -168,7 +168,7 @@ export class AssetSearchService {
       this.getIndexName(asset.teamId)
     );
     const document = this.mapAssetToSearchDocument(asset);
-    const response = await index.addDocuments([document]);
+    const response = await index.addDocuments([document], { primaryKey: "id" });
     this.logger.debug("Indexed asset", {
       assetId: asset.id,
       response,
@@ -184,8 +184,11 @@ export class AssetSearchService {
       );
       await index.deleteAllDocuments();
       const documents = assets.map(this.mapAssetToSearchDocument);
-      await index.addDocuments(documents);
-      this.logger.info("Rebuilding index done", { teamId: team.id });
+      await index.addDocuments(documents, { primaryKey: "id" });
+      this.logger.info("Rebuilding index done", {
+        teamId: team.id,
+        documentCount: documents.length,
+      });
     } catch (error) {
       this.logger.error(
         "Rebuilding index failed. This may be fine if no index exists.",

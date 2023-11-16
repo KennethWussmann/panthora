@@ -73,4 +73,18 @@ export class SearchService {
     await this.userService.requireTeamMembership(userId, teamId);
     await this.rebuildIndexes(teamId);
   };
+
+  public getTasks = async (userId: string, teamId: string) => {
+    await this.userService.requireTeamMembership(userId, teamId);
+    const { results: tasks } = await this.meiliSearch.getTasks({
+      limit: 10,
+      indexUids: [
+        this.assetSearchService.getIndexName(teamId),
+        this.assetTypeSearchService.getIndexName(teamId),
+        this.tagSearchService.getIndexName(teamId),
+      ],
+    });
+
+    return tasks;
+  };
 }

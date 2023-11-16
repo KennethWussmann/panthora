@@ -11,7 +11,7 @@ const tagSearchDocument = z.object({
   createdAt: z.number(),
   teamId: z.string().nullable(),
   name: z.string(),
-  parentId: z.string(),
+  parentId: z.string().nullable(),
 });
 
 export type TagSearchDocument = z.infer<typeof tagSearchDocument>;
@@ -31,7 +31,7 @@ export class TagSearchService {
     private userService: UserService
   ) {}
 
-  private getIndexName = (teamId: string) => `tags_${teamId}`;
+  public getIndexName = (teamId: string) => `tags_${teamId}`;
 
   public initialize = async () => {
     this.logger.debug("Initializing tag search indexes");
@@ -139,7 +139,7 @@ export class TagSearchService {
       this.getIndexName(tag.teamId)
     );
     const document = this.mapTagToSearchDocument(tag);
-    const response = await index.addDocuments([document]);
+    const response = await index.addDocuments([document], { primaryKey: "id" });
     this.logger.debug("Indexed tag", {
       tagId: tag.id,
       response,
@@ -167,8 +167,11 @@ export class TagSearchService {
       );
       await index.deleteAllDocuments();
       const documents = tags.map(this.mapTagToSearchDocument);
-      await index.addDocuments(documents);
-      this.logger.info("Rebuilding index done", { teamId: team.id });
+      await index.addDocuments(documents, { primaryKey: "id" });
+      this.logger.info("Rebuilding index done", {
+        teamId: team.id,
+        documentCount: documents.length,
+      });
     } catch (error) {
       this.logger.error(
         "Rebuilding index failed. This may be fine if no index exists.",
