@@ -1,14 +1,21 @@
 import { type UserService } from "../user/userService";
-import { type AssetSearchService } from "./assetSearchService";
+import {
+  AssetSearchDocument,
+  type AssetSearchService,
+} from "./assetSearchService";
 import { type Logger } from "winston";
-import { type TagSearchService } from "./tagSearchService";
-import { type AssetTypeSearchService } from "./assetTypeSearchService";
+import { TagSearchDocument, type TagSearchService } from "./tagSearchService";
+import {
+  AssetTypeSearchDocument,
+  type AssetTypeSearchService,
+} from "./assetTypeSearchService";
 import { type AssetService } from "../assets/assetService";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type TagService } from "../tags/tagService";
 import type MeiliSearch from "meilisearch";
-import { SearchRequest } from "./searchRequest";
-import { SearchResult } from "./searchResponse";
+import { type SearchRequest } from "./searchRequest";
+import { type SearchResult } from "./searchResponse";
+import { parseQuery } from "./queryParser";
 
 export class SearchService {
   constructor(
@@ -90,7 +97,48 @@ export class SearchService {
     return tasks;
   };
 
-  public search = async (search: SearchRequest): Promise<SearchResult> => {
-    
+  public search = async (
+    userId: string,
+    search: SearchRequest
+  ): Promise<SearchResult[]> => {
+    this.logger.debug("Searching for query", { search });
+    await this.userService.requireTeamMembership(userId, search.teamId);
+    const parsedQuery = parseQuery(search.query);
+    this.logger.debug("Parsed query", { search, parsedQuery });
+
+    if (typeof parsedQuery === "string") {
+      const { hits: assetTypes } = await this.meiliSearch
+        .index<AssetTypeSearchDocument>(
+          this.assetTypeSearchService.getIndexName(search.teamId)
+        )
+        .search(parsedQuery, {});
+      const { hits: assets } = await this.meiliSearch
+        .index<AssetSearchDocument>(
+          this.assetSearchService.getIndexName(search.teamId)
+        )
+        .search(parsedQuery, {});
+      const { hits: tags } = await this.meiliSearch
+        .index<TagSearchDocument>(
+          this.tagSearchService.getIndexName(search.teamId)
+        )
+        .search(parsedQuery, {});
+
+      return [
+        ...assetTypes.map((hit) => ({
+          index: "assetTypes" as const,
+          result: hit,
+        })),
+        ...assets.map((hit) => ({
+          index: "assets" as const,
+          result: hit,
+        })),
+        ...tags.map((hit) => ({
+          index: "tags" as const,
+          result: hit,
+        })),
+      ];
+    } else {
+      throw new Error("Not implemented");
+    }
   };
 }

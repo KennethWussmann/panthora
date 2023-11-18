@@ -5,17 +5,17 @@ import { tagSearchDocument } from "./tagSearchService";
 
 const assetSearchResult = z.object({
   index: z.literal("assets"),
-  results: z.array(assetDocumentSchema),
+  result: assetDocumentSchema,
 });
 
 const assetTypeSearchResult = z.object({
   index: z.literal("assetTypes"),
-  results: z.array(assetTypeSearchDocument),
+  result: assetTypeSearchDocument,
 });
 
 const tagsSearchResult = z.object({
   index: z.literal("tags"),
-  results: z.array(tagSearchDocument),
+  result: tagSearchDocument,
 });
 
 const searchResult = z.discriminatedUnion("index", [

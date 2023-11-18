@@ -1,13 +1,4 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Button,
-  Code,
-  Divider,
   Icon,
   Input,
   InputGroup,
@@ -17,10 +8,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
-  Progress,
   Stack,
   Table,
   TableCaption,
@@ -34,6 +22,10 @@ import {
 } from "@chakra-ui/react";
 import { FiBox, FiFolder, FiSearch, FiTag } from "react-icons/fi";
 import { AdvancedSearchExplanation } from "./AdvancedSearchExplanation";
+import { api } from "~/utils/api";
+import { type ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { type SearchResult } from "~/server/lib/search/searchResponse";
 
 const AssetSearchResultTypeColumn = () => (
   <Td fontWeight={"bold"}>
@@ -56,12 +48,53 @@ const TagSearchResultTypeColumn = () => (
     <Icon fontSize={"1.2rem"}>
       <FiTag />
     </Icon>
-    Asset
+    Tag
   </Td>
 );
 
+const searchResultTypeMap: Record<"assetTypes" | "assets" | "tags", ReactNode> =
+  {
+    assetTypes: <AssetTypeSearchResultTypeColumn />,
+    assets: <AssetSearchResultTypeColumn />,
+    tags: <TagSearchResultTypeColumn />,
+  };
+
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
+  const { push } = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
+    api.user.defaultTeam.useQuery();
+
+  const { data: searchResults } = api.search.search.useQuery(
+    {
+      query: searchQuery,
+      teamId: defaultTeam?.id ?? "",
+    },
+    {
+      enabled: defaultTeam && searchQuery.length > 0 && !isLoadingDefaultTeam,
+    }
+  );
+
+  const openResult = (result: SearchResult) => {
+    switch (result.index) {
+      case "assets":
+        void push(`/assets/edit/${result.result.id}`);
+        break;
+      case "assetTypes":
+        void push(`/asset-types/edit/${result.result.id}`);
+        break;
+      case "tags":
+        void push(`/tags/edit/${result.result.id}`);
+        break;
+    }
+    onClose();
+  };
+
+  useEffect(() => {
+    setSearchQuery("");
+  }, [isOpen]);
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size={"3xl"}>
@@ -85,6 +118,8 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                   variant={"outline"}
                   size={"lg"}
                   autoFocus
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 {!hideShortcut && (
                   <InputRightElement
@@ -97,39 +132,44 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
               </InputGroup>
 
               <AdvancedSearchExplanation />
-              <Progress size="xs" isIndeterminate />
 
-              <TableContainer>
-                <Table variant="simple">
-                  <TableCaption>49 Results</TableCaption>
-                  <Thead>
-                    <Tr>
-                      <Th>Type</Th>
-                      <Th>Name</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    <Tr _hover={{ bgColor: "gray.100", cursor: "pointer" }}>
-                      <AssetSearchResultTypeColumn />
-                      <Td>millimetres (mm)</Td>
-                    </Tr>
-                    <Tr>
-                      <AssetTypeSearchResultTypeColumn />
-                      <Td>centimetres (cm)</Td>
-                    </Tr>
-                    <Tr>
-                      <TagSearchResultTypeColumn />
-                      <Td>metres (m)</Td>
-                    </Tr>
-                  </Tbody>
-                </Table>
-              </TableContainer>
+              {searchResults && (
+                <TableContainer>
+                  <Table variant="simple">
+                    <TableCaption>
+                      {searchResults.length}{" "}
+                      {searchResults.length === 1 ? "result" : "results"}
+                    </TableCaption>
+                    <Thead>
+                      <Tr>
+                        <Th>Type</Th>
+                        <Th>Name</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {searchResults.map((result, index) => (
+                        <Tr
+                          key={index}
+                          _hover={{ bgColor: "gray.100", cursor: "pointer" }}
+                          onClick={() => openResult(result)}
+                        >
+                          {searchResultTypeMap[result.index]}
+                          <Td>{result.result.name}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
             </Stack>
           </ModalBody>
         </ModalContent>
       </Modal>
       <InputGroup
         onClick={(e) => {
+          if (isLoadingDefaultTeam) {
+            return;
+          }
           onOpen();
           e.preventDefault();
         }}
@@ -141,7 +181,11 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
         >
           <FiSearch />
         </InputLeftElement>
-        <Input placeholder="Search" variant={"outline"} />
+        <Input
+          placeholder="Search"
+          variant={"outline"}
+          isDisabled={isLoadingDefaultTeam || isOpen}
+        />
         {!hideShortcut && (
           <InputRightElement
             pointerEvents="none"
