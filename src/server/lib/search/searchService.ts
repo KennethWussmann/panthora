@@ -7,6 +7,8 @@ import { type AssetService } from "../assets/assetService";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type TagService } from "../tags/tagService";
 import type MeiliSearch from "meilisearch";
+import { SearchRequest } from "./searchRequest";
+import { SearchResult } from "./searchResponse";
 
 export class SearchService {
   constructor(
@@ -86,5 +88,9 @@ export class SearchService {
     });
 
     return tasks;
+  };
+
+  public search = async (search: SearchRequest): Promise<SearchResult> => {
+    
   };
 }

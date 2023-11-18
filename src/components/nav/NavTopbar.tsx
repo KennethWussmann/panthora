@@ -15,7 +15,7 @@ import { useRef, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Logo } from "./Logo";
 import { NavItems } from "./NavItems";
-import { NavSearchBar } from "./NavSearchBar";
+import { NavSearchBar } from "./search/NavSearchBar";
 import { NavLogout } from "./NavLogout";
 import { NavTeamSelector } from "./NavTeamSelector";
 

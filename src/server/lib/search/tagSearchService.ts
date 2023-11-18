@@ -6,7 +6,7 @@ import { type Team, type Tag } from "@prisma/client";
 import { z } from "zod";
 import { waitForTasks } from "../user/meiliSearchUtils";
 
-const tagSearchDocument = z.object({
+export const tagSearchDocument = z.object({
   id: z.string(),
   createdAt: z.number(),
   teamId: z.string().nullable(),

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { type AssetType } from "../asset-types/assetType";
 import { waitForTasks } from "../user/meiliSearchUtils";
 
-const assetTypeSearchDocument = z.object({
+export const assetTypeSearchDocument = z.object({
   id: z.string(),
   createdAt: z.number(),
   teamId: z.string().nullable(),
