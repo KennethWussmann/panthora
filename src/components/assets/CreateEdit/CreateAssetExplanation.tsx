@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, Stack } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 
-export const CreateEditAssetExplanation = () => {
+export const CreateAssetExplanation = () => {
   return (
     <Box p={4} borderWidth={1} rounded={4}>
       <Stack gap={2}>

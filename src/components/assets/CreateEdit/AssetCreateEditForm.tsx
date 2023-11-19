@@ -7,7 +7,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
-import { CreateEditAssetExplanation } from "./CreateEditAssetExplanation";
+import { CreateAssetExplanation } from "./CreateAssetExplanation";
 import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { useFieldArray, useForm } from "react-hook-form";
 import { api } from "~/utils/api";
@@ -130,7 +130,7 @@ export const AssetCreateEditForm = ({
         create={!asset}
         edit={asset?.id ? String(asset.id) : undefined}
       />
-      <CreateEditAssetExplanation />
+      {!asset && <CreateAssetExplanation />}
       {isErrorCreate && (
         <Alert status="error">
           <AlertIcon />

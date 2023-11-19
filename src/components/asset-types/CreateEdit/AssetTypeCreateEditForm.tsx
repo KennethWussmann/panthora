@@ -116,7 +116,7 @@ export const AssetTypeCreateEditForm = ({
   return (
     <Stack gap={2}>
       <AssetTypeBreadcrumbs create={!assetType} edit={assetType?.id} />
-      <CreateAssetTypeExplanation />
+      {!assetType && <CreateAssetTypeExplanation />}
       {isErrorCreation && (
         <Alert status="error">
           <AlertIcon />

@@ -53,6 +53,7 @@ export class ApplicationContext {
   public readonly tagService = new TagService(
     this.logger.child({ name: "TagService" }),
     this.prismaClient,
+    this.userService,
     this.tagSearchService
   );
   public readonly searchService = new SearchService(

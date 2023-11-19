@@ -1,16 +1,10 @@
-import {
-  Box,
-  Flex,
-  IconButton,
-  Td,
-  Tooltip,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Flex, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { BiSubdirectoryRight } from "react-icons/bi";
 import { type Tag } from "@prisma/client";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 const TagActions = ({
   tag,
@@ -19,6 +13,7 @@ const TagActions = ({
   tag: Tag;
   onDelete: VoidFunction;
 }) => {
+  const { push } = useRouter();
   const { data: defaultTeam } = api.user.defaultTeam.useQuery();
   const deleteTag = api.tag.delete.useMutation();
 
@@ -34,7 +29,12 @@ const TagActions = ({
   return (
     <>
       <Tooltip label="Edit">
-        <IconButton variant={"ghost"} icon={<FiEdit />} aria-label="Edit" />
+        <IconButton
+          variant={"ghost"}
+          icon={<FiEdit />}
+          aria-label="Edit"
+          onClick={() => push(`tags/edit/${tag.id}`)}
+        />
       </Tooltip>
       <Tooltip label="Delete">
         <DeleteIconButton itemName={tag.name} onConfirm={handleDelete} />

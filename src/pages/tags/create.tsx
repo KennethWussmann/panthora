@@ -1,5 +1,5 @@
-import { TagCreationForm } from "~/components/tags/Create/TagCreationForm";
+import { TagEditCreationForm } from "~/components/tags/Create/TagEditCreationForm";
 
 export default function CreateTag() {
-  return <TagCreationForm />;
+  return <TagEditCreationForm />;
 }
