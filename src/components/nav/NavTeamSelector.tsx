@@ -12,7 +12,7 @@ export const NavTeamSelector = () => {
         /
       </Text>
       <Tooltip label="Switching teams is not possible yet">
-        <Select variant={"outline"} isDisabled minWidth={"100px"}>
+        <Select variant={"outline"} isDisabled width={"180px"}>
           <option value={defaultTeam.id}>{defaultTeam.name}</option>
         </Select>
       </Tooltip>
