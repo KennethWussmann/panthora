@@ -1,12 +1,15 @@
 import { type UserService } from "../user/userService";
 import {
-  AssetSearchDocument,
+  type AssetSearchDocument,
   type AssetSearchService,
 } from "./assetSearchService";
 import { type Logger } from "winston";
-import { TagSearchDocument, type TagSearchService } from "./tagSearchService";
 import {
-  AssetTypeSearchDocument,
+  type TagSearchDocument,
+  type TagSearchService,
+} from "./tagSearchService";
+import {
+  type AssetTypeSearchDocument,
   type AssetTypeSearchService,
 } from "./assetTypeSearchService";
 import { type AssetService } from "../assets/assetService";

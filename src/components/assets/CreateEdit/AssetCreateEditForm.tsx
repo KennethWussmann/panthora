@@ -40,7 +40,7 @@ export const AssetCreateEditForm = ({
             assetTypeId: asset.assetTypeId,
             teamId: asset.teamId ?? undefined,
             customFieldValues:
-              asset.assetType?.fields?.map((field) => {
+              asset.assetType.fields?.map((field) => {
                 const customFieldValue = asset.fieldValues?.find(
                   (value) => value.customFieldId === field.id
                 );

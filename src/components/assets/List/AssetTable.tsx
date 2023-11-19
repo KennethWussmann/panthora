@@ -44,13 +44,14 @@ export const AssetTable: React.FC = () => {
   const showCreateFirstAssetNotice =
     !showAssetTypeMissingNotice && assets && assets.length === 0;
 
-  const uniqueFieldsToShow =
-    uniqBy(
-      assets
-        ?.flatMap((asset) => asset.assetType.fields)
-        ?.filter((field) => field.showInTable),
-      (field) => field.id
-    ) ?? [];
+  const uniqueFieldsToShow = assets
+    ? uniqBy(
+        assets
+          .flatMap((asset) => asset.assetType?.fields ?? [])
+          .filter((field) => field.showInTable),
+        (field) => field.id
+      )
+    : [];
 
   return (
     <Stack gap={2}>

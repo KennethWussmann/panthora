@@ -4,10 +4,10 @@ import {
   type FieldValue as FieldValueRelation,
   type Team as TeamRelation,
 } from "@prisma/client";
-import { AssetType } from "../asset-types/assetType";
+import { type AssetType } from "../asset-types/assetType";
 
 export type AssetWithFields = AssetRelation & {
-  assetType: AssetType | null;
+  assetType: AssetType;
   fieldValues: (FieldValueRelation & {
     customField: CustomFieldRelation;
   })[];

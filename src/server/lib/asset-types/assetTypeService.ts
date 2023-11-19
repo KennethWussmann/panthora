@@ -88,13 +88,13 @@ export class AssetTypeService {
       userId,
     });
     void this.assetTypeSearchService.indexAssetType(
-      await this.getByIdWithFieldsAndChildren(userId, assetType.id)
+      await this.getByIdWithFieldsAndChildrenByUser(userId, assetType.id)
     );
 
     return { assetType, fields };
   };
 
-  public getByIdWithFieldsAndChildren = async (
+  public getByIdWithFieldsAndChildrenByUser = async (
     userId: string,
     assetTypeId: string
   ): Promise<AssetType> => {
@@ -113,13 +113,18 @@ export class AssetTypeService {
       assetTypeBasicInfo.teamId
     );
 
+    return this.getByIdWithFieldsAndChildren(assetTypeId);
+  };
+
+  public getByIdWithFieldsAndChildren = async (
+    assetTypeId: string
+  ): Promise<AssetType> => {
     // Fetch AssetTypes and Children
     const fetchAssetTypesAndChildren = async (
       parentId: string | null
     ): Promise<AssetType[]> => {
       const assetTypes = (await this.prisma.assetType.findMany({
         where: {
-          teamId: assetTypeBasicInfo.teamId,
           parentId: parentId,
         },
         include: {
@@ -288,7 +293,7 @@ export class AssetTypeService {
       userId,
     });
     void this.assetTypeSearchService.indexAssetType(
-      await this.getByIdWithFieldsAndChildren(userId, assetTypeId)
+      await this.getByIdWithFieldsAndChildrenByUser(userId, assetTypeId)
     );
   };
 
@@ -445,7 +450,7 @@ export class AssetTypeService {
       userId,
     });
     void this.assetTypeSearchService.deleteAssetType(
-      await this.getByIdWithFieldsAndChildren(userId, assetType.id)
+      await this.getByIdWithFieldsAndChildrenByUser(userId, assetType.id)
     );
   };
 

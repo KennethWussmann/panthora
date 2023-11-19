@@ -7,7 +7,6 @@ import {
   Box,
   Code,
   HStack,
-  Spacer,
   Stack,
   Table,
   TableContainer,

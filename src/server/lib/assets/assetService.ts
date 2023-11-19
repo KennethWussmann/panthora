@@ -22,10 +22,11 @@ export class AssetService {
     createRequest: AssetCreateEditRequest
   ) => {
     this.logger.debug("Creating asset", { createRequest, userId });
-    const assetType = await this.assetTypeService.getByIdWithFieldsAndChildren(
-      userId,
-      createRequest.assetTypeId
-    );
+    const assetType =
+      await this.assetTypeService.getByIdWithFieldsAndChildrenByUser(
+        userId,
+        createRequest.assetTypeId
+      );
     await this.userService.requireTeamMembership(userId, assetType.teamId!);
 
     const asset = await this.prisma.asset.create({
@@ -137,11 +138,6 @@ export class AssetService {
       take: listRequest.limit,
       skip: listRequest.offset,
       include: {
-        assetType: {
-          include: {
-            fields: true,
-          },
-        },
         fieldValues: {
           include: {
             customField: true,
@@ -151,20 +147,24 @@ export class AssetService {
       },
     });
 
-    return assets;
+    return Promise.all(
+      assets.map(async (asset) => ({
+        ...asset,
+        assetType:
+          await this.assetTypeService.getByIdWithFieldsAndChildrenByUser(
+            userId,
+            asset.assetTypeId
+          ),
+      }))
+    );
   };
 
-  public getSearchableAssets = async (teamId: string) =>
-    this.prisma.asset.findMany({
+  public getSearchableAssets = async (teamId: string) => {
+    const assets = await this.prisma.asset.findMany({
       where: {
         teamId,
       },
       include: {
-        assetType: {
-          include: {
-            fields: true,
-          },
-        },
         fieldValues: {
           include: {
             customField: true,
@@ -173,6 +173,15 @@ export class AssetService {
         team: true,
       },
     });
+    return Promise.all(
+      assets.map(async (asset) => ({
+        ...asset,
+        assetType: await this.assetTypeService.getByIdWithFieldsAndChildren(
+          asset.assetTypeId
+        ),
+      }))
+    );
+  };
 
   public getById = async (
     userId: string,
@@ -183,11 +192,6 @@ export class AssetService {
         id,
       },
       include: {
-        assetType: {
-          include: {
-            fields: true,
-          },
-        },
         fieldValues: {
           include: {
             customField: true,
@@ -202,6 +206,12 @@ export class AssetService {
 
     await this.userService.requireTeamMembership(userId, asset.teamId!);
 
-    return asset;
+    const assetType =
+      await this.assetTypeService.getByIdWithFieldsAndChildrenByUser(
+        userId,
+        asset.assetTypeId
+      );
+
+    return { ...asset, assetType };
   };
 }

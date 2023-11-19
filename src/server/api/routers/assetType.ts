@@ -38,7 +38,7 @@ export const assetTypeRouter = createTRPCRouter({
   getWithFields: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      return ctx.applicationContext.assetTypeService.getByIdWithFieldsAndChildren(
+      return ctx.applicationContext.assetTypeService.getByIdWithFieldsAndChildrenByUser(
         ctx.session.user.id,
         input
       );
