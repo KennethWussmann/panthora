@@ -20,6 +20,7 @@ import {
   Stack,
   Switch,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FiTrash } from "react-icons/fi";
 import { FieldType } from "@prisma/client";
@@ -48,6 +49,8 @@ export const NewCustomFieldForm = ({
   field: TemporaryCustomField;
   control: Control<AssetTypeCreateRequestWithTemporaryFields, unknown>;
 }) => {
+  const isDraggingBackgroundColor = useColorModeValue("gray.50", "gray.600");
+  const notDraggingBackgroundColor = useColorModeValue("white", "gray.800");
   const {
     register,
     _formState: { errors: formErrors },
@@ -74,8 +77,8 @@ export const NewCustomFieldForm = ({
   return (
     <Box
       border={"1px"}
-      borderColor={["gray.200", "gray.600"]}
-      bg={isDragging ? ["gray.50", "gray.600"] : ["white", "gray.800"]}
+      borderColor={useColorModeValue("gray.200", "gray.600")}
+      bg={isDragging ? isDraggingBackgroundColor : notDraggingBackgroundColor}
       p={4}
       rounded={"lg"}
       style={{
