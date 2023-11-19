@@ -1,4 +1,4 @@
-import { Divider, Flex, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Stack, useColorModeValue } from "@chakra-ui/react";
 import { NavItems } from "./NavItems";
 import { Logo } from "./Logo";
 import { NavSearchBar } from "./search/NavSearchBar";
@@ -13,15 +13,14 @@ export const NavSidebar = () => {
       px={{ base: "4", sm: "6" }}
       bg={useColorModeValue("gray.100", "gray.900")}
     >
-      <Stack justify="space-between" spacing="1">
+      <Stack justify="space-between">
         <Stack spacing={{ base: "5", sm: "6" }} shouldWrapChildren>
           <Flex justify={"space-between"}>
             <Logo />
             <NavTeamSelector />
           </Flex>
           <NavSearchBar />
-          <Divider />
-          <Stack spacing="1">
+          <Stack>
             <NavItems />
           </Stack>
         </Stack>

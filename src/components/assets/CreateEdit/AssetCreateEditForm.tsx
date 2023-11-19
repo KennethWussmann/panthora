@@ -39,10 +39,21 @@ export const AssetCreateEditForm = ({
             id: asset.id,
             assetTypeId: asset.assetTypeId,
             teamId: asset.teamId ?? undefined,
-            customFieldValues: asset.fieldValues?.map((customFieldValue) => ({
-              fieldId: customFieldValue.customFieldId,
-              value: customFieldValue.value,
-            })),
+            customFieldValues:
+              asset.assetType?.fields?.map((field) => {
+                const customFieldValue = asset.fieldValues?.find(
+                  (value) => value.customFieldId === field.id
+                );
+                return customFieldValue
+                  ? {
+                      fieldId: customFieldValue.customFieldId,
+                      value: customFieldValue.value,
+                    }
+                  : {
+                      fieldId: field.id,
+                      value: "",
+                    };
+              }) ?? [],
           },
         }
       : undefined
@@ -100,6 +111,7 @@ export const AssetCreateEditForm = ({
     if (!defaultTeam) {
       throw new Error("No default team found");
     }
+    console.log(data);
     await updateAsset({
       ...data,
       teamId: defaultTeam.id,

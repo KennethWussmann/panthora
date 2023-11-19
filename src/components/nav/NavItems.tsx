@@ -1,4 +1,4 @@
-import { type As } from "@chakra-ui/react";
+import { Divider, type As } from "@chakra-ui/react";
 import {
   FiBarChart2,
   FiBox,
@@ -13,7 +13,7 @@ type NavigationItem = {
   label: string;
   onClick?: VoidFunction;
   href?: string;
-};
+} | null;
 
 export const navigationItems: NavigationItem[] = [
   {
@@ -21,6 +21,7 @@ export const navigationItems: NavigationItem[] = [
     label: "Dashboard",
     href: "/dashboard",
   },
+  null,
   {
     icon: FiBox,
     label: "Assets",
@@ -36,6 +37,7 @@ export const navigationItems: NavigationItem[] = [
     label: "Tags",
     href: "/tags",
   },
+  null,
   {
     icon: FiSettings,
     label: "Settings",
@@ -46,16 +48,20 @@ export const navigationItems: NavigationItem[] = [
 export const NavItems = () => {
   return (
     <>
-      {navigationItems.map((item, index) => (
-        <NavButton
-          key={index}
-          icon={item.icon}
-          label={item.label}
-          onClick={item.onClick}
-          href={item.href}
-          isActive={window.location.pathname.startsWith(item.href ?? "/")}
-        />
-      ))}
+      {navigationItems.map((item, index) =>
+        item ? (
+          <NavButton
+            key={index}
+            icon={item.icon}
+            label={item.label}
+            onClick={item.onClick}
+            href={item.href}
+            isActive={window.location.pathname.startsWith(item.href ?? "/")}
+          />
+        ) : (
+          <Divider key={index} />
+        )
+      )}
     </>
   );
 };

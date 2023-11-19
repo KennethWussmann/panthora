@@ -57,7 +57,7 @@ export const NavTopbar = () => {
           />
         </HStack>
         {!isDesktop && menuOpen && (
-          <VStack spacing="5" align={"stretch"}>
+          <VStack gap={2} align={"stretch"}>
             <Spacer />
             <Divider />
             <NavItems />
