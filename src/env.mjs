@@ -22,13 +22,22 @@ export const env = createEnv({
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url()
     ),
-    // Add ` on ID and SECRET if you want to make sure they're not empty
-    COGNITO_CLIENT_ID: z.string(),
-    COGNITO_CLIENT_SECRET: z.string(),
-    COGNITO_ISSUER: z.string(),
     APP_BASE_URL: z.string().url(),
     MEILI_URL: z.string().url(),
     MEILI_MASTER_KEY: z.string(),
+
+    COGNITO_CLIENT_ID: z.string().nullable(),
+    COGNITO_CLIENT_SECRET: z.string().nullable(),
+    COGNITO_ISSUER: z.string().nullable(),
+
+    DISCORD_CLIENT_ID: z.string().nullable(),
+    DISCORD_CLIENT_SECRET: z.string().nullable(),
+
+    GOOGLE_CLIENT_ID: z.string().nullable(),
+    GOOGLE_CLIENT_SECRET: z.string().nullable(),
+
+    GITHUB_CLIENT_ID: z.string().nullable(),
+    GITHUB_CLIENT_SECRET: z.string().nullable(),
   },
 
   /**
@@ -50,11 +59,21 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     APP_BASE_URL: process.env.APP_BASE_URL,
+    MEILI_URL: process.env.MEILI_URL,
+    MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
+
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
     COGNITO_ISSUER: process.env.COGNITO_ISSUER,
-    MEILI_URL: process.env.MEILI_URL,
-    MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
+
+    DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
