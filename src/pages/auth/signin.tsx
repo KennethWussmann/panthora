@@ -22,10 +22,10 @@ import { getProviders, signIn } from "next-auth/react";
 import { useEffect, type ReactElement } from "react";
 import { FiLogIn } from "react-icons/fi";
 import { FaAws, FaDiscord, FaGithub, FaGoogle } from "react-icons/fa";
-import BlankLayout from "~/components/layout/BlankLayout";
 import { getServerAuthSession } from "~/server/auth/auth";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import BlankLayout from "~/components/layout/BlankLayout";
 
 const providerIcons: Record<string, ReactElement> = {
   cognito: <FaAws />,
@@ -54,6 +54,7 @@ export default function SignIn({
     setError,
   } = useForm<Credentials>();
   const [loginError, setLoginError] = useBoolean();
+  const [autoSignIn, setAutoSignIn] = useBoolean();
   const {
     push,
     query: { error, logout },
@@ -83,6 +84,7 @@ export default function SignIn({
       Object.keys(providers).length === 1
     ) {
       // if there is only one third-party provider, sign in with it.
+      setAutoSignIn.on();
       void signIn(Object.keys(providers)[0], { callbackUrl: "/dashboard" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,6 +123,14 @@ export default function SignIn({
             <Alert status="success">
               <AlertIcon />
               <AlertDescription>Logged out successfully</AlertDescription>
+            </Alert>
+          )}
+          {autoSignIn && (
+            <Alert status="info">
+              <AlertIcon />
+              <AlertDescription>
+                Logging in with {Object.values(providers).at(0)?.name} ...
+              </AlertDescription>
             </Alert>
           )}
           <Stack spacing="6">
@@ -173,11 +183,13 @@ export default function SignIn({
                 )}
               </>
             )}
-            {hasThirdPartyProviders && !isPasswordAuthEnabled && (
-              <Text color="fg.muted" textAlign={"center"}>
-                Login with one of the providers
-              </Text>
-            )}
+            {!autoSignIn &&
+              hasThirdPartyProviders &&
+              !isPasswordAuthEnabled && (
+                <Text color="fg.muted" textAlign={"center"}>
+                  Login with one of the providers
+                </Text>
+              )}
             <Stack spacing="3">
               {Object.values(providers)
                 .filter((provider) => provider.id !== "password")
@@ -190,6 +202,7 @@ export default function SignIn({
                     variant={"ghost"}
                     w={"full"}
                     leftIcon={providerIcons[provider.id]}
+                    isLoading={autoSignIn}
                   >
                     {provider.name}
                   </Button>
