@@ -26,18 +26,24 @@ export const env = createEnv({
     MEILI_URL: z.string().url(),
     MEILI_MASTER_KEY: z.string(),
 
-    COGNITO_CLIENT_ID: z.string().nullable(),
-    COGNITO_CLIENT_SECRET: z.string().nullable(),
-    COGNITO_ISSUER: z.string().nullable(),
+    PASSWORD_AUTH_ENABLED: z
+      .string()
+      .optional()
+      .default("false")
+      .transform((val) => val?.toLowerCase() === "true"),
 
-    DISCORD_CLIENT_ID: z.string().nullable(),
-    DISCORD_CLIENT_SECRET: z.string().nullable(),
+    COGNITO_CLIENT_ID: z.string().optional(),
+    COGNITO_CLIENT_SECRET: z.string().optional(),
+    COGNITO_ISSUER: z.string().optional(),
 
-    GOOGLE_CLIENT_ID: z.string().nullable(),
-    GOOGLE_CLIENT_SECRET: z.string().nullable(),
+    DISCORD_CLIENT_ID: z.string().optional(),
+    DISCORD_CLIENT_SECRET: z.string().optional(),
 
-    GITHUB_CLIENT_ID: z.string().nullable(),
-    GITHUB_CLIENT_SECRET: z.string().nullable(),
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
+
+    GITHUB_CLIENT_ID: z.string().optional(),
+    GITHUB_CLIENT_SECRET: z.string().optional(),
   },
 
   /**
@@ -74,6 +80,8 @@ export const env = createEnv({
 
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+
+    PASSWORD_AUTH_ENABLED: process.env.PASSWORD_AUTH_ENABLED,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

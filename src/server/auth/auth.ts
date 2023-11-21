@@ -43,6 +43,9 @@ export const authOptions: NextAuthOptions = {
       return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`;
     },
   },
+  pages: {
+    signIn: "/auth/signin",
+  },
   adapter: PrismaAdapter(db),
   providers,
 };

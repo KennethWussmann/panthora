@@ -4,25 +4,27 @@ import CognitoProvider from "next-auth/providers/cognito";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import { CustomCredentialsProvider } from "./customCredentialsProvider";
 
 type EnvConfig = typeof env;
-type NonNullableEnv<T> = {
-  [P in keyof T]: NonNullable<T[P]>;
+type NonUndefinedEnv<T extends keyof EnvConfig> = {
+  [P in T]: Exclude<EnvConfig[P], undefined>;
 };
+
 type ProviderInitializer<T extends keyof EnvConfig> = (
-  validatedEnv: NonNullableEnv<Pick<EnvConfig, T>>
+  validatedEnv: NonUndefinedEnv<T>
 ) => Provider;
 
 const validateEnv = <T extends keyof EnvConfig>(
   requiredKeys: T[]
-): NonNullableEnv<Pick<EnvConfig, T>> | null => {
-  const isConfigured = requiredKeys.every((key) => env[key] != null);
+): NonUndefinedEnv<T> | null => {
+  const isConfigured = requiredKeys.every((key) => env[key] !== undefined);
   if (!isConfigured) return null;
 
   return requiredKeys.reduce((acc, key) => {
-    acc[key] = env[key] as NonNullable<EnvConfig[T]>;
+    acc[key] = env[key] as NonUndefinedEnv<T>[T];
     return acc;
-  }, {} as NonNullableEnv<Pick<EnvConfig, T>>);
+  }, {} as NonUndefinedEnv<T>);
 };
 
 const initializeProvider = <T extends keyof EnvConfig>(
@@ -69,4 +71,5 @@ export const providers: Provider[] = [
         clientSecret: validatedEnv.GITHUB_CLIENT_SECRET,
       })
   ),
+  env.PASSWORD_AUTH_ENABLED ? CustomCredentialsProvider() : null,
 ].filter((provider): provider is Provider => provider !== null);

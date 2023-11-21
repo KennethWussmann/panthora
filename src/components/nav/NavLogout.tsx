@@ -1,9 +1,11 @@
 import { Flex, IconButton, Text, Tooltip } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { FiLogOut } from "react-icons/fi";
 
 export const NavLogout = () => {
   const { data: session } = useSession();
+  const { push } = useRouter();
 
   if (!session) {
     return;
@@ -20,7 +22,10 @@ export const NavLogout = () => {
           colorScheme="red"
           icon={<FiLogOut />}
           aria-label="Logout"
-          onClick={() => void signOut()}
+          onClick={async () => {
+            await signOut({ redirect: false });
+            void push("/auth/signin?logout=true");
+          }}
         />
       </Tooltip>
     </Flex>
