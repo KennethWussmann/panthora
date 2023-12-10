@@ -24,7 +24,13 @@ import {
 import { FiBox, FiFolder, FiSearch, FiTag, FiX } from "react-icons/fi";
 import { AdvancedSearchExplanation } from "./AdvancedSearchExplanation";
 import { api } from "~/utils/api";
-import { type ReactNode, useEffect, useState } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useState,
+  KeyboardEventHandler,
+  KeyboardEvent,
+} from "react";
 import { useRouter } from "next/router";
 import { type SearchResult } from "~/server/lib/search/searchResponse";
 import { useSearchShortcut } from "./useSearchShortcut";
@@ -67,6 +73,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
   useSearchShortcut(onToggle);
 
@@ -79,6 +86,32 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
       enabled: defaultTeam && searchQuery.length > 0 && !isLoadingDefaultTeam,
     }
   );
+
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (
+    e: KeyboardEvent
+  ) => {
+    if (!searchResults) return;
+
+    let newIndex: number;
+    switch (e.key) {
+      case "ArrowDown":
+        newIndex = (selectedIndex + 1) % searchResults.length;
+        setSelectedIndex(newIndex);
+        break;
+      case "ArrowUp":
+        newIndex =
+          (selectedIndex - 1 + searchResults.length) % searchResults.length;
+        setSelectedIndex(newIndex);
+        break;
+      case "Enter":
+        if (selectedIndex >= 0) {
+          openResult(searchResults.at(selectedIndex)!);
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
   const openResult = (result: SearchResult) => {
     switch (result.index) {
@@ -99,11 +132,16 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
     setSearchQuery("");
   }, [isOpen]);
 
+  useEffect(() => {
+    // Reset the selected index when the search results change
+    setSelectedIndex(-1);
+  }, [searchResults]);
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size={"3xl"}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent onKeyDown={handleKeyDown}>
           <ModalCloseButton />
           <ModalBody mt={10} mb={4}>
             <Stack gap={4}>
@@ -131,6 +169,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                     aria-label="Clear"
                     variant={"ghost"}
                     size={"sm"}
+                    disabled={searchQuery.length === 0}
                     onClick={() => setSearchQuery("")}
                   />
                 </InputRightElement>
@@ -156,6 +195,9 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                         <Tr
                           key={index}
                           _hover={{ bgColor: "gray.100", cursor: "pointer" }}
+                          backgroundColor={
+                            selectedIndex === index ? "gray.100" : undefined
+                          }
                           onClick={() => openResult(result)}
                         >
                           {searchResultTypeMap[result.index]}
