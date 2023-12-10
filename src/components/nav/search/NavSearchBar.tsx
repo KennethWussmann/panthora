@@ -1,5 +1,6 @@
 import {
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -20,7 +21,7 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiBox, FiFolder, FiSearch, FiTag } from "react-icons/fi";
+import { FiBox, FiFolder, FiSearch, FiTag, FiX } from "react-icons/fi";
 import { AdvancedSearchExplanation } from "./AdvancedSearchExplanation";
 import { api } from "~/utils/api";
 import { type ReactNode, useEffect, useState } from "react";
@@ -124,6 +125,15 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                <InputRightElement marginTop={1} marginRight={1}>
+                  <IconButton
+                    icon={<FiX />}
+                    aria-label="Clear"
+                    variant={"ghost"}
+                    size={"sm"}
+                    onClick={() => setSearchQuery("")}
+                  />
+                </InputRightElement>
               </InputGroup>
 
               <AdvancedSearchExplanation />
