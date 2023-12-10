@@ -124,14 +124,6 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                {!hideShortcut && (
-                  <InputRightElement
-                    pointerEvents="none"
-                    color="gray.300"
-                    fontSize="1.2em"
-                    marginRight={2}
-                  />
-                )}
               </InputGroup>
 
               <AdvancedSearchExplanation />
@@ -195,7 +187,9 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
             color="gray.300"
             fontSize="1.2em"
             marginRight={2}
-          />
+          >
+            ⌘K
+          </InputRightElement>
         )}
       </InputGroup>
     </>
