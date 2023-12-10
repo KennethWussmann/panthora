@@ -7,6 +7,7 @@ import { type UserService } from "../user/userService";
 import { type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
 import { waitForTasks } from "../user/meiliSearchUtils";
+import slugify from "slugify";
 
 export const assetDocumentSchema = z.record(
   z.union([z.string(), z.number(), z.boolean(), z.null()])
@@ -92,22 +93,22 @@ export class AssetSearchService {
         );
         const customFieldsAndBaseAttributes = [
           ...baseAttributes,
-          ...customFieldsForTeam.map((field) => field.name),
+          ...customFieldsForTeam.map((field) => field.slug),
         ];
 
         const currentlyFilterableAttributes =
           await index.getFilterableAttributes();
         const notYetFilterableAttributes = customFieldsForTeam.filter(
           (field) =>
-            !currentlyFilterableAttributes.includes(field.name) &&
-            !baseAttributes.includes(field.name)
+            !currentlyFilterableAttributes.includes(field.slug) &&
+            !baseAttributes.includes(field.slug)
         );
 
         const currentlySortableAttributes = await index.getSortableAttributes();
         const notYetSortableAttributes = customFieldsForTeam.filter(
           (field) =>
-            !currentlySortableAttributes.includes(field.name) &&
-            !baseAttributes.includes(field.name)
+            !currentlySortableAttributes.includes(field.slug) &&
+            !baseAttributes.includes(field.slug)
         );
 
         if (notYetFilterableAttributes.length > 0) {
@@ -119,7 +120,7 @@ export class AssetSearchService {
           );
           this.logger.debug("New filterable attributes", {
             teamId: team.id,
-            attributes: notYetFilterableAttributes.map((attr) => attr.name),
+            attributes: notYetFilterableAttributes.map((attr) => attr.slug),
           });
           await index.updateFilterableAttributes(customFieldsAndBaseAttributes);
           this.logger.info("Applying filterable attributes done", {
@@ -136,7 +137,7 @@ export class AssetSearchService {
           );
           this.logger.debug("New sortable attributes", {
             teamId: team.id,
-            attributes: notYetSortableAttributes.map((attr) => attr.name),
+            attributes: notYetSortableAttributes.map((attr) => attr.slug),
           });
           await index.updateSortableAttributes(customFieldsAndBaseAttributes);
           this.logger.info("Applying sortable attributes done", {
@@ -155,7 +156,7 @@ export class AssetSearchService {
     teamId: asset.teamId,
     teamName: asset.team?.name ?? null,
     ...Object.fromEntries(
-      asset.fieldValues.map((field) => [field.customField.name, field.value])
+      asset.fieldValues.map((field) => [field.customField.slug, field.value])
     ),
   });
 

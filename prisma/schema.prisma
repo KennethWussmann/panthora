@@ -117,6 +117,7 @@ model CustomField {
     createdAt     DateTime     @default(now())
     updatedAt     DateTime     @updatedAt
     name          String
+    slug          String
     fieldType     FieldType
     inputRequired Boolean
     inputMin      Int?

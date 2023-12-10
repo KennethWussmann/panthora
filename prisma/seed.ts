@@ -1,11 +1,7 @@
 import { FieldType } from "@prisma/client";
 import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
-const {
-  prismaClient,
-  searchService,
-  logger: rootLogger,
-} = defaultApplicationContext;
+const { prismaClient, logger: rootLogger } = defaultApplicationContext;
 
 const logger = rootLogger.child({ name: "PrismaSeed" });
 
@@ -74,6 +70,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: electronicsAssetType.id,
         name: "Name",
+        slug: "name",
         fieldType: FieldType.STRING,
         inputRequired: true,
         inputMin: 3,
@@ -85,6 +82,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: electronicsAssetType.id,
         name: "Quantity",
+        slug: "quantity",
         fieldType: FieldType.NUMBER,
         inputRequired: true,
         inputMin: 0,
@@ -95,6 +93,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: electronicsAssetType.id,
         name: "Location",
+        slug: "location",
         fieldType: FieldType.TAG,
         tagId: electronicsLocationTag.id,
         inputRequired: false,
@@ -107,6 +106,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My String",
+        slug: "my-string",
         fieldType: FieldType.STRING,
         inputRequired: false,
         showInTable: true,
@@ -117,6 +117,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Boolean",
+        slug: "my-boolean",
         fieldType: FieldType.BOOLEAN,
         inputRequired: false,
       },
@@ -126,6 +127,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Currency",
+        slug: "my-currency",
         fieldType: FieldType.CURRENCY,
         inputRequired: false,
       },
@@ -135,6 +137,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Date",
+        slug: "my-date",
         fieldType: FieldType.DATE,
         inputRequired: false,
       },
@@ -144,6 +147,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Time",
+        slug: "my-time",
         fieldType: FieldType.TIME,
         inputRequired: false,
       },
@@ -153,6 +157,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Date & Time",
+        slug: "my-date-time",
         fieldType: FieldType.DATETIME,
         inputRequired: false,
       },
@@ -162,6 +167,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Number",
+        slug: "my-number",
         fieldType: FieldType.NUMBER,
         inputRequired: false,
       },
@@ -171,6 +177,7 @@ const seed = async () => {
         teamId: team.id,
         assetTypeId: allFieldTypesAssetType.id,
         name: "My Tag",
+        slug: "my-tag",
         fieldType: FieldType.TAG,
         tagId: electronicsLocationTag.id,
         inputRequired: false,

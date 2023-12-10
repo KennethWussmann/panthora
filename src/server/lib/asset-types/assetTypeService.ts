@@ -10,6 +10,7 @@ import { type AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
 import { type UserService } from "../user/userService";
 import { type Logger } from "winston";
 import { type AssetTypeSearchService } from "../search/assetTypeSearchService";
+import slugify from "slugify";
 
 export class AssetTypeService {
   constructor(
@@ -73,6 +74,7 @@ export class AssetTypeService {
           data: {
             fieldType: field.type,
             name: field.name,
+            slug: slugify(field.name, { lower: true }),
             inputRequired: field.inputRequired,
             showInTable: field.showInTable,
             assetType: {
@@ -258,6 +260,7 @@ export class AssetTypeService {
             create: {
               fieldType: field.type,
               name: field.name,
+              slug: slugify(field.name, { lower: true }),
               inputRequired: field.inputRequired,
               showInTable: field.showInTable,
               assetType: {
@@ -278,6 +281,7 @@ export class AssetTypeService {
           data: {
             fieldType: field.type,
             name: field.name,
+            slug: slugify(field.name, { lower: true }),
             inputRequired: field.inputRequired,
             showInTable: field.showInTable,
             assetType: {
