@@ -67,17 +67,6 @@ const searchResultTypeMap: Record<"assetTypes" | "assets" | "tags", ReactNode> =
     tags: <TagSearchResultTypeColumn />,
   };
 
-const getResultName = (result: SearchResult) => {
-  switch (result.index) {
-    case "assets":
-      return result.result.name;
-    case "assetTypes":
-      return result.result.name;
-    case "tags":
-      return result.result.name;
-  }
-}
-
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
   const [searchQuery, setSearchQuery] = useState("");

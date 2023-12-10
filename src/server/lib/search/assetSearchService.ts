@@ -7,7 +7,6 @@ import { type UserService } from "../user/userService";
 import { type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
 import { waitForTasks } from "../user/meiliSearchUtils";
-import slugify from "slugify";
 
 export const assetDocumentSchema = z.record(
   z.union([z.string(), z.number(), z.boolean(), z.null()])
