@@ -26,6 +26,7 @@ import { api } from "~/utils/api";
 import { type ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { type SearchResult } from "~/server/lib/search/searchResponse";
+import { useSearchShortcut } from "./useSearchShortcut";
 
 const AssetSearchResultTypeColumn = () => (
   <Td fontWeight={"bold"}>
@@ -62,9 +63,11 @@ const searchResultTypeMap: Record<"assetTypes" | "assets" | "tags", ReactNode> =
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
+
+  useSearchShortcut(onToggle);
 
   const { data: searchResults } = api.search.search.useQuery(
     {
