@@ -1,5 +1,8 @@
 import { type PrismaClient } from "@prisma/client";
-import { type AssetCreateEditRequest } from "./assetCreateEditRequest";
+import {
+  type AssetCreateEditCustomFieldValue,
+  type AssetCreateEditRequest,
+} from "./assetCreateEditRequest";
 import { type AssetListRequest } from "./assetListRequest";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type UserService } from "../user/userService";
@@ -16,6 +19,49 @@ export class AssetService {
     private readonly assetTypeService: AssetTypeService,
     private readonly assetSearchService: AssetSearchService
   ) {}
+
+  /**
+   * Get the tag ids of all field values that are arrays of tags and the user has access to
+   * @param teamId
+   * @param fieldValues
+   * @returns Record with field id as key and array of tag ids as value
+   */
+  private findTagsOfFieldValues = async (
+    teamId: string,
+    fieldValues: AssetCreateEditCustomFieldValue[]
+  ): Promise<Record<string, string[] | undefined>> => {
+    const rawTagIds = fieldValues.flatMap((fieldValue) => {
+      if (Array.isArray(fieldValue.value)) {
+        return fieldValue.value;
+      }
+      return [];
+    });
+
+    const filteredTagIds = await this.prisma.tag.findMany({
+      select: { id: true },
+      where: {
+        teamId,
+        id: {
+          in: rawTagIds,
+        },
+      },
+    });
+
+    const fieldValueToTagIds = Object.fromEntries(
+      fieldValues.map((fieldValue) => {
+        if (Array.isArray(fieldValue.value)) {
+          return [
+            fieldValue.fieldId,
+            fieldValue.value.filter((tagId) =>
+              filteredTagIds.find((filteredTagId) => filteredTagId.id == tagId)
+            ),
+          ];
+        }
+        return [fieldValue.fieldId, undefined];
+      })
+    );
+    return fieldValueToTagIds;
+  };
 
   public createAsset = async (
     userId: string,
@@ -37,18 +83,42 @@ export class AssetService {
     });
     this.logger.info("Created asset", { assetId: asset.id, userId });
 
+    const tagsOfFieldValues = await this.findTagsOfFieldValues(
+      createRequest.teamId,
+      createRequest.customFieldValues
+    );
+
     await this.prisma.$transaction(
       createRequest.customFieldValues
         .filter((fieldValue) => !!fieldValue.value)
-        .map((fieldValue) =>
-          this.prisma.fieldValue.create({
+        .map((fieldValue) => {
+          console.log({
             data: {
-              value: String(fieldValue.value),
+              value: Array.isArray(fieldValue.value)
+                ? undefined
+                : String(fieldValue.value),
               customFieldId: fieldValue.fieldId,
               assetId: asset.id,
+              tags: {
+                connect: tagsOfFieldValues[fieldValue.fieldId]?.map(
+                  (tagId) => ({ id: tagId })
+                ),
+              },
             },
-          })
-        )
+          });
+          return this.prisma.fieldValue.create({
+            data: {
+              value: fieldValue.value ? String(fieldValue.value) : undefined,
+              customFieldId: fieldValue.fieldId,
+              assetId: asset.id,
+              tags: {
+                connect: tagsOfFieldValues[fieldValue.fieldId]?.map(
+                  (tagId) => ({ id: tagId })
+                ),
+              },
+            },
+          });
+        })
     );
     this.logger.info("Created custom fields", { assetId: asset.id, userId });
     void this.assetSearchService.indexAsset(
@@ -88,6 +158,11 @@ export class AssetService {
     await this.userService.requireTeamMembership(userId, oldAsset.teamId);
     await this.userService.requireTeamMembership(userId, updateRequest.teamId);
 
+    const tagsOfFieldValues = await this.findTagsOfFieldValues(
+      updateRequest.teamId,
+      updateRequest.customFieldValues
+    );
+
     await this.prisma.$transaction([
       this.prisma.asset.update({
         data: {
@@ -105,14 +180,28 @@ export class AssetService {
               )?.id ?? randomUUID(),
           },
           create: {
-            value: String(fieldValue.value),
+            value: Array.isArray(fieldValue.value)
+              ? undefined
+              : String(fieldValue.value),
             customFieldId: fieldValue.fieldId,
             assetId: oldAsset.id,
+            tags: {
+              connect: tagsOfFieldValues[fieldValue.fieldId]?.map((tagId) => ({
+                id: tagId,
+              })),
+            },
           },
           update: {
-            value: String(fieldValue.value),
+            value: Array.isArray(fieldValue.value)
+              ? undefined
+              : String(fieldValue.value),
             customFieldId: fieldValue.fieldId,
             assetId: oldAsset.id,
+            tags: {
+              connect: tagsOfFieldValues[fieldValue.fieldId]?.map((tagId) => ({
+                id: tagId,
+              })),
+            },
           },
         })
       ),
@@ -140,6 +229,7 @@ export class AssetService {
       include: {
         fieldValues: {
           include: {
+            tags: true,
             customField: true,
           },
         },
@@ -194,6 +284,7 @@ export class AssetService {
       include: {
         fieldValues: {
           include: {
+            tags: true,
             customField: true,
           },
         },

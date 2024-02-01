@@ -148,7 +148,8 @@ export const AssetCreateEditCustomFieldInput = ({
                 }}
                 value={value && Array.isArray(value) ? value : []}
                 setValue={onChange}
-                max={1}
+                max={customField.inputMax ?? undefined}
+                min={customField.inputMin ?? undefined}
               />
             )}
           />

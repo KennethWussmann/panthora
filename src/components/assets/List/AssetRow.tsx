@@ -1,5 +1,5 @@
-import { Checkbox, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { type CustomField } from "@prisma/client";
+import { Checkbox, IconButton, Tag, Td, Tooltip, Tr } from "@chakra-ui/react";
+import { FieldType, type CustomField } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit, FiPrinter } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
@@ -50,6 +50,7 @@ export const AssetRow = ({
   asset,
   uniqueFieldsToShow,
 }: AssetRowProps) => {
+  const { push } = useRouter();
   return (
     <>
       <Tr key={asset.id}>
@@ -64,6 +65,25 @@ export const AssetRow = ({
           const fieldValue = asset.fieldValues.find(
             (fv) => fv.customFieldId === field.id
           );
+          if (fieldValue?.customField.fieldType === FieldType.TAG) {
+            return (
+              <Td key={field.id}>
+                {fieldValue?.tags?.map((tag) => (
+                  <Tag
+                    key={tag.id}
+                    mr={2}
+                    _hover={{
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => push(`/tags/edit/${tag.id}`)}
+                  >
+                    {tag.name}
+                  </Tag>
+                ))}
+              </Td>
+            );
+          }
           return <Td key={field.id}>{fieldValue?.value ?? ""}</Td>;
         })}
         <Td textAlign="right">

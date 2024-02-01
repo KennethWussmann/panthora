@@ -1,4 +1,4 @@
-import { OAuthConfig, Provider } from "next-auth/providers";
+import { type OAuthConfig, type Provider } from "next-auth/providers";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 

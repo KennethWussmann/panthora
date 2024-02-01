@@ -26,7 +26,7 @@ export const CustomCredentialsProvider = () =>
         if (user?.password && credentials) {
           const validPassword = await bcrypt.compare(
             credentials.password,
-            user.password as string
+            user.password
           );
 
           if (validPassword) {

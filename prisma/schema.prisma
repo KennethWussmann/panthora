@@ -93,9 +93,9 @@ model Tag {
     parent      Tag?          @relation("TagToTag", fields: [parentId], references: [id])
     children    Tag[]         @relation("TagToTag")
     customField CustomField[]
-    fieldValue  FieldValue[]
     team        Team?         @relation(fields: [teamId], references: [id])
     teamId      String?
+    fieldValues FieldValue[]
 }
 
 model AssetType {
@@ -159,11 +159,10 @@ model FieldValue {
     id            String      @id @default(uuid())
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
-    value         String
+    value         String?
     assetId       String
     asset         Asset       @relation(fields: [assetId], references: [id])
     customFieldId String
     customField   CustomField @relation(fields: [customFieldId], references: [id])
-    tagId         String?
-    tag           Tag?        @relation(fields: [tagId], references: [id])
+    tags          Tag[]
 }

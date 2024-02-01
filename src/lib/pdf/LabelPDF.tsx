@@ -6,6 +6,7 @@ import { dataURLtoUint8Array } from "./dataUrlToUint8Array";
 import { appUrl } from "../appUrl";
 import QRCode from "qrcode";
 import { useEffect, useRef } from "react";
+import { FieldType } from "@prisma/client";
 
 const baseDocument = () =>
   new Document({
@@ -21,7 +22,7 @@ const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
     .filter((field) => field.showInTable)
     .map((field) => ({
       field,
-      value: asset.fieldValues.find((f) => f.customFieldId === field.id)!.value,
+      value: asset.fieldValues.find((f) => f.customFieldId === field.id)!,
     }));
 
   const table = doc.table({ widths: [20 * mm, 35 * mm] });
@@ -31,8 +32,12 @@ const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
   const textCell = row.cell({
     paddingLeft: 2 * mm,
   });
-  fieldsToShow.forEach(({ value }) => {
-    textCell.text(value);
+  fieldsToShow.forEach(({ value, field: { fieldType } }) => {
+    if (fieldType === FieldType.TAG) {
+      textCell.text(value.tags.map((tag) => tag.name).join(", "));
+    } else {
+      textCell.text(String(value.value));
+    }
   });
 
   table.row().cell().text(asset.id, { fontSize: 5 });
