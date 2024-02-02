@@ -12,6 +12,7 @@ import type { Team } from "@prisma/client";
 import { FiSearch } from "react-icons/fi";
 import { api } from "~/utils/api";
 import { SearchTaskTable } from "./SearchTaskTable";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 
 export const SearchSettingsForm = ({ team }: { team: Team }) => {
   const {
@@ -19,7 +20,7 @@ export const SearchSettingsForm = ({ team }: { team: Team }) => {
     isLoading: isLoadingRebuildIndexes,
     isError,
     isSuccess,
-  } = api.search.rebuildIndexes.useMutation();
+  } = useErrorHandlingMutation(api.search.rebuildIndexes);
 
   return (
     <Box p={4} borderWidth={1} rounded={4}>

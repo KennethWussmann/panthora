@@ -14,6 +14,7 @@ import type { Team } from "@prisma/client";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiSave } from "react-icons/fi";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type TeamUpdateRequest } from "~/server/lib/user/teamUpdateRequest";
 import { api } from "~/utils/api";
 
@@ -35,7 +36,7 @@ export const TeamSettingsForm = ({
     isLoading: isLoadingTeamUpdate,
     isError,
     isSuccess,
-  } = api.user.updateTeam.useMutation();
+  } = useErrorHandlingMutation(api.user.updateTeam);
 
   const onSubmit = async (data: TeamUpdateRequest) => {
     await updateTeam({

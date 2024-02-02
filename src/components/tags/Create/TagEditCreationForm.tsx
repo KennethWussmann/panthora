@@ -19,6 +19,7 @@ import { type Tag } from "~/server/lib/tags/tag";
 import { Controller, useForm } from "react-hook-form";
 import { type TagCreateEditRequest } from "~/server/lib/tags/tagCreateEditRequest";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 
 export const TagEditCreationForm = ({
   tag,
@@ -49,13 +50,13 @@ export const TagEditCreationForm = ({
     isError: isErrorCreation,
     isLoading: isLoadingCreation,
     isSuccess: tagCreated,
-  } = api.tag.create.useMutation();
+  } = useErrorHandlingMutation(api.tag.create);
   const {
     mutateAsync: updateTag,
     isError: isErrorUpdate,
     isLoading: isLoadingUpdate,
     isSuccess: tagUpdated,
-  } = api.tag.update.useMutation();
+  } = useErrorHandlingMutation(api.tag.update);
 
   const onSubmit = (data: TagCreateEditRequest) => {
     if (!defaultTeam) {

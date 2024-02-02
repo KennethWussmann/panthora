@@ -16,6 +16,7 @@ import { FiSave } from "react-icons/fi";
 import { AssetCreateEditCustomFieldsForm } from "./AssetCreateEditCustomFieldsForm";
 import { useEffect } from "react";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 
 export const AssetCreateEditForm = ({
   asset,
@@ -69,13 +70,13 @@ export const AssetCreateEditForm = ({
     isError: isErrorUpdate,
     isLoading: isLoadingUpdate,
     isSuccess: assetUpdated,
-  } = api.asset.update.useMutation();
+  } = useErrorHandlingMutation(api.asset.update);
   const {
     mutateAsync: createAsset,
     isError: isErrorCreate,
     isLoading: isLoadingCreate,
     isSuccess: assetCreated,
-  } = api.asset.create.useMutation();
+  } = useErrorHandlingMutation(api.asset.create);
   const selectedAssetTypeId = watch("assetTypeId");
   const { data: assetType, isLoading: isLoadingAssetType } =
     api.assetType.getWithFields.useQuery(selectedAssetTypeId, {

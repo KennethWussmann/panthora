@@ -20,6 +20,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { type AssetTypeCreateRequestWithTemporaryFields } from "./types";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { AssetTypeSelector } from "../AssetTypeSelector";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 
 export const AssetTypeCreateEditForm = ({
   assetType,
@@ -68,13 +69,13 @@ export const AssetTypeCreateEditForm = ({
     isError: isErrorCreation,
     isLoading: isLoadingCreation,
     isSuccess: assetTypeCreated,
-  } = api.assetType.create.useMutation();
+  } = useErrorHandlingMutation(api.assetType.create);
   const {
     mutateAsync: updateAssetType,
     isError: isErrorUpdate,
     isLoading: isLoadingUpdate,
     isSuccess: assetTypeUpdated,
-  } = api.assetType.update.useMutation();
+  } = useErrorHandlingMutation(api.assetType.update);
 
   const onSubmit = (data: AssetTypeCreateRequestWithTemporaryFields) => {
     if (!defaultTeam) {

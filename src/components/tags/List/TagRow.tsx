@@ -5,6 +5,7 @@ import { type Tag } from "@prisma/client";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 
 const TagActions = ({
   tag,
@@ -15,7 +16,7 @@ const TagActions = ({
 }) => {
   const { push } = useRouter();
   const { data: defaultTeam } = api.user.defaultTeam.useQuery();
-  const deleteTag = api.tag.delete.useMutation();
+  const deleteTag = useErrorHandlingMutation(api.tag.delete);
 
   const handleDelete = async () => {
     if (!defaultTeam) {
