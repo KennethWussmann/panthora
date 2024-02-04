@@ -175,8 +175,10 @@ export class LabelTemplateService {
     createRequest: LabelTemplateCreateEditRequest
   ) => {
     this.logger.debug("Creating label template", { createRequest, userId });
+    await this.userService.requireTeamMembership(userId, createRequest.teamId);
     const labelTemplate = await this.prisma.labelTemplate.create({
       data: {
+        teamId: createRequest.teamId,
         name: createRequest.name,
         default: createRequest.default,
         width: createRequest.width,

@@ -184,7 +184,7 @@ model LabelTemplate {
     height      Int               @default(32)
     padding     Int               @default(3)
     fontSize    Int               @default(7)
-    qrCodeScale Int               @default(2)
+    qrCodeScale Decimal           @default(2)
     components  LabelComponents[] @default([QR_CODE, ASSET_ID, ASSET_VALUES])
     team        Team?             @relation(fields: [teamId], references: [id])
     teamId      String?

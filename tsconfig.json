@@ -30,6 +30,6 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-  ],
+, "src/components/settings/LabelTemplateSettings/LabelTemplateCreateEditForm.tsx"  ],
   "exclude": ["node_modules"]
 }

@@ -2,7 +2,7 @@ import { LabelComponents } from "@prisma/client";
 import { z } from "zod";
 
 export const labelTemplateCreateEditRequest = z.object({
-  id: z.string().optional(),
+  id: z.string().nullable().default(null),
   teamId: z.string(),
   name: z.string(),
   default: z.boolean(),
