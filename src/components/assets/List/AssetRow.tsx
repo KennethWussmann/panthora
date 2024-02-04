@@ -75,44 +75,42 @@ export const AssetRow = ({
 }: AssetRowProps) => {
   const { push } = useRouter();
   return (
-    <>
-      <Tr key={asset.id}>
-        <Td>
-          <Checkbox
-            isChecked={selected}
-            onChange={(e) => setSelected(e.target.checked)}
-          />
-        </Td>
-        <Td>{asset.createdAt.toISOString()}</Td>
-        {uniqueFieldsToShow.map((field) => {
-          const fieldValue = asset.fieldValues.find(
-            (fv) => fv.customFieldId === field.id
+    <Tr key={asset.id}>
+      <Td>
+        <Checkbox
+          isChecked={selected}
+          onChange={(e) => setSelected(e.target.checked)}
+        />
+      </Td>
+      <Td>{asset.createdAt.toISOString()}</Td>
+      {uniqueFieldsToShow.map((field) => {
+        const fieldValue = asset.fieldValues.find(
+          (fv) => fv.customFieldId === field.id
+        );
+        if (fieldValue?.customField.fieldType === FieldType.TAG) {
+          return (
+            <Td key={field.id}>
+              {fieldValue?.tags?.map((tag) => (
+                <Tag
+                  key={tag.id}
+                  mr={2}
+                  _hover={{
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                  onClick={() => push(`/tags/edit/${tag.id}`)}
+                >
+                  {tag.name}
+                </Tag>
+              ))}
+            </Td>
           );
-          if (fieldValue?.customField.fieldType === FieldType.TAG) {
-            return (
-              <Td key={field.id}>
-                {fieldValue?.tags?.map((tag) => (
-                  <Tag
-                    key={tag.id}
-                    mr={2}
-                    _hover={{
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                    }}
-                    onClick={() => push(`/tags/edit/${tag.id}`)}
-                  >
-                    {tag.name}
-                  </Tag>
-                ))}
-              </Td>
-            );
-          }
-          return <Td key={field.id}>{fieldValue?.value ?? ""}</Td>;
-        })}
-        <Td textAlign="right">
-          <AssetActions asset={asset} onDelete={refetchAssets} />
-        </Td>
-      </Tr>
-    </>
+        }
+        return <Td key={field.id}>{fieldValue?.value ?? ""}</Td>;
+      })}
+      <Td textAlign="right">
+        <AssetActions asset={asset} onDelete={refetchAssets} />
+      </Td>
+    </Tr>
   );
 };

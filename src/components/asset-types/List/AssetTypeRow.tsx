@@ -59,30 +59,25 @@ export const AssetTypeRow: React.FC<AssetTypeRowProps> = ({
   refetchAssetTypes,
 }) => {
   return (
-    <>
-      <Tr key={assetType.id}>
-        <Td>
-          <Box pl={`${(level - 1) * 20}px`}>
-            <Flex alignItems={"center"} gap={2}>
-              {level > 0 && <BiSubdirectoryRight size={"20px"} />}{" "}
-              {assetType.name}{" "}
-              {assetType.fields.length > 0 && (
-                <b>
-                  {assetType.fields.length}{" "}
-                  {assetType.fields.length === 1 ? "field" : "fields"}{" "}
-                </b>
-              )}
-            </Flex>
-          </Box>
-        </Td>
-        <Td textAlign="right">
-          <AssetTypeActions
-            assetType={assetType}
-            onDelete={refetchAssetTypes}
-          />
-        </Td>
-      </Tr>
-    </>
+    <Tr key={assetType.id}>
+      <Td>
+        <Box pl={`${(level - 1) * 20}px`}>
+          <Flex alignItems={"center"} gap={2}>
+            {level > 0 && <BiSubdirectoryRight size={"20px"} />}{" "}
+            {assetType.name}{" "}
+            {assetType.fields.length > 0 && (
+              <b>
+                {assetType.fields.length}{" "}
+                {assetType.fields.length === 1 ? "field" : "fields"}{" "}
+              </b>
+            )}
+          </Flex>
+        </Box>
+      </Td>
+      <Td textAlign="right">
+        <AssetTypeActions assetType={assetType} onDelete={refetchAssetTypes} />
+      </Td>
+    </Tr>
   );
 };
 
