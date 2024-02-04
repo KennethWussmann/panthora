@@ -7,10 +7,13 @@ import React, {
   type Dispatch,
 } from "react";
 import type { AssetWithFields } from "~/server/lib/assets/asset";
+import { type LabelTemplate } from "~/server/lib/label-templates/labelTemplate";
 
 type SelectedAssetContextType = {
   selectedAssets: AssetWithFields[];
   setSelectedAssets: Dispatch<SetStateAction<AssetWithFields[]>>;
+  selectedLabelTemplate: LabelTemplate | undefined;
+  setSelectedLabelTemplate: Dispatch<SetStateAction<LabelTemplate | undefined>>;
 };
 
 const SelectedAssetContext = createContext<
@@ -35,10 +38,17 @@ export const SelectedAssetProvider: React.FC<SelectedAssetProviderProps> = ({
   children,
 }) => {
   const [selectedAssets, setSelectedAssets] = useState<AssetWithFields[]>([]);
+  const [selectedLabelTemplate, setSelectedLabelTemplate] =
+    useState<LabelTemplate>();
 
   return (
     <SelectedAssetContext.Provider
-      value={{ selectedAssets, setSelectedAssets }}
+      value={{
+        selectedAssets,
+        setSelectedAssets,
+        selectedLabelTemplate,
+        setSelectedLabelTemplate,
+      }}
     >
       {children}
     </SelectedAssetContext.Provider>
