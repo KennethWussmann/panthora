@@ -23,7 +23,7 @@ export const assetRouter = createTRPCRouter({
     }),
   delete: protectedProcedure
     .input(assetDeleteRequest)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.applicationContext.assetService.deleteAsset(
         ctx.session.user.id,
         input
