@@ -6,23 +6,33 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
+import { api } from "~/utils/api";
 
-const stats = [
-  { label: "Assets", value: "1,320" },
-  { label: "Avg. Open Rate", value: "56.87%" },
-  { label: "Avg. Click Rate", value: "12.87%" },
-];
 export default function Dashboard() {
+  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
+    api.user.defaultTeam.useQuery();
+  const { data: stats } = api.stats.get.useQuery(
+    {
+      teamId: defaultTeam?.id ?? "",
+    },
+    { enabled: !isLoadingDefaultTeam }
+  );
   return (
     <Box as="section" py={{ base: "4", md: "8" }}>
       <Container>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: "5", md: "6" }}>
-          {stats.map(({ label, value }) => (
-            <Stat key={label}>
-              <StatLabel>{label}</StatLabel>
-              <StatNumber>{value}</StatNumber>
-            </Stat>
-          ))}
+          <Stat>
+            <StatLabel>Total Assets</StatLabel>
+            <StatNumber>{stats?.assets}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Total Asset Types</StatLabel>
+            <StatNumber>{stats?.assetTypes}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Total Tags</StatLabel>
+            <StatNumber>{stats?.tags}</StatNumber>
+          </Stat>
         </SimpleGrid>
       </Container>
     </Box>
