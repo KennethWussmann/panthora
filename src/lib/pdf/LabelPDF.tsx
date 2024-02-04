@@ -1,4 +1,4 @@
-import { Document, Image, mm } from "pdfjs";
+import { Document, Image, type Row, mm } from "pdfjs";
 import { OpenSans } from "./openSans";
 import { usePDF } from "./usePDF";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
@@ -6,18 +6,46 @@ import { dataURLtoUint8Array } from "./dataUrlToUint8Array";
 import { appUrl } from "../appUrl";
 import QRCode from "qrcode";
 import { useEffect, useRef } from "react";
-import { FieldType } from "@prisma/client";
+import { FieldType, LabelComponents } from "@prisma/client";
+import { type LabelTemplate } from "~/server/lib/label-templates/labelTemplate";
+import { api } from "~/utils/api";
 
-const baseDocument = () =>
+const baseDocument = (template: LabelTemplate) =>
   new Document({
     font: OpenSans,
-    width: 57 * mm,
-    height: 32 * mm,
-    padding: 3 * mm,
-    fontSize: 7,
+    width: template.width * mm,
+    height: template.height * mm,
+    padding: template.padding * mm,
+    fontSize: template.fontSize,
   });
 
-const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
+const labelCell = (
+  doc: Document,
+  template: LabelTemplate,
+  asset: AssetWithFields,
+  qrCode: string
+) => {
+  const table = doc.table({
+    widths: [template.qrCodeScale * 10 * mm, 35 * mm],
+  });
+  const row = table.row();
+
+  if (template.components?.includes(LabelComponents.QR_CODE)) {
+    qrCodeImg(row, qrCode);
+  }
+  if (template.components?.includes(LabelComponents.ASSET_VALUES)) {
+    assetText(row, asset);
+  }
+  if (template.components?.includes(LabelComponents.ASSET_ID)) {
+    assetId(table, asset);
+  }
+};
+
+const qrCodeImg = (row: Row, qrCode: string) => {
+  row.cell().image(new Image(dataURLtoUint8Array(qrCode)));
+};
+
+const assetText = (row: Row, asset: AssetWithFields) => {
   const fieldsToShow = asset.assetType.fields
     .filter((field) => field.showInTable)
     .map((field) => ({
@@ -25,10 +53,6 @@ const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
       value: asset.fieldValues.find((f) => f.customFieldId === field.id)!,
     }));
 
-  const table = doc.table({ widths: [20 * mm, 35 * mm] });
-  const row = table.row();
-
-  row.cell().image(new Image(dataURLtoUint8Array(qrCode)));
   const textCell = row.cell({
     paddingLeft: 2 * mm,
   });
@@ -39,21 +63,35 @@ const labelCell = (doc: Document, asset: AssetWithFields, qrCode: string) => {
       textCell.text(String(value.value));
     }
   });
+};
 
+const assetId = (
+  table: ReturnType<Document["table"]>,
+  asset: AssetWithFields
+) => {
   table.row().cell().text(asset.id, { fontSize: 5 });
 };
 
 export const LabelPDF = ({
   assets,
   showPrintDialog = true,
+  labelTemplate,
 }: {
   assets: AssetWithFields[];
   showPrintDialog?: boolean;
+  labelTemplate?: LabelTemplate;
 }) => {
+  const { data: defaultLabelTemplate } = api.labelTemplate.default.useQuery({
+    teamId: assets[0]!.teamId!,
+  });
+  const template = labelTemplate ?? defaultLabelTemplate;
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const pdfUrl = usePDF({
     document: async () => {
-      const doc = baseDocument();
+      if (!template) {
+        throw new Error("No label template");
+      }
+      const doc = baseDocument(template);
       await Promise.all(
         assets.map(async (asset, index) => {
           const isLast = index === assets.length - 1;
@@ -62,10 +100,10 @@ export const LabelPDF = ({
             {
               type: "image/jpeg",
               margin: 0,
-              scale: 2,
+              scale: template.qrCodeScale,
             }
           );
-          labelCell(doc, asset, qrCode);
+          labelCell(doc, template, asset, qrCode);
           if (!isLast) {
             doc.pageBreak();
           }
@@ -73,7 +111,8 @@ export const LabelPDF = ({
       );
       return doc;
     },
-    skip: assets.length === 0,
+    dependencies: [assets, template],
+    skip: assets.length === 0 || !template,
   });
 
   useEffect(() => {

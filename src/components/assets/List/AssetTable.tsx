@@ -13,8 +13,16 @@ import {
   AlertDescription,
   Checkbox,
   useBoolean,
+  ButtonGroup,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Tag,
+  Divider,
 } from "@chakra-ui/react";
-import { FiPlus, FiPrinter } from "react-icons/fi";
+import { FiChevronDown, FiPlus, FiPrinter } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
 import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
@@ -26,7 +34,8 @@ import { useSelectedAssets } from "~/lib/SelectedAssetsProvider";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
 
 export const AssetTable: React.FC = () => {
-  const { selectedAssets, setSelectedAssets } = useSelectedAssets();
+  const { selectedAssets, setSelectedAssets, setSelectedLabelTemplate } =
+    useSelectedAssets();
   const [isLoadingPrintView, setLoadingPrintView] = useBoolean();
   const { push } = useRouter();
   const { data: defaultTeam } = api.user.defaultTeam.useQuery();
@@ -36,6 +45,11 @@ export const AssetTable: React.FC = () => {
   );
   const { data: assetTypes, isLoading: isLoadingAssetTypes } =
     api.assetType.list.useQuery(
+      { teamId: defaultTeam?.id ?? "" },
+      { enabled: !!defaultTeam }
+    );
+  const { data: labelTemplates, isLoading: isLoadingLabelTemplates } =
+    api.labelTemplate.list.useQuery(
       { teamId: defaultTeam?.id ?? "" },
       { enabled: !!defaultTeam }
     );
@@ -71,22 +85,70 @@ export const AssetTable: React.FC = () => {
       )}
 
       <Flex justify="end" gap={2}>
-        <Button
-          leftIcon={<FiPrinter />}
-          variant={"outline"}
-          onClick={() => {
-            void push("/assets/print");
-            setLoadingPrintView.on();
-          }}
-          isLoading={isLoadingAssetTypes || isLoadingPrintView}
+        <ButtonGroup
+          isAttached
+          variant="outline"
           isDisabled={selectedAssets.length === 0}
         >
-          {selectedAssets.length === 0
-            ? "Print"
-            : `Print ${selectedAssets.length} ${
-                selectedAssets.length === 1 ? "label" : "labels"
-              }`}
-        </Button>
+          <Button
+            leftIcon={<FiPrinter />}
+            onClick={() => {
+              setSelectedLabelTemplate(undefined);
+              void push("/assets/print");
+              setLoadingPrintView.on();
+            }}
+            isLoading={
+              isLoadingAssetTypes ||
+              isLoadingPrintView ||
+              isLoadingLabelTemplates
+            }
+          >
+            {selectedAssets.length === 0
+              ? "Print"
+              : `Print ${selectedAssets.length} ${
+                  selectedAssets.length === 1 ? "label" : "labels"
+                }`}
+          </Button>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              icon={<FiChevronDown />}
+              isLoading={
+                isLoadingAssetTypes ||
+                isLoadingPrintView ||
+                isLoadingLabelTemplates
+              }
+            />
+            <MenuList>
+              {labelTemplates?.map((labelTemplate) => (
+                <MenuItem
+                  key={labelTemplate.id}
+                  flex={1}
+                  justifyContent={"space-between"}
+                  onClick={() => {
+                    setSelectedLabelTemplate(labelTemplate);
+                    void push("/assets/print");
+                    setLoadingPrintView.on();
+                  }}
+                >
+                  {labelTemplate.name}{" "}
+                  <Tag ml={4}>
+                    {labelTemplate.width} mm x {labelTemplate.height} mm
+                  </Tag>
+                </MenuItem>
+              ))}
+              <Divider />
+              <MenuItem
+                onClick={() => {
+                  void push("/settings/label-templates/create");
+                }}
+                gap={4}
+              >
+                <FiPlus /> Create template
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </ButtonGroup>
         <Button
           leftIcon={<FiPlus />}
           colorScheme="green"

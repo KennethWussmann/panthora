@@ -56,12 +56,10 @@ const AssetActions = ({
           aria-label="Print label"
         />
       </Tooltip>
-      <Tooltip label="Delete">
-        <DeleteIconButton
-          itemName={asset.fieldValues?.[0]?.value ?? asset.id}
-          onConfirm={handleDelete}
-        />
-      </Tooltip>
+      <DeleteIconButton
+        itemName={asset.fieldValues?.[0]?.value ?? asset.id}
+        onConfirm={handleDelete}
+      />
     </>
   );
 };

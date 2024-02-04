@@ -37,9 +37,7 @@ const TagActions = ({
           onClick={() => push(`tags/edit/${tag.id}`)}
         />
       </Tooltip>
-      <Tooltip label="Delete">
-        <DeleteIconButton itemName={tag.name} onConfirm={handleDelete} />
-      </Tooltip>
+      <DeleteIconButton itemName={tag.name} onConfirm={handleDelete} />
     </>
   );
 };

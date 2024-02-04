@@ -4,6 +4,7 @@ import { assetRouter } from "./routers/asset";
 import { assetTypeRouter } from "./routers/assetType";
 import { userRouter } from "./routers/user";
 import { searchRouter } from "./routers/search";
+import { labelTemplateRouter } from "./routers/labelTemplate";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   assetType: assetTypeRouter,
   user: userRouter,
   search: searchRouter,
+  labelTemplate: labelTemplateRouter,
 });
 
 // export type definition of API

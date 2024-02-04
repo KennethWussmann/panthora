@@ -9,6 +9,7 @@ import { AssetSearchService } from "./search/assetSearchService";
 import MeiliSearch from "meilisearch";
 import { TagSearchService } from "./search/tagSearchService";
 import { AssetTypeSearchService } from "./search/assetTypeSearchService";
+import { LabelTemplateService } from "./label-templates/LabelTemplateService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -55,6 +56,11 @@ export class ApplicationContext {
     this.prismaClient,
     this.userService,
     this.tagSearchService
+  );
+  public readonly labelTemplateService = new LabelTemplateService(
+    this.logger.child({ name: "LabelTemplateService" }),
+    this.prismaClient,
+    this.userService
   );
   public readonly searchService = new SearchService(
     this.logger.child({ name: "SearchService" }),

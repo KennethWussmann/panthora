@@ -68,6 +68,7 @@ model Team {
     customFields    CustomField[]
     assets          Asset[]
     teamMemberships UserTeamMembership[]
+    LabelTemplate   LabelTemplate[]
 }
 
 model User {
@@ -165,4 +166,26 @@ model FieldValue {
     customFieldId String
     customField   CustomField @relation(fields: [customFieldId], references: [id])
     tags          Tag[]
+}
+
+enum LabelComponents {
+    QR_CODE
+    ASSET_ID
+    ASSET_VALUES
+}
+
+model LabelTemplate {
+    id          String            @id @default(uuid())
+    createdAt   DateTime          @default(now())
+    updatedAt   DateTime          @updatedAt
+    name        String
+    default     Boolean           @default(false)
+    width       Int               @default(57)
+    height      Int               @default(32)
+    padding     Int               @default(3)
+    fontSize    Int               @default(7)
+    qrCodeScale Decimal           @default(2)
+    components  LabelComponents[] @default([QR_CODE, ASSET_ID, ASSET_VALUES])
+    team        Team?             @relation(fields: [teamId], references: [id])
+    teamId      String?
 }

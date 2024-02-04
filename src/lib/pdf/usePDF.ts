@@ -4,9 +4,11 @@ import type { Document } from "pdfjs";
 export const usePDF = ({
   document,
   skip,
+  dependencies,
 }: {
   document: () => Promise<Document> | Document;
   skip: boolean;
+  dependencies?: unknown[];
 }) => {
   const [pdfUrl, setPdfUrl] = useState("");
 
@@ -38,7 +40,7 @@ export const usePDF = ({
       isSubscribed = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skip]);
+  }, [skip, ...(dependencies ?? [])]);
 
   return pdfUrl;
 };

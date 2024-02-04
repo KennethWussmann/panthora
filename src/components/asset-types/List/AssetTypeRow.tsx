@@ -46,9 +46,7 @@ const AssetTypeActions = ({
           onClick={() => push(`/asset-types/edit/${assetType.id}`)}
         />
       </Tooltip>
-      <Tooltip label="Delete">
-        <DeleteIconButton itemName={assetType.name} onConfirm={handleDelete} />
-      </Tooltip>
+      <DeleteIconButton itemName={assetType.name} onConfirm={handleDelete} />
     </>
   );
 };

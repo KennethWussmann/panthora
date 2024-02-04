@@ -33,6 +33,17 @@ export class UserService {
           teamId: team.id,
         },
       });
+      this.logger.info("Creating default label template for new team", {
+        teamId: team.id,
+        userId,
+      });
+      await this.prisma.labelTemplate.create({
+        data: {
+          teamId: team.id,
+          default: true,
+          name: "Default",
+        },
+      });
     } else if (
       existingTeams.length === 1 &&
       existingTeams[0]?.teamMemberships?.some(
