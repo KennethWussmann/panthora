@@ -3,6 +3,7 @@ import {
   FiBarChart2,
   FiBox,
   FiFolder,
+  FiPlus,
   FiSettings,
   FiTag,
 } from "react-icons/fi";
@@ -13,6 +14,10 @@ type NavigationItem = {
   label: string;
   onClick?: VoidFunction;
   href?: string;
+  secondaryAction?: {
+    icon: As;
+    href: string;
+  };
 } | null;
 
 export const navigationItems: NavigationItem[] = [
@@ -26,6 +31,10 @@ export const navigationItems: NavigationItem[] = [
     icon: FiBox,
     label: "Assets",
     href: "/assets",
+    secondaryAction: {
+      icon: FiPlus,
+      href: "/assets/create",
+    },
   },
   {
     icon: FiFolder,
@@ -57,6 +66,7 @@ export const NavItems = () => {
             onClick={item.onClick}
             href={item.href}
             isActive={window.location.pathname.startsWith(item.href ?? "/")}
+            secondaryAction={item.secondaryAction}
           />
         ) : (
           <Divider key={index} />
