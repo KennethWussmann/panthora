@@ -16,6 +16,7 @@ import {
   Table,
   TableCaption,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Th,
@@ -310,7 +311,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
             fontSize="1.2em"
             marginRight={2}
           >
-            ⌘K
+            <Tag>⌘K</Tag>
           </InputRightElement>
         )}
       </InputGroup>
