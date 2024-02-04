@@ -30,7 +30,7 @@ export const AssetTable: React.FC = () => {
   const [isLoadingPrintView, setLoadingPrintView] = useBoolean();
   const { push } = useRouter();
   const { data: defaultTeam } = api.user.defaultTeam.useQuery();
-  const { data: assets } = api.asset.list.useQuery(
+  const { data: assets, refetch: refetchAssets } = api.asset.list.useQuery(
     { teamId: defaultTeam?.id ?? "" },
     { enabled: !!defaultTeam }
   );
@@ -137,6 +137,7 @@ export const AssetTable: React.FC = () => {
                 key={asset.id}
                 asset={asset}
                 uniqueFieldsToShow={uniqueFieldsToShow}
+                refetchAssets={refetchAssets}
                 selected={selectedAssets.includes(asset)}
                 setSelected={(selected) => {
                   if (selected) {

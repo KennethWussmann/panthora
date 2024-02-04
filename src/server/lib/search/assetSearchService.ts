@@ -4,7 +4,7 @@ import { type Logger } from "winston";
 import { z } from "zod";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type UserService } from "../user/userService";
-import { type Team } from "@prisma/client";
+import { Asset, type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
 import { waitForTasks } from "../user/meiliSearchUtils";
 
@@ -195,5 +195,20 @@ export class AssetSearchService {
         { teamId: team.id, error }
       );
     }
+  };
+
+  public deleteAsset = async (asset: Asset) => {
+    if (!asset.teamId) {
+      return;
+    }
+    this.logger.debug("Deleting asset", { assetId: asset.id });
+    const index = this.meilisearch.index<AssetSearchDocument>(
+      this.getIndexName(asset.teamId)
+    );
+    const response = await index.deleteDocument(asset.id);
+    this.logger.debug("Deleted asset type", {
+      assetId: asset.id,
+      response,
+    });
   };
 }

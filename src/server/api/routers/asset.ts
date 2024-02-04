@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { assetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
+import { assetDeleteRequest } from "~/server/lib/assets/assetDeleteRequest";
 import { assetListRequest } from "~/server/lib/assets/assetListRequest";
 
 export const assetRouter = createTRPCRouter({
@@ -16,6 +17,14 @@ export const assetRouter = createTRPCRouter({
     .input(assetCreateEditRequest)
     .mutation(({ ctx, input }) => {
       return ctx.applicationContext.assetService.updateAsset(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  delete: protectedProcedure
+    .input(assetDeleteRequest)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.applicationContext.assetService.deleteAsset(
         ctx.session.user.id,
         input
       );
