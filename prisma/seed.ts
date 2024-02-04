@@ -1,4 +1,4 @@
-import { FieldType } from "@prisma/client";
+import { FieldType, LabelComponents } from "@prisma/client";
 import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
 const { prismaClient, logger: rootLogger } = defaultApplicationContext;
@@ -185,6 +185,26 @@ const seed = async () => {
     }),
   ]);
   logger.info("Created custom fields");
+
+  const labelTemplate = await prismaClient.labelTemplate.create({
+    data: {
+      teamId: team.id,
+      name: "Default",
+      width: 57,
+      height: 32,
+      padding: 3,
+      fontSize: 7,
+      qrCodeScale: 2,
+      components: [
+        LabelComponents.QR_CODE,
+        LabelComponents.ASSET_ID,
+        LabelComponents.ASSET_VALUES,
+      ],
+    },
+  });
+  logger.info("Created label template", {
+    labelTemplateId: labelTemplate.id,
+  });
 
   logger.info("Seeding done, rebuilding search indexes");
   await defaultApplicationContext.searchService.rebuildIndexes(team.id);

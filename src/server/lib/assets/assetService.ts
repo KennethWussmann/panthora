@@ -10,7 +10,7 @@ import { type AssetWithFields } from "./asset";
 import { randomUUID } from "crypto";
 import { type Logger } from "winston";
 import type { AssetSearchService } from "../search/assetSearchService";
-import { AssetDeleteRequest } from "./assetDeleteRequest";
+import { type AssetDeleteRequest } from "./assetDeleteRequest";
 
 export class AssetService {
   constructor(
