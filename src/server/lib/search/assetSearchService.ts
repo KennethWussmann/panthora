@@ -4,7 +4,7 @@ import { type Logger } from "winston";
 import { z } from "zod";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type UserService } from "../user/userService";
-import { Asset, type Team } from "@prisma/client";
+import { type Asset, type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
 import { waitForTasks } from "../user/meiliSearchUtils";
 

@@ -5,9 +5,9 @@ import {
   AlertTitle,
   Progress,
 } from "@chakra-ui/react";
-import { Control, useWatch } from "react-hook-form";
+import { type Control, useWatch } from "react-hook-form";
 import { LabelPDF } from "~/lib/pdf/LabelPDF";
-import { LabelTemplateCreateEditRequest } from "~/server/lib/label-templates/labelTemplateCreateEditRequest";
+import { type LabelTemplateCreateEditRequest } from "~/server/lib/label-templates/labelTemplateCreateEditRequest";
 import { api } from "~/utils/api";
 
 export const LabelTemplatePrintPreview = ({

@@ -1,4 +1,4 @@
-import { Document, Image, Row, mm } from "pdfjs";
+import { Document, Image, type Row, mm } from "pdfjs";
 import { OpenSans } from "./openSans";
 import { usePDF } from "./usePDF";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
@@ -7,7 +7,7 @@ import { appUrl } from "../appUrl";
 import QRCode from "qrcode";
 import { useEffect, useRef } from "react";
 import { FieldType, LabelComponents } from "@prisma/client";
-import { LabelTemplate } from "~/server/lib/label-templates/labelTemplate";
+import { type LabelTemplate } from "~/server/lib/label-templates/labelTemplate";
 import { api } from "~/utils/api";
 
 const baseDocument = (template: LabelTemplate) =>
