@@ -7,6 +7,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Stack,
 } from "@chakra-ui/react";
@@ -54,36 +55,39 @@ export const TeamSettingsForm = ({
 
   return (
     <Box p={4} borderWidth={1} rounded={4}>
-      {isError && (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertDescription>Failed to save settings</AlertDescription>
-        </Alert>
-      )}
-      {isSuccess && (
-        <Alert status="success">
-          <AlertIcon />
-          <AlertDescription>Settings saved</AlertDescription>
-        </Alert>
-      )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap={2}>
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel>Team Name</FormLabel>
-            <Input type="text" {...register("name")} />
-          </FormControl>
-          <Flex justifyContent="flex-end">
-            <Button
-              leftIcon={<FiSave />}
-              colorScheme="green"
-              type="submit"
-              isLoading={isLoadingTeamUpdate}
-            >
-              Save
-            </Button>
-          </Flex>
-        </Stack>
-      </form>
+      <Stack gap={2}>
+        <Heading size={"md"}>Team</Heading>
+        {isError && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertDescription>Failed to save settings</AlertDescription>
+          </Alert>
+        )}
+        {isSuccess && (
+          <Alert status="success">
+            <AlertIcon />
+            <AlertDescription>Settings saved</AlertDescription>
+          </Alert>
+        )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack gap={2}>
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel>Name</FormLabel>
+              <Input type="text" {...register("name")} />
+            </FormControl>
+            <Flex justifyContent="flex-end">
+              <Button
+                leftIcon={<FiSave />}
+                colorScheme="green"
+                type="submit"
+                isLoading={isLoadingTeamUpdate}
+              >
+                Save
+              </Button>
+            </Flex>
+          </Stack>
+        </form>
+      </Stack>
     </Box>
   );
 };

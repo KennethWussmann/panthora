@@ -40,6 +40,7 @@ export class UserService {
       await this.prisma.labelTemplate.create({
         data: {
           teamId: team.id,
+          default: true,
           name: "Default",
         },
       });

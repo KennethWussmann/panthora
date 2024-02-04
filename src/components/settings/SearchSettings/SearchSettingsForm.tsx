@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Flex,
+  Heading,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -25,6 +26,7 @@ export const SearchSettingsForm = ({ team }: { team: Team }) => {
   return (
     <Box p={4} borderWidth={1} rounded={4}>
       <Stack gap={2}>
+        <Heading size={"md"}>Search</Heading>
         {isError && (
           <Alert status="error">
             <AlertIcon />

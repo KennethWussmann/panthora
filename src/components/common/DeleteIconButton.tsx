@@ -17,22 +17,27 @@ import { FiTrash } from "react-icons/fi";
 type DeleteIconButtonProps = {
   itemName: string;
   onConfirm: VoidFunction;
+  isDisabled?: boolean;
+  tooltipText?: string;
 };
 
 export const DeleteIconButton = ({
   itemName,
   onConfirm,
+  tooltipText,
+  isDisabled,
 }: DeleteIconButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Tooltip label={"Delete"}>
+      <Tooltip label={tooltipText ?? "Delete"}>
         <IconButton
           icon={<FiTrash />}
           variant={"ghost"}
           colorScheme="red"
           aria-label="Delete"
           onClick={onOpen}
+          isDisabled={isDisabled}
         />
       </Tooltip>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>

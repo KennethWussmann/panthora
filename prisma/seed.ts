@@ -190,6 +190,7 @@ const seed = async () => {
     data: {
       teamId: team.id,
       name: "Default",
+      default: true,
       width: 57,
       height: 32,
       padding: 3,

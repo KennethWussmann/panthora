@@ -78,6 +78,16 @@ export class LabelTemplateService {
       throw new Error("Label template not found");
     }
 
+    if (labelTemplate.default) {
+      this.logger.info("Cannot delete default label template", {
+        labelTemplateId: labelTemplate.id,
+        userId,
+      });
+      throw new Error(
+        "Cannot delete default label template. Set another label template as default first."
+      );
+    }
+
     await this.prisma.labelTemplate.delete({
       where: {
         id: labelTemplate.id,
@@ -120,6 +130,16 @@ export class LabelTemplateService {
       oldLabelTemplate.teamId
     );
     await this.userService.requireTeamMembership(userId, updateRequest.teamId);
+
+    if (oldLabelTemplate.default && !updateRequest.default) {
+      this.logger.error("Cannot unset default label template", {
+        labelTemplateId: oldLabelTemplate.id,
+        userId,
+      });
+      throw new Error(
+        "Cannot unset default label template. Create another default label template first."
+      );
+    }
 
     const labelTemplate = await this.prisma.labelTemplate.update({
       data: {
