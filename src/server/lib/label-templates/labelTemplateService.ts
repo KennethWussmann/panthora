@@ -30,6 +30,29 @@ export class LabelTemplateService {
     });
   };
 
+  getById = async (userId: string, labelTemplateId: string) => {
+    const labelTemplate = await this.prisma.labelTemplate.findUnique({
+      where: {
+        id: labelTemplateId,
+      },
+      include: {
+        team: true,
+      },
+    });
+
+    if (!labelTemplate?.teamId) {
+      this.logger.error("Label template did not have a team assigned", {
+        labelTemplateId,
+        userId,
+      });
+      throw new Error("Label template not found");
+    }
+
+    await this.userService.requireTeamMembership(userId, labelTemplate.teamId);
+
+    return labelTemplate;
+  };
+
   deleteLabelTemplate = async (
     userId: string,
     deleteRequest: LabelTemplateDeleteRequest
