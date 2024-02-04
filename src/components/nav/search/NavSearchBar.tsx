@@ -21,7 +21,14 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiBox, FiFolder, FiSearch, FiTag, FiX } from "react-icons/fi";
+import {
+  FiBox,
+  FiCommand,
+  FiFolder,
+  FiSearch,
+  FiTag,
+  FiX,
+} from "react-icons/fi";
 import { AdvancedSearchExplanation } from "./AdvancedSearchExplanation";
 import { api } from "~/utils/api";
 import {
@@ -30,10 +37,15 @@ import {
   useState,
   type KeyboardEventHandler,
   type KeyboardEvent,
+  useMemo,
 } from "react";
 import { useRouter } from "next/router";
 import { type SearchResult } from "~/server/lib/search/searchResponse";
 import { useSearchShortcut } from "./useSearchShortcut";
+import {
+  type ActionSearchResult,
+  useActionShortcutSearch,
+} from "./useActionShortcutSearch";
 
 const AssetSearchResultTypeColumn = () => (
   <Td fontWeight={"bold"}>
@@ -59,13 +71,24 @@ const TagSearchResultTypeColumn = () => (
     Tag
   </Td>
 );
+const ActionResultTypeColumn = () => (
+  <Td fontWeight={"bold"}>
+    <Icon fontSize={"1.2rem"}>
+      <FiCommand />
+    </Icon>
+    Action
+  </Td>
+);
 
-const searchResultTypeMap: Record<"assetTypes" | "assets" | "tags", ReactNode> =
-  {
-    assetTypes: <AssetTypeSearchResultTypeColumn />,
-    assets: <AssetSearchResultTypeColumn />,
-    tags: <TagSearchResultTypeColumn />,
-  };
+const searchResultTypeMap: Record<
+  "assetTypes" | "assets" | "tags" | "actions",
+  ReactNode
+> = {
+  assetTypes: <AssetTypeSearchResultTypeColumn />,
+  assets: <AssetSearchResultTypeColumn />,
+  tags: <TagSearchResultTypeColumn />,
+  actions: <ActionResultTypeColumn />,
+};
 
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
@@ -77,7 +100,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
 
   useSearchShortcut(onToggle);
 
-  const { data: searchResults } = api.search.search.useQuery(
+  const { data: entitiesSearchResults } = api.search.search.useQuery(
     {
       query: searchQuery,
       teamId: defaultTeam?.id ?? "",
@@ -85,6 +108,13 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
     {
       enabled: defaultTeam && searchQuery.length > 0 && !isLoadingDefaultTeam,
     }
+  );
+
+  const actionResults = useActionShortcutSearch(searchQuery);
+
+  const searchResults = useMemo(
+    () => [...(actionResults ?? []), ...(entitiesSearchResults ?? [])],
+    [actionResults, entitiesSearchResults]
   );
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (
@@ -113,7 +143,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
     }
   };
 
-  const openResult = (result: SearchResult) => {
+  const openResult = (result: SearchResult | ActionSearchResult) => {
     switch (result.index) {
       case "assets":
         void push(`/assets/edit/${result.result.id}`);
@@ -123,6 +153,12 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
         break;
       case "tags":
         void push(`/tags/edit/${result.result.id}`);
+        break;
+      case "actions":
+        if (result.result.href) {
+          void push(result.result.href);
+        }
+        void result.result.onClick?.();
         break;
     }
     onClose();
@@ -134,7 +170,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
 
   useEffect(() => {
     // Reset the selected index when the search results change
-    setSelectedIndex(-1);
+    setSelectedIndex(searchResults.length > 0 ? 0 : -1);
   }, [searchResults]);
 
   return (
