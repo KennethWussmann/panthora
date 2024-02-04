@@ -1,4 +1,6 @@
 import {
+  Box,
+  CircularProgress,
   Icon,
   IconButton,
   Input,
@@ -19,6 +21,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -97,6 +100,11 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
     api.user.defaultTeam.useQuery();
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [loadingRouter, setLoadingRouter] = useState(false);
+  const modalOverlayLoadingBackgroundColor = useColorModeValue(
+    "rgba(255, 255, 255, 0.8)",
+    "rgba(0, 0, 0, 0.8)"
+  );
 
   useSearchShortcut(onToggle);
 
@@ -122,20 +130,21 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   ) => {
     if (!searchResults) return;
 
-    let newIndex: number;
     switch (e.key) {
       case "ArrowDown":
-        newIndex = (selectedIndex + 1) % searchResults.length;
-        setSelectedIndex(newIndex);
+        setSelectedIndex(
+          (selectedIndex) => (selectedIndex + 1) % searchResults.length
+        );
         break;
       case "ArrowUp":
-        newIndex =
-          (selectedIndex - 1 + searchResults.length) % searchResults.length;
-        setSelectedIndex(newIndex);
+        setSelectedIndex(
+          (selectedIndex) =>
+            (selectedIndex - 1 + searchResults.length) % searchResults.length
+        );
         break;
       case "Enter":
         if (selectedIndex >= 0) {
-          openResult(searchResults.at(selectedIndex)!);
+          void openResult(searchResults.at(selectedIndex)!);
         }
         break;
       default:
@@ -143,24 +152,26 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
     }
   };
 
-  const openResult = (result: SearchResult | ActionSearchResult) => {
+  const openResult = async (result: SearchResult | ActionSearchResult) => {
+    setLoadingRouter(true);
     switch (result.index) {
       case "assets":
-        void push(`/assets/edit/${result.result.id}`);
+        await push(`/assets/edit/${result.result.id}`);
         break;
       case "assetTypes":
-        void push(`/asset-types/edit/${result.result.id}`);
+        await push(`/asset-types/edit/${result.result.id}`);
         break;
       case "tags":
-        void push(`/tags/edit/${result.result.id}`);
+        await push(`/tags/edit/${result.result.id}`);
         break;
       case "actions":
         if (result.result.href) {
-          void push(result.result.href);
+          await push(result.result.href);
         }
-        void result.result.onClick?.();
+        await result.result.onClick?.();
         break;
     }
+    setLoadingRouter(false);
     onClose();
   };
 
@@ -170,14 +181,37 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
 
   useEffect(() => {
     // Reset the selected index when the search results change
+    console.log("Resetting selected index");
     setSelectedIndex(searchResults.length > 0 ? 0 : -1);
-  }, [searchResults]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
+  useEffect(() => {
+    console.log("selectedIndex", selectedIndex);
+  }, [selectedIndex]);
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size={"3xl"}>
         <ModalOverlay />
-        <ModalContent onKeyDown={handleKeyDown}>
+        <ModalContent onKeyDown={handleKeyDown} position={"relative"}>
+          {loadingRouter && (
+            <Box
+              position="absolute"
+              rounded={"md"}
+              top={0}
+              left={0}
+              right={0}
+              bottom={0}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              zIndex={100}
+              backgroundColor={modalOverlayLoadingBackgroundColor}
+            >
+              <CircularProgress isIndeterminate />
+            </Box>
+          )}
           <ModalCloseButton />
           <ModalBody mt={10} mb={4}>
             <Stack gap={4}>
