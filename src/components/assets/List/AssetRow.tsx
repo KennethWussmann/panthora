@@ -3,17 +3,41 @@ import { FieldType, type CustomField } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit, FiPrinter } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
+import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
+import { api } from "~/utils/api";
 
 type AssetRowProps = {
   asset: AssetWithFields;
   uniqueFieldsToShow: CustomField[];
   selected: boolean;
   setSelected: (selected: boolean) => void;
+  refetchAssets: VoidFunction;
 };
 
-const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
+const AssetActions = ({
+  asset,
+  onDelete,
+}: {
+  asset: AssetWithFields;
+  onDelete: VoidFunction;
+}) => {
   const { push } = useRouter();
+  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const deleteAsset = useErrorHandlingMutation(api.asset.delete);
+
+  const handleDelete = async () => {
+    if (!defaultTeam) {
+      return;
+    }
+
+    await deleteAsset.mutateAsync({
+      teamId: defaultTeam.id,
+      id: asset.id,
+    });
+    onDelete();
+  };
+
   return (
     <>
       <Tooltip label="Edit">
@@ -34,10 +58,8 @@ const AssetActions = ({ asset }: { asset: AssetWithFields }) => {
       </Tooltip>
       <Tooltip label="Delete">
         <DeleteIconButton
-          itemName={asset.id}
-          onConfirm={() => {
-            //
-          }}
+          itemName={asset.fieldValues?.[0]?.value ?? asset.id}
+          onConfirm={handleDelete}
         />
       </Tooltip>
     </>
@@ -49,6 +71,7 @@ export const AssetRow = ({
   setSelected,
   asset,
   uniqueFieldsToShow,
+  refetchAssets,
 }: AssetRowProps) => {
   const { push } = useRouter();
   return (
@@ -87,7 +110,7 @@ export const AssetRow = ({
           return <Td key={field.id}>{fieldValue?.value ?? ""}</Td>;
         })}
         <Td textAlign="right">
-          <AssetActions asset={asset} />
+          <AssetActions asset={asset} onDelete={refetchAssets} />
         </Td>
       </Tr>
     </>

@@ -10,6 +10,7 @@ import { type AssetWithFields } from "./asset";
 import { randomUUID } from "crypto";
 import { type Logger } from "winston";
 import type { AssetSearchService } from "../search/assetSearchService";
+import { AssetDeleteRequest } from "./assetDeleteRequest";
 
 export class AssetService {
   constructor(
@@ -124,6 +125,46 @@ export class AssetService {
     void this.assetSearchService.indexAsset(
       await this.getById(userId, asset.id)
     );
+  };
+
+  deleteAsset = async (userId: string, deleteRequest: AssetDeleteRequest) => {
+    this.logger.debug("Deleting asset", { deleteRequest, userId });
+
+    await this.userService.requireTeamMembership(userId, deleteRequest.teamId);
+    const asset = await this.prisma.asset.findUnique({
+      where: {
+        teamId: deleteRequest.teamId,
+        id: deleteRequest.id,
+      },
+    });
+
+    if (!asset) {
+      this.logger.error("Delete request did not have a valid asset id", {
+        deleteRequest,
+        userId,
+      });
+      throw new Error("Asset not found");
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.fieldValue.deleteMany({
+        where: {
+          assetId: asset.id,
+        },
+      }),
+      this.prisma.asset.delete({
+        where: {
+          id: asset.id,
+          teamId: deleteRequest.teamId,
+        },
+      }),
+    ]);
+
+    this.logger.info("Deleted asset", {
+      assetTypeId: deleteRequest.id,
+      userId,
+    });
+    void this.assetSearchService.deleteAsset(asset);
   };
 
   updateAsset = async (
