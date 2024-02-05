@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const teamAddMemberRequest = z.object({
   teamId: z.string(),
-  memberId: z.string(),
+  email: z.string(),
   role: z
     .nativeEnum(UserTeamMembershipRole)
     .default(UserTeamMembershipRole.MEMBER),

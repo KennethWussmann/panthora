@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { teamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
 import { teamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
+import { teamRemoveMemberRequest } from "~/server/lib/user/teamRemoveMemberRequest";
 
 export const teamRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -20,6 +21,14 @@ export const teamRouter = createTRPCRouter({
       input
     );
   }),
+  membership: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return await ctx.applicationContext.teamService.getUserMembership(
+        ctx.session.user.id,
+        input
+      );
+    }),
   updateTeam: protectedProcedure
     .input(teamCreateEditRequest)
     .mutation(async ({ ctx, input }) => {
@@ -36,6 +45,14 @@ export const teamRouter = createTRPCRouter({
         input
       );
     }),
+  removeMember: protectedProcedure
+    .input(teamRemoveMemberRequest)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.applicationContext.teamService.removeTeamMember(
+        ctx.session.user.id,
+        input
+      );
+    }),
   updateMemberRole: protectedProcedure
     .input(teamAddMemberRequest)
     .mutation(async ({ ctx, input }) => {
@@ -47,7 +64,7 @@ export const teamRouter = createTRPCRouter({
   members: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      await ctx.applicationContext.teamService.getMembers(
+      return await ctx.applicationContext.teamService.getMembers(
         ctx.session.user.id,
         input
       );

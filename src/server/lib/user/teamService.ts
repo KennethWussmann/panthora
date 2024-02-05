@@ -7,6 +7,8 @@ import {
 import { type Logger } from "winston";
 import { type TeamCreateEditRequest } from "./teamCreateEditRequest";
 import { type TeamAddMemberRequest } from "./teamAddMemberRequest";
+import { Member } from "./member";
+import { TeamRemoveMemberRequest } from "./teamRemoveMemberRequest";
 
 export class TeamService {
   constructor(
@@ -153,6 +155,23 @@ export class TeamService {
       },
     });
 
+  public getUserMembership = async (
+    userId: string,
+    teamId: string
+  ): Promise<UserTeamMembership> => {
+    await this.requireTeamMembership(userId, teamId);
+    const membership = await this.prisma.userTeamMembership.findFirst({
+      where: {
+        teamId,
+        userId,
+      },
+    });
+    if (!membership) {
+      throw new Error("Team membership not found");
+    }
+    return membership;
+  };
+
   // private getTeamMemberships = async (
   //   userId: string,
   //   teamId: string
@@ -165,7 +184,7 @@ export class TeamService {
   //   });
   // };
 
-  getMembers = async (userId: string, teamId: string) => {
+  getMembers = async (userId: string, teamId: string): Promise<Member[]> => {
     await this.requireTeamMembershipAdmin(userId, teamId);
     const users = await this.prisma.userTeamMembership.findMany({
       where: {
@@ -174,10 +193,16 @@ export class TeamService {
       include: {
         user: true,
       },
+      orderBy: {
+        user: {
+          email: "asc",
+        },
+      },
     });
 
     return users.map((u) => ({
-      email: u.user.email,
+      id: u.userId,
+      email: u.user.email!,
       role: u.role,
     }));
   };
@@ -223,6 +248,74 @@ export class TeamService {
     }
   };
 
+  removeTeamMember = async (userId: string, input: TeamRemoveMemberRequest) => {
+    this.logger.info("Removing team member", { userId, input });
+
+    await this.requireTeamMembershipAdmin(userId, input.teamId);
+    const userToRemove = await this.prisma.user.findUnique({
+      where: {
+        email: input.email,
+      },
+    });
+
+    if (!userToRemove) {
+      this.logger.error("User not found", { userId, input });
+      throw new Error("User not found");
+    }
+    await this.requireTeamMembership(userToRemove.id, input.teamId);
+
+    const ownMembership = await this.getTeamMembership(userId, input.teamId);
+    const membership = await this.getTeamMembership(
+      userToRemove.id,
+      input.teamId
+    );
+
+    if (!membership) {
+      this.logger.error("User is not a member of the team", {
+        userId,
+        input,
+      });
+      throw new Error("User not found");
+    }
+
+    if (membership.role === UserTeamMembershipRole.OWNER) {
+      this.logger.error("Team ownership cannot be transferred", {
+        userId,
+        input,
+      });
+      throw new Error("Owners cannot be removed");
+    }
+
+    if (
+      membership.role === UserTeamMembershipRole.ADMIN &&
+      ownMembership?.role !== UserTeamMembershipRole.OWNER
+    ) {
+      this.logger.error("Admin tried to remove another admin", {
+        userId,
+        input,
+      });
+      throw new Error("Insufficient permission");
+    }
+
+    if (userToRemove.id === userId) {
+      this.logger.error("User cannot remove themselves from the team", {
+        userId,
+        input,
+      });
+      throw new Error("You cannot remove yourself from the team");
+    }
+
+    await this.prisma.userTeamMembership.delete({
+      where: {
+        userId_teamId: {
+          teamId: input.teamId,
+          userId: userToRemove.id,
+        },
+      },
+    });
+    this.logger.info("Removed team member", { userId, input });
+  };
+
   addTeamMember = async (userId: string, input: TeamAddMemberRequest) => {
     this.logger.info("Adding team member", { userId, input });
 
@@ -236,8 +329,19 @@ export class TeamService {
       throw new Error("Team ownership cannot be transferred");
     }
 
+    const userToAdd = await this.prisma.user.findUnique({
+      where: {
+        email: input.email,
+      },
+    });
+
+    if (!userToAdd) {
+      this.logger.error("User not found", { userId, input });
+      throw new Error("User not found");
+    }
+
     const currentMembership = await this.getTeamMembership(
-      input.memberId,
+      userToAdd.id,
       input.teamId
     );
 
@@ -265,7 +369,7 @@ export class TeamService {
     } else {
       await this.prisma.userTeamMembership.create({
         data: {
-          userId: input.memberId,
+          userId: userToAdd.id,
           teamId: input.teamId,
           role: input.role,
         },

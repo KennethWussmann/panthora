@@ -16,7 +16,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
@@ -26,7 +25,6 @@ import { TeamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
 import { api } from "~/utils/api";
 
 export const TeamCreateButton = () => {
-  const { reload } = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     register,
@@ -44,12 +42,12 @@ export const TeamCreateButton = () => {
     setLoading(true);
     const createdTeam = await createTeam.mutateAsync(data);
     toast({
-      title: "Team created",
+      title: "Team created successfully",
       status: "success",
+      duration: 30000,
     });
     setTeam(createdTeam);
     onClose();
-    reload();
     setLoading(false);
   };
 
