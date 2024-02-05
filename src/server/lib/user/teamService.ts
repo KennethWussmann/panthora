@@ -56,7 +56,10 @@ export class TeamService {
     });
   };
 
-  createTeam = async (userId: string, createRequest: TeamCreateEditRequest) => {
+  createTeam = async (
+    userId: string,
+    createRequest: TeamCreateEditRequest
+  ): Promise<Team> => {
     this.logger.info("Creating team", { userId, createRequest });
 
     const team = await this.prisma.team.create({
@@ -82,6 +85,8 @@ export class TeamService {
     });
 
     await this.initializeTeam(team);
+
+    return team;
   };
 
   /**

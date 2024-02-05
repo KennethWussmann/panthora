@@ -1,4 +1,8 @@
-import { FieldType, LabelComponents } from "@prisma/client";
+import {
+  FieldType,
+  LabelComponents,
+  UserTeamMembershipRole,
+} from "@prisma/client";
 import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
 const { prismaClient, logger: rootLogger } = defaultApplicationContext;

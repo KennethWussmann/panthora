@@ -1,3 +1,4 @@
+import { Team } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { teamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
@@ -45,7 +46,7 @@ export const teamRouter = createTRPCRouter({
     }),
   members: protectedProcedure
     .input(z.string())
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       await ctx.applicationContext.teamService.getMembers(
         ctx.session.user.id,
         input
@@ -53,8 +54,8 @@ export const teamRouter = createTRPCRouter({
     }),
   create: protectedProcedure
     .input(teamCreateEditRequest)
-    .mutation(async ({ ctx, input }) => {
-      await ctx.applicationContext.teamService.createTeam(
+    .mutation(async ({ ctx, input }): Promise<Team> => {
+      return await ctx.applicationContext.teamService.createTeam(
         ctx.session.user.id,
         input
       );
