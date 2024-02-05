@@ -7,16 +7,16 @@ import {
 import { type AssetTypeListRequest } from "./assetTypeListRequest";
 import { type AssetType } from "./assetType";
 import { type AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
-import { type UserService } from "../user/userService";
 import { type Logger } from "winston";
 import { type AssetTypeSearchService } from "../search/assetTypeSearchService";
+import { type TeamService } from "../user/teamService";
 import slugify from "slugify";
 
 export class AssetTypeService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
-    private readonly userService: UserService,
+    private readonly teamService: TeamService,
     private readonly assetTypeSearchService: AssetTypeSearchService
   ) {}
 
@@ -58,7 +58,7 @@ export class AssetTypeService {
     createRequest: AssetTypeCreateEditRequest
   ) => {
     this.logger.debug("Creating new asset type", { createRequest, userId });
-    await this.userService.requireTeamMembership(userId, createRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, createRequest.teamId);
     const assetType = await this.prisma.assetType.create({
       data: {
         teamId: createRequest.teamId,
@@ -110,7 +110,7 @@ export class AssetTypeService {
       throw new Error("AssetType not found");
     }
 
-    await this.userService.requireTeamMembership(
+    await this.teamService.requireTeamMembership(
       userId,
       assetTypeBasicInfo.teamId
     );
@@ -190,7 +190,7 @@ export class AssetTypeService {
       throw new Error("Asset type not found");
     }
 
-    await this.userService.requireTeamMembership(userId, assetType.teamId);
+    await this.teamService.requireTeamMembership(userId, assetType.teamId);
 
     return assetType;
   };
@@ -200,7 +200,7 @@ export class AssetTypeService {
     updateRequest: AssetTypeCreateEditRequest
   ) => {
     this.logger.debug("Updating asset type", { updateRequest, userId });
-    await this.userService.requireTeamMembership(userId, updateRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, updateRequest.teamId);
 
     const assetTypeId = updateRequest.id;
     if (!assetTypeId) {
@@ -224,7 +224,7 @@ export class AssetTypeService {
       throw new Error("Asset type not found");
     }
 
-    await this.userService.requireTeamMembership(
+    await this.teamService.requireTeamMembership(
       userId,
       existingAssetType.teamId
     );
@@ -305,7 +305,7 @@ export class AssetTypeService {
     userId: string,
     listRequest: AssetTypeListRequest
   ) => {
-    await this.userService.requireTeamMembership(userId, listRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, listRequest.teamId);
     const fetchAssetTypesAndChildren = async (
       assetTypeId: string | null
     ): Promise<AssetType[]> => {
@@ -393,7 +393,7 @@ export class AssetTypeService {
       deleteRequest,
       userId,
     });
-    await this.userService.requireTeamMembership(userId, deleteRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, deleteRequest.teamId);
     const assetType = await this.prisma.assetType.findUnique({
       where: {
         teamId: deleteRequest.teamId,

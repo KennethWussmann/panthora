@@ -3,10 +3,10 @@ import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { z } from "zod";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
-import { type UserService } from "../user/userService";
 import { type Asset, type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
 import { waitForTasks } from "../user/meiliSearchUtils";
+import { type TeamService } from "../user/teamService";
 
 export const assetDocumentSchema = z.record(
   z.union([z.string(), z.number(), z.boolean(), z.null()])
@@ -26,7 +26,7 @@ export class AssetSearchService {
   constructor(
     private logger: Logger,
     private meilisearch: MeiliSearch,
-    private userService: UserService,
+    private teamService: TeamService,
     private assetTypeService: AssetTypeService
   ) {}
 
@@ -35,7 +35,7 @@ export class AssetSearchService {
   public initialize = async () => {
     this.logger.debug("Initializing asset search indexes");
 
-    const teams = await this.userService.getAllTeams();
+    const teams = await this.teamService.getAllTeams();
     await this.createMissingIndexes(teams);
     await this.syncFilterableAttributes(teams);
 

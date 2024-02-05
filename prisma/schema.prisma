@@ -49,12 +49,19 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum UserTeamMembershipRole {
+    OWNER
+    ADMIN
+    MEMBER
+}
+
 // User Management
 model UserTeamMembership {
     userId String
     teamId String
-    team   Team   @relation(fields: [teamId], references: [id])
-    user   User   @relation(fields: [userId], references: [id])
+    team   Team                   @relation(fields: [teamId], references: [id])
+    user   User                   @relation(fields: [userId], references: [id])
+    role   UserTeamMembershipRole @default(MEMBER)
 
     @@id([userId, teamId])
 }

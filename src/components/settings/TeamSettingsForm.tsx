@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiSave } from "react-icons/fi";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
-import { type TeamUpdateRequest } from "~/server/lib/user/teamUpdateRequest";
+import { type TeamUpdateRequest } from "~/server/lib/user/teamCreateEditRequest";
 import { api } from "~/utils/api";
 
 export const TeamSettingsForm = ({

@@ -1,7 +1,7 @@
 import { type Index } from "meilisearch";
 import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
-import { type UserService } from "../user/userService";
+import { type TeamService } from "../user/teamService";
 import { type Team, type Tag } from "@prisma/client";
 import { z } from "zod";
 import { waitForTasks } from "../user/meiliSearchUtils";
@@ -28,7 +28,7 @@ export class TagSearchService {
   constructor(
     private logger: Logger,
     private meilisearch: MeiliSearch,
-    private userService: UserService
+    private teamService: TeamService
   ) {}
 
   public getIndexName = (teamId: string) => `tags_${teamId}`;
@@ -36,7 +36,7 @@ export class TagSearchService {
   public initialize = async () => {
     this.logger.debug("Initializing tag search indexes");
 
-    const teams = await this.userService.getAllTeams();
+    const teams = await this.teamService.getAllTeams();
     await this.createMissingIndexes(teams);
     await this.syncFilterableAttributes(teams);
 
