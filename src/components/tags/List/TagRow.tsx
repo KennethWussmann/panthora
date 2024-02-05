@@ -6,6 +6,7 @@ import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 const TagActions = ({
   tag,
@@ -15,15 +16,15 @@ const TagActions = ({
   onDelete: VoidFunction;
 }) => {
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const deleteTag = useErrorHandlingMutation(api.tag.delete);
 
   const handleDelete = async () => {
-    if (!defaultTeam) {
+    if (!team) {
       return;
     }
 
-    await deleteTag.mutateAsync({ teamId: defaultTeam.id, id: tag.id });
+    await deleteTag.mutateAsync({ teamId: team.id, id: tag.id });
     onDelete();
   };
 

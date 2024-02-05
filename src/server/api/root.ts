@@ -2,7 +2,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { tagRouter } from "./routers/tag";
 import { assetRouter } from "./routers/asset";
 import { assetTypeRouter } from "./routers/assetType";
-import { userRouter } from "./routers/user";
+import { teamRouter } from "./routers/team";
 import { searchRouter } from "./routers/search";
 import { labelTemplateRouter } from "./routers/labelTemplate";
 import { statsRouter } from "./routers/stats";
@@ -16,7 +16,7 @@ export const appRouter = createTRPCRouter({
   tag: tagRouter,
   asset: assetRouter,
   assetType: assetTypeRouter,
-  user: userRouter,
+  team: teamRouter,
   search: searchRouter,
   labelTemplate: labelTemplateRouter,
   stats: statsRouter,

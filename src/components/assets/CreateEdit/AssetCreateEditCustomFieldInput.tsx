@@ -17,6 +17,7 @@ import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEdit
 import { DateTimePicker } from "~/components/common/DateTimePicker";
 import { TagSearchInput } from "~/components/common/TagSearchInput";
 import { api } from "~/utils/api";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 const getRegisterOptions = (customField: CustomField) => {
   const registerOptions: Record<string, unknown> = {
@@ -61,14 +62,14 @@ export const AssetCreateEditCustomFieldInput = ({
   const errors = formErrors.customFieldValues?.[index];
   const formFieldName = `customFieldValues.${index}.value` as const;
   const inputProps = register(formFieldName, getRegisterOptions(customField));
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const { data: tags } = api.tag.list.useQuery(
     {
-      teamId: defaultTeam!.id,
+      teamId: team!.id,
       parentId: customField.tagId!,
     },
     {
-      enabled: defaultTeam && customField.fieldType === FieldType.TAG,
+      enabled: team && customField.fieldType === FieldType.TAG,
     }
   );
 

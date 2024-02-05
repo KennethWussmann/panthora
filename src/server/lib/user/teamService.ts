@@ -47,6 +47,15 @@ export class TeamService {
       },
     });
 
+  public getUserTeam = async (userId: string, teamId: string) => {
+    await this.requireTeamMembership(userId, teamId);
+    return await this.prisma.team.findUnique({
+      where: {
+        id: teamId,
+      },
+    });
+  };
+
   createTeam = async (userId: string, createRequest: TeamCreateEditRequest) => {
     this.logger.info("Creating team", { userId, createRequest });
 
@@ -108,7 +117,7 @@ export class TeamService {
     );
   };
 
-  hasTeamMembershipRole = async (
+  private hasTeamMembershipRole = async (
     userId: string,
     teamId: string,
     role: UserTeamMembershipRole
@@ -128,7 +137,7 @@ export class TeamService {
     );
   };
 
-  getTeamMembership = (
+  private getTeamMembership = (
     userId: string,
     teamId: string
   ): Promise<UserTeamMembership | null> =>
@@ -139,12 +148,34 @@ export class TeamService {
       },
     });
 
-  getTeamMemberships = (teamId: string): Promise<UserTeamMembership[]> =>
-    this.prisma.userTeamMembership.findMany({
+  // private getTeamMemberships = async (
+  //   userId: string,
+  //   teamId: string
+  // ): Promise<UserTeamMembership[]> => {
+  //   await this.requireTeamMembershipAdmin(userId, teamId);
+  //   return await this.prisma.userTeamMembership.findMany({
+  //     where: {
+  //       teamId,
+  //     },
+  //   });
+  // };
+
+  getMembers = async (userId: string, teamId: string) => {
+    await this.requireTeamMembershipAdmin(userId, teamId);
+    const users = await this.prisma.userTeamMembership.findMany({
       where: {
         teamId,
       },
+      include: {
+        user: true,
+      },
     });
+
+    return users.map((u) => ({
+      email: u.user.email,
+      role: u.role,
+    }));
+  };
 
   requireTeamMembershipRole = async (
     userId: string,
@@ -164,10 +195,33 @@ export class TeamService {
     }
   };
 
+  requireTeamMembershipAdmin = async (userId: string, teamId: string) => {
+    const membership = await this.getTeamMembership(userId, teamId);
+
+    if (!membership) {
+      this.logger.error("User is not a member of required team nor admin", {
+        userId,
+        teamId,
+      });
+      throw new Error("Team not found");
+    }
+
+    if (
+      membership.role !== UserTeamMembershipRole.ADMIN &&
+      membership.role !== UserTeamMembershipRole.OWNER
+    ) {
+      this.logger.error("User is not an admin of required team", {
+        userId,
+        teamId,
+      });
+      throw new Error("Team not found");
+    }
+  };
+
   addTeamMember = async (userId: string, input: TeamAddMemberRequest) => {
     this.logger.info("Adding team member", { userId, input });
 
-    await this.requireTeamMembership(userId, input.teamId);
+    await this.requireTeamMembershipAdmin(userId, input.teamId);
 
     if (input.role === UserTeamMembershipRole.OWNER) {
       this.logger.error("Team ownership cannot be transferred", {
@@ -234,29 +288,8 @@ export class TeamService {
           },
         },
       },
-      include: {
-        teamMemberships: true,
-      },
     });
   };
 
   public getAllTeams = async () => this.prisma.team.findMany();
-
-  public getDefaultTeam = async (userId: string) => {
-    const team = await this.prisma.team.findFirst({
-      where: {
-        teamMemberships: {
-          some: {
-            userId,
-          },
-        },
-      },
-    });
-
-    if (!team) {
-      throw new Error("No default team found");
-    }
-
-    return team;
-  };
 }

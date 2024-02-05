@@ -50,6 +50,7 @@ import {
   type ActionSearchResult,
   useActionShortcutSearch,
 } from "./useActionShortcutSearch";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 const AssetSearchResultTypeColumn = () => (
   <Td fontWeight={"bold"}>
@@ -98,8 +99,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [loadingRouter, setLoadingRouter] = useState(false);
   const modalOverlayLoadingBackgroundColor = useColorModeValue(
@@ -112,10 +112,10 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { data: entitiesSearchResults } = api.search.search.useQuery(
     {
       query: searchQuery,
-      teamId: defaultTeam?.id ?? "",
+      teamId: team?.id ?? "",
     },
     {
-      enabled: defaultTeam && searchQuery.length > 0 && !isLoadingDefaultTeam,
+      enabled: team && searchQuery.length > 0,
     }
   );
 
@@ -285,7 +285,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
       </Modal>
       <InputGroup
         onClick={(e) => {
-          if (isLoadingDefaultTeam) {
+          if (!team) {
             return;
           }
           onOpen();
@@ -302,7 +302,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
         <Input
           placeholder="Search"
           variant={"outline"}
-          isDisabled={isLoadingDefaultTeam || isOpen}
+          isDisabled={!team || isOpen}
         />
         {!hideShortcut && (
           <InputRightElement

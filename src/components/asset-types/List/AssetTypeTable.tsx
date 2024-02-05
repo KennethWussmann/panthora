@@ -16,6 +16,7 @@ import { AssetTypeExplanation } from "./AssetTypeExplanation";
 import { AssetTypeRow, EmptyAssetTypeRow } from "./AssetTypeRow";
 import { api } from "~/utils/api";
 import { type AssetType } from "~/server/lib/asset-types/assetType";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 const renderNestedAssetTypes = (
   assetTypes: AssetType[],
@@ -41,10 +42,10 @@ const renderNestedAssetTypes = (
 
 export const AssetTypeTable: React.FC = () => {
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const assetTypeQuery = api.assetType.list.useQuery(
-    { teamId: defaultTeam?.id ?? "" },
-    { enabled: !!defaultTeam }
+    { teamId: team?.id ?? "" },
+    { enabled: !!team }
   );
 
   return (

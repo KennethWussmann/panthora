@@ -17,6 +17,7 @@ import { AssetCreateEditCustomFieldsForm } from "./AssetCreateEditCustomFieldsFo
 import { useEffect } from "react";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 export const AssetCreateEditForm = ({
   asset,
@@ -63,8 +64,7 @@ export const AssetCreateEditForm = ({
     control,
     name: "customFieldValues",
   });
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const {
     mutateAsync: updateAsset,
     isError: isErrorUpdate,
@@ -86,7 +86,7 @@ export const AssetCreateEditForm = ({
   const hasNoFields = assetType?.fields?.length === 0;
 
   const onSubmit = (data: AssetCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
 
@@ -98,24 +98,24 @@ export const AssetCreateEditForm = ({
   };
 
   const onCreate = async (data: AssetCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
     await createAsset({
       ...data,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     reset();
   };
 
   const onUpdate = async (data: AssetCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
     console.log(data);
     await updateAsset({
       ...data,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     refetch?.();
   };
@@ -214,7 +214,7 @@ export const AssetCreateEditForm = ({
               colorScheme="green"
               type="submit"
               isLoading={
-                isLoadingDefaultTeam ||
+                !team ||
                 isLoadingCreate ||
                 isLoadingUpdate ||
                 (selectedAssetTypeId ? isLoadingAssetType : false)

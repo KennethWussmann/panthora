@@ -5,6 +5,7 @@ import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { SelectedAssetProvider } from "~/lib/SelectedAssetsProvider";
+import { SelectedTeamProvider } from "~/lib/SelectedTeamProvider";
 
 const theme = extendTheme({
   config: {
@@ -26,7 +27,9 @@ function Providers({
         {/* eslint-disable-next-line */}
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <SessionProvider session={session}>
-          <SelectedAssetProvider>{children}</SelectedAssetProvider>
+          <SelectedTeamProvider>
+            <SelectedAssetProvider>{children}</SelectedAssetProvider>
+          </SelectedTeamProvider>
         </SessionProvider>
       </ChakraProvider>
     </CacheProvider>

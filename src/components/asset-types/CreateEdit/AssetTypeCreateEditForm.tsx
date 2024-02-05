@@ -21,6 +21,7 @@ import { type AssetTypeCreateRequestWithTemporaryFields } from "./types";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { AssetTypeSelector } from "../AssetTypeSelector";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 export const AssetTypeCreateEditForm = ({
   assetType,
@@ -61,8 +62,7 @@ export const AssetTypeCreateEditForm = ({
     control,
     name: "fields",
   });
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
 
   const {
     mutateAsync: createAssetType,
@@ -78,8 +78,8 @@ export const AssetTypeCreateEditForm = ({
   } = useErrorHandlingMutation(api.assetType.update);
 
   const onSubmit = (data: AssetTypeCreateRequestWithTemporaryFields) => {
-    if (!defaultTeam) {
-      throw new Error("No default team found");
+    if (!team) {
+      throw new Error("No team selected");
     }
 
     if (assetType) {
@@ -90,13 +90,13 @@ export const AssetTypeCreateEditForm = ({
   };
 
   const onCreate = async (data: AssetTypeCreateRequestWithTemporaryFields) => {
-    if (!defaultTeam) {
-      throw new Error("No default team found");
+    if (!team) {
+      throw new Error("No team selected");
     }
     await createAssetType({
       ...data,
       id: null,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     remove();
     reset();
@@ -104,12 +104,12 @@ export const AssetTypeCreateEditForm = ({
   };
 
   const onUpdate = async (data: AssetTypeCreateRequestWithTemporaryFields) => {
-    if (!defaultTeam) {
-      throw new Error("No default team found");
+    if (!team) {
+      throw new Error("No team selected");
     }
     await updateAssetType({
       ...data,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     refetch?.();
   };
@@ -178,9 +178,7 @@ export const AssetTypeCreateEditForm = ({
               leftIcon={<FiSave />}
               colorScheme="green"
               type="submit"
-              isLoading={
-                isLoadingDefaultTeam || isLoadingCreation || isLoadingUpdate
-              }
+              isLoading={!team || isLoadingCreation || isLoadingUpdate}
               isDisabled={!isDirty}
             >
               {assetType ? "Save" : "Create"}

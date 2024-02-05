@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { BiSubdirectoryRight } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type AssetType } from "~/server/lib/asset-types/assetType";
 import { api } from "~/utils/api";
@@ -21,16 +22,16 @@ const AssetTypeActions = ({
   onDelete: VoidFunction;
 }) => {
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const deleteAssetType = useErrorHandlingMutation(api.assetType.delete);
 
   const handleDelete = async () => {
-    if (!defaultTeam) {
+    if (!team) {
       return;
     }
 
     await deleteAssetType.mutateAsync({
-      teamId: defaultTeam.id,
+      teamId: team.id,
       id: assetType.id,
     });
     onDelete();
