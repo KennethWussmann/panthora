@@ -46,7 +46,7 @@ export class TagService {
       },
     });
     this.logger.info("Created tag", { tagId: tag.id });
-    void this.tagSearchService.indexTag(tag);
+    void this.tagSearchService.add(tag);
     return tag;
   };
 
@@ -92,7 +92,7 @@ export class TagService {
       },
     });
     this.logger.info("Updated tag", { tagId: tag.id });
-    void this.tagSearchService.indexTag(tag);
+    void this.tagSearchService.add(tag);
     return tag;
   };
 
@@ -196,6 +196,6 @@ export class TagService {
       }),
     ]);
     this.logger.info("Deleted tag", { tagId: tag.id });
-    void this.tagSearchService.deleteTag(tag);
+    void this.tagSearchService.delete(tag);
   };
 }

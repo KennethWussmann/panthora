@@ -89,7 +89,7 @@ export class AssetTypeService {
       fieldIds: fields.map((field) => field.id),
       userId,
     });
-    void this.assetTypeSearchService.indexAssetType(
+    void this.assetTypeSearchService.add(
       await this.getByIdWithFieldsAndChildrenByUser(userId, assetType.id)
     );
 
@@ -296,7 +296,7 @@ export class AssetTypeService {
       assetTypeId,
       userId,
     });
-    void this.assetTypeSearchService.indexAssetType(
+    void this.assetTypeSearchService.add(
       await this.getByIdWithFieldsAndChildrenByUser(userId, assetTypeId)
     );
   };
@@ -453,7 +453,7 @@ export class AssetTypeService {
       assetTypeId: deleteRequest.id,
       userId,
     });
-    void this.assetTypeSearchService.deleteAssetType(
+    void this.assetTypeSearchService.delete(
       await this.getByIdWithFieldsAndChildrenByUser(userId, assetType.id)
     );
   };

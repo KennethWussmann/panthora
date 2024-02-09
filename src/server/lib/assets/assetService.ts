@@ -122,9 +122,7 @@ export class AssetService {
         })
     );
     this.logger.info("Created custom fields", { assetId: asset.id, userId });
-    void this.assetSearchService.indexAsset(
-      await this.getById(userId, asset.id)
-    );
+    void this.assetSearchService.add(await this.getById(userId, asset.id));
   };
 
   deleteAsset = async (userId: string, deleteRequest: AssetDeleteRequest) => {
@@ -164,7 +162,7 @@ export class AssetService {
       assetTypeId: deleteRequest.id,
       userId,
     });
-    void this.assetSearchService.deleteAsset(asset);
+    void this.assetSearchService.delete(asset);
   };
 
   updateAsset = async (
@@ -251,9 +249,7 @@ export class AssetService {
       assetId: oldAsset.id,
       userId,
     });
-    void this.assetSearchService.indexAsset(
-      await this.getById(userId, oldAsset.id)
-    );
+    void this.assetSearchService.add(await this.getById(userId, oldAsset.id));
   };
 
   public getAssets = async (

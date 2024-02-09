@@ -19,6 +19,7 @@ import { type SearchRequest } from "./searchRequest";
 import { type SearchResult } from "./searchResponse";
 import { parseQuery } from "./queryParser";
 import { type TeamService } from "../user/teamService";
+import { AssetWithFields } from "../assets/asset";
 
 export class SearchService {
   constructor(
@@ -68,7 +69,9 @@ export class SearchService {
     await Promise.all([
       this.assetSearchService.rebuildIndex(
         team,
-        await this.assetService.getSearchableAssets(team.id)
+        (await this.assetService.getSearchableAssets(
+          team.id
+        )) as unknown as AssetWithFields[]
       ),
       this.tagSearchService.rebuildIndex(
         team,

@@ -25,7 +25,10 @@ const baseAttributes: (keyof TagSearchDocument)[] = [
   "parentId",
 ];
 
-export class TagSearchService extends AbstractSearchService<TagSearchDocument> {
+export class TagSearchService extends AbstractSearchService<
+  TagSearchDocument,
+  Tag
+> {
   constructor(
     readonly logger: Logger,
     readonly meilisearch: MeiliSearch,
@@ -123,61 +126,11 @@ export class TagSearchService extends AbstractSearchService<TagSearchDocument> {
     );
   };
 
-  private mapTagToSearchDocument = (tag: Tag): TagSearchDocument => ({
+  protected mapToSearchDocument = (tag: Tag): TagSearchDocument => ({
     id: tag.id,
     createdAt: tag.createdAt.getTime(),
     teamId: tag.teamId,
     name: tag.name,
     parentId: tag.parentId,
   });
-
-  public indexTag = async (tag: Tag) => {
-    this.logger.debug("Indexing tag", { tagId: tag.id });
-    if (!tag.teamId) {
-      return;
-    }
-    const index = this.meilisearch.index<TagSearchDocument>(
-      this.getIndexName(tag.teamId)
-    );
-    const document = this.mapTagToSearchDocument(tag);
-    const response = await index.addDocuments([document], { primaryKey: "id" });
-    this.logger.debug("Indexed tag", {
-      tagId: tag.id,
-      response,
-      document,
-    });
-  };
-
-  public deleteTag = async (tag: Tag) => {
-    this.logger.debug("Deleting tag", { tagId: tag.id });
-    if (!tag.teamId) {
-      return;
-    }
-    const index = this.meilisearch.index<TagSearchDocument>(
-      this.getIndexName(tag.teamId)
-    );
-    const response = await index.deleteDocument(tag.id);
-    this.logger.debug("Deleted tag", { tagId: tag.id, response });
-  };
-
-  public rebuildIndex = async (team: Team, tags: Tag[]) => {
-    this.logger.debug("Rebuilding index", { teamId: team.id });
-    try {
-      const index = await this.meilisearch.getIndex<TagSearchDocument>(
-        this.getIndexName(team.id)
-      );
-      await index.deleteAllDocuments();
-      const documents = tags.map(this.mapTagToSearchDocument);
-      await index.addDocuments(documents, { primaryKey: "id" });
-      this.logger.info("Rebuilding index done", {
-        teamId: team.id,
-        documentCount: documents.length,
-      });
-    } catch (error) {
-      this.logger.error(
-        "Rebuilding index failed. This may be fine if no index exists.",
-        { teamId: team.id, error }
-      );
-    }
-  };
 }

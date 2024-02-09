@@ -24,7 +24,10 @@ const baseAttributes: (keyof AssetTypeSearchDocument)[] = [
   "name",
 ];
 
-export class AssetTypeSearchService extends AbstractSearchService<AssetTypeSearchDocument> {
+export class AssetTypeSearchService extends AbstractSearchService<
+  AssetTypeSearchDocument,
+  AssetType
+> {
   constructor(
     readonly logger: Logger,
     readonly meilisearch: MeiliSearch,
@@ -122,7 +125,7 @@ export class AssetTypeSearchService extends AbstractSearchService<AssetTypeSearc
     );
   };
 
-  private mapAssetTypeToSearchDocument = (
+  protected mapToSearchDocument = (
     assetType: AssetType
   ): AssetTypeSearchDocument => ({
     id: assetType.id,
@@ -130,57 +133,4 @@ export class AssetTypeSearchService extends AbstractSearchService<AssetTypeSearc
     teamId: assetType.teamId,
     name: assetType.name,
   });
-
-  public indexAssetType = async (assetType: AssetType) => {
-    this.logger.debug("Indexing asset type", { assetTypeId: assetType.id });
-    if (!assetType.teamId) {
-      return;
-    }
-    const index = this.meilisearch.index<AssetTypeSearchDocument>(
-      this.getIndexName(assetType.teamId)
-    );
-    const document = this.mapAssetTypeToSearchDocument(assetType);
-    const response = await index.addDocuments([document], { primaryKey: "id" });
-    this.logger.debug("Indexed asset type", {
-      assetTypeId: assetType.id,
-      response,
-      document,
-    });
-  };
-
-  public deleteAssetType = async (assetType: AssetType) => {
-    this.logger.debug("Deleting asset type", { assetTypeId: assetType.id });
-    if (!assetType.teamId) {
-      return;
-    }
-    const index = this.meilisearch.index<AssetTypeSearchDocument>(
-      this.getIndexName(assetType.teamId)
-    );
-    const response = await index.deleteDocument(assetType.id);
-    this.logger.debug("Deleted asset type", {
-      assetTypeId: assetType.id,
-      response,
-    });
-  };
-
-  public rebuildIndex = async (team: Team, assetTypes: AssetType[]) => {
-    this.logger.debug("Rebuilding index", { teamId: team.id });
-    try {
-      const index = await this.meilisearch.getIndex<AssetTypeSearchDocument>(
-        this.getIndexName(team.id)
-      );
-      await index.deleteAllDocuments();
-      const documents = assetTypes.map(this.mapAssetTypeToSearchDocument);
-      await index.addDocuments(documents, { primaryKey: "id" });
-      this.logger.info("Rebuilding index done", {
-        teamId: team.id,
-        documentCount: documents.length,
-      });
-    } catch (error) {
-      this.logger.error(
-        "Rebuilding index failed. This may be fine if no index exists.",
-        { teamId: team.id, error }
-      );
-    }
-  };
 }
