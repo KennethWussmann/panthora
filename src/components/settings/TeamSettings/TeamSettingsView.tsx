@@ -30,7 +30,7 @@ export const TeamSettingsView = ({
             <TeamCreateButton />
           </HStack>
         </Flex>
-        <TeamSettingsForm team={team} refetch={refetch} />
+        {isAdmin && <TeamSettingsForm team={team} refetch={refetch} />}
         {membership && isAdmin && (
           <>
             <Divider />

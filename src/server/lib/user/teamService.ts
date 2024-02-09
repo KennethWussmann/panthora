@@ -25,9 +25,9 @@ export class TeamService {
       throw new Error("Team id required");
     }
 
-    this.logger.info("Updating team", { userId, updateRequest });
+    await this.requireTeamMembershipAdmin(userId, updateRequest.teamId);
 
-    await this.requireTeamMembership(userId, updateRequest.teamId);
+    this.logger.info("Updating team", { userId, updateRequest });
     await this.prisma.team.update({
       where: {
         id: updateRequest.teamId,
