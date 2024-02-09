@@ -9,13 +9,11 @@ import { type TeamCreateEditRequest } from "./teamCreateEditRequest";
 import { type TeamAddMemberRequest } from "./teamAddMemberRequest";
 import { type Member } from "./member";
 import { type TeamRemoveMemberRequest } from "./teamRemoveMemberRequest";
-import { type SearchService } from "../search/searchService";
 
 export class TeamService {
   constructor(
     private readonly logger: Logger,
-    private readonly prisma: PrismaClient,
-    private readonly searchService: SearchService
+    private readonly prisma: PrismaClient
   ) {}
 
   updateTeam = async (userId: string, updateRequest: TeamCreateEditRequest) => {
@@ -318,35 +316,6 @@ export class TeamService {
     this.logger.info("Removed team member", { userId, input });
   };
 
-  deleteTeam = async (userId: string, teamId: string) => {
-    this.logger.info("Deleting team", { userId, teamId });
-
-    await this.requireTeamMembershipRole(
-      userId,
-      teamId,
-      UserTeamMembershipRole.OWNER
-    );
-    await this.prisma.team.delete({
-      where: {
-        id: teamId,
-      },
-      include: {
-        teamMemberships: true,
-        assets: true,
-        customFields: {
-          include: {
-            fieldValue: true,
-          },
-        },
-        assetTypes: true,
-        tags: true,
-        labelTemplates: true,
-      },
-    });
-    void this.searchService.deleteIndexes(teamId);
-    this.logger.info("Deleted team", { userId, teamId });
-  };
-
   addTeamMember = async (userId: string, input: TeamAddMemberRequest) => {
     this.logger.info("Adding team member", { userId, input });
 
@@ -419,12 +388,13 @@ export class TeamService {
     }
   };
 
-  public getTeams = async (userId: string) => {
+  public getTeams = async (userId: string, role?: UserTeamMembershipRole) => {
     return this.prisma.team.findMany({
       where: {
         teamMemberships: {
           some: {
             userId,
+            role,
           },
         },
       },

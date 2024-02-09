@@ -19,7 +19,7 @@ import { type SearchRequest } from "./searchRequest";
 import { type SearchResult } from "./searchResponse";
 import { parseQuery } from "./queryParser";
 import { type TeamService } from "../user/teamService";
-import { AssetWithFields } from "../assets/asset";
+import { type AssetWithFields } from "../assets/asset";
 
 export class SearchService {
   constructor(

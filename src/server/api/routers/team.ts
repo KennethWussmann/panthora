@@ -77,4 +77,12 @@ export const teamRouter = createTRPCRouter({
         input
       );
     }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.applicationContext.teamDeletionService.deleteTeam(
+        ctx.session.user.id,
+        input
+      );
+    }),
 });

@@ -1,9 +1,10 @@
-import { Team, UserTeamMembershipRole } from "@prisma/client";
+import { type Team, UserTeamMembershipRole } from "@prisma/client";
 import { TeamSettingsForm } from "./TeamSettingsForm";
-import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Stack, HStack } from "@chakra-ui/react";
 import { TeamCreateButton } from "./TeamCreateButton";
 import { TeamMemberTable } from "./TeamMemberTable";
 import { api } from "~/utils/api";
+import { TeamDeleteButton } from "./TeamDeleteButton";
 
 export const TeamSettingsView = ({
   team,
@@ -22,7 +23,12 @@ export const TeamSettingsView = ({
       <Stack gap={2}>
         <Flex justifyContent={"space-between"}>
           <Heading size={"md"}>Team</Heading>
-          <TeamCreateButton />
+          <HStack gap={2}>
+            {membership?.role === UserTeamMembershipRole.OWNER && (
+              <TeamDeleteButton team={team} />
+            )}
+            <TeamCreateButton />
+          </HStack>
         </Flex>
         <TeamSettingsForm team={team} refetch={refetch} />
         {membership && isAdmin && (

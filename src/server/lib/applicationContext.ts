@@ -12,6 +12,7 @@ import { AssetTypeSearchService } from "./search/assetTypeSearchService";
 import { StatsService } from "./statsService";
 import { LabelTemplateService } from "./label-templates/labelTemplateService";
 import { TeamService } from "./user/teamService";
+import { TeamDeletionService } from "./user/TeamDeletionService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -79,6 +80,12 @@ export class ApplicationContext {
     this.assetSearchService,
     this.tagSearchService,
     this.assetTypeSearchService
+  );
+  public readonly teamDeletionService = new TeamDeletionService(
+    this.logger.child({ name: "TeamDeletionService" }),
+    this.prismaClient,
+    this.teamService,
+    this.searchService
   );
   public readonly statsService = new StatsService(
     this.logger.child({ name: "StatsService" }),
