@@ -81,6 +81,15 @@ export class SearchService {
     ]);
   };
 
+  public deleteIndexes = async (teamId: string) => {
+    this.logger.info("Deleting all search indexes of team", { teamId });
+    await Promise.all([
+      this.assetSearchService.deleteIndex(teamId),
+      this.tagSearchService.deleteIndex(teamId),
+      this.assetTypeSearchService.deleteIndex(teamId),
+    ]);
+  };
+
   public rebuildIndexesByUser = async (userId: string, teamId: string) => {
     await this.teamService.requireTeamMembership(userId, teamId);
     await this.rebuildIndexes(teamId);

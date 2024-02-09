@@ -6,6 +6,7 @@ import { z } from "zod";
 import { type AssetType } from "../asset-types/assetType";
 import { waitForTasks } from "../user/meiliSearchUtils";
 import { type TeamService } from "../user/teamService";
+import { AbstractSearchService } from "./abstractSearchService";
 
 export const assetTypeSearchDocument = z.object({
   id: z.string(),
@@ -23,14 +24,14 @@ const baseAttributes: (keyof AssetTypeSearchDocument)[] = [
   "name",
 ];
 
-export class AssetTypeSearchService {
+export class AssetTypeSearchService extends AbstractSearchService<AssetTypeSearchDocument> {
   constructor(
-    private logger: Logger,
-    private meilisearch: MeiliSearch,
-    private teamService: TeamService
-  ) {}
-
-  public getIndexName = (teamId: string) => `asset_types_${teamId}`;
+    readonly logger: Logger,
+    readonly meilisearch: MeiliSearch,
+    private readonly teamService: TeamService
+  ) {
+    super(logger, meilisearch, "asset_types");
+  }
 
   public initialize = async () => {
     this.logger.debug("Initializing asset type search indexes");

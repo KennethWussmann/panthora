@@ -75,7 +75,7 @@ model Team {
     customFields    CustomField[]
     assets          Asset[]
     teamMemberships UserTeamMembership[]
-    LabelTemplate   LabelTemplate[]
+    labelTemplates  LabelTemplate[]
 }
 
 model User {

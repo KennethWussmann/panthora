@@ -5,6 +5,7 @@ import { type TeamService } from "../user/teamService";
 import { type Team, type Tag } from "@prisma/client";
 import { z } from "zod";
 import { waitForTasks } from "../user/meiliSearchUtils";
+import { AbstractSearchService } from "./abstractSearchService";
 
 export const tagSearchDocument = z.object({
   id: z.string(),
@@ -24,14 +25,14 @@ const baseAttributes: (keyof TagSearchDocument)[] = [
   "parentId",
 ];
 
-export class TagSearchService {
+export class TagSearchService extends AbstractSearchService<TagSearchDocument> {
   constructor(
-    private logger: Logger,
-    private meilisearch: MeiliSearch,
-    private teamService: TeamService
-  ) {}
-
-  public getIndexName = (teamId: string) => `tags_${teamId}`;
+    readonly logger: Logger,
+    readonly meilisearch: MeiliSearch,
+    private readonly teamService: TeamService
+  ) {
+    super(logger, meilisearch, "tags");
+  }
 
   public initialize = async () => {
     this.logger.debug("Initializing tag search indexes");

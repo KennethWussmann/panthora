@@ -7,6 +7,7 @@ import { type Asset, type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
 import { waitForTasks } from "../user/meiliSearchUtils";
 import { type TeamService } from "../user/teamService";
+import { AbstractSearchService } from "./abstractSearchService";
 
 export const assetDocumentSchema = z.record(
   z.union([z.string(), z.number(), z.boolean(), z.null()])
@@ -22,15 +23,15 @@ const baseAttributes: string[] = [
   "teamName",
 ];
 
-export class AssetSearchService {
+export class AssetSearchService extends AbstractSearchService<AssetSearchDocument> {
   constructor(
-    private logger: Logger,
-    private meilisearch: MeiliSearch,
-    private teamService: TeamService,
-    private assetTypeService: AssetTypeService
-  ) {}
-
-  public getIndexName = (teamId: string) => `assets_${teamId}`;
+    readonly logger: Logger,
+    readonly meilisearch: MeiliSearch,
+    private readonly teamService: TeamService,
+    private readonly assetTypeService: AssetTypeService
+  ) {
+    super(logger, meilisearch, "assets");
+  }
 
   public initialize = async () => {
     this.logger.debug("Initializing asset search indexes");
