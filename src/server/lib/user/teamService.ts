@@ -336,6 +336,25 @@ export class TeamService {
     });
 
     if (!userToAdd) {
+      await this.requireTeamMembershipRole(
+        userId,
+        input.teamId,
+        UserTeamMembershipRole.OWNER
+      );
+
+      this.logger.error(
+        "User tried to invite someone who has never signed up.",
+        {
+          userId,
+          input,
+        }
+      );
+      throw new Error(
+        "User not found. They have to sign up before inviting them to your team."
+      );
+    }
+
+    if (!userToAdd) {
       this.logger.error("User not found", { userId, input });
       throw new Error("User not found");
     }

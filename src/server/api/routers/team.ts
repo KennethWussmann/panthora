@@ -40,7 +40,7 @@ export const teamRouter = createTRPCRouter({
   addMember: protectedProcedure
     .input(teamAddMemberRequest)
     .mutation(async ({ ctx, input }) => {
-      await ctx.applicationContext.teamService.addTeamMember(
+      return await ctx.applicationContext.teamService.addTeamMember(
         ctx.session.user.id,
         input
       );
@@ -56,7 +56,7 @@ export const teamRouter = createTRPCRouter({
   updateMemberRole: protectedProcedure
     .input(teamAddMemberRequest)
     .mutation(async ({ ctx, input }) => {
-      await ctx.applicationContext.teamService.addTeamMember(
+      return await ctx.applicationContext.teamService.addTeamMember(
         ctx.session.user.id,
         input
       );

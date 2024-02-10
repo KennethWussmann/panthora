@@ -1,7 +1,12 @@
-import { Progress, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
-import { Team, UserTeamMembership } from "@prisma/client";
+import { Flex, Progress, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Team,
+  UserTeamMembership,
+  UserTeamMembershipRole,
+} from "@prisma/client";
 import { api } from "~/utils/api";
 import { TeamMemberRow } from "./TeamMemberRow";
+import { TeamMemberInviteButton } from "./TeamMemberInviteButton";
 
 export const TeamMemberTable = ({
   team,
@@ -38,6 +43,12 @@ export const TeamMemberTable = ({
             ))}
           </Tbody>
         </Table>
+      )}
+
+      {membership.role === UserTeamMembershipRole.OWNER && (
+        <Flex justifyContent={"end"}>
+          <TeamMemberInviteButton team={team} refetchMembers={refetchMembers} />
+        </Flex>
       )}
     </>
   );
