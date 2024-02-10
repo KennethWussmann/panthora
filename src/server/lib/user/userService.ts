@@ -1,15 +1,16 @@
 import { type PrismaClient } from "@prisma/client";
-import { type TeamUpdateRequest } from "./teamUpdateRequest";
 import { type Logger } from "winston";
+import { type TeamService } from "./teamService";
 
 export class UserService {
   constructor(
     private readonly logger: Logger,
-    private readonly prisma: PrismaClient
+    private readonly prisma: PrismaClient,
+    private readonly teamService: TeamService
   ) {}
 
   public initialize = async (userId: string) => {
-    const existingTeams = await this.getTeams(userId);
+    const existingTeams = await this.teamService.getTeams(userId);
     this.logger.debug(
       `Found ${existingTeams.length} teams for user ${userId}`,
       { existingTeams }
@@ -17,132 +18,11 @@ export class UserService {
     if (existingTeams.length === 0) {
       // create a default team
       // we dont want full blown team support yet, but having one team with every user in it makes it easier to implement later.
-      this.logger.info("Creating initial team");
-      const team = await this.prisma.team.create({
-        data: {
-          name: "My Team",
-        },
-      });
-      this.logger.info("Assigning user to initial team", {
-        teamId: team.id,
-        userId,
-      });
-      await this.prisma.userTeamMembership.create({
-        data: {
-          userId,
-          teamId: team.id,
-        },
-      });
-      this.logger.info("Creating default label template for new team", {
-        teamId: team.id,
-        userId,
-      });
-      await this.prisma.labelTemplate.create({
-        data: {
-          teamId: team.id,
-          default: true,
-          name: "Default",
-        },
-      });
-    } else if (
-      existingTeams.length === 1 &&
-      existingTeams[0]?.teamMemberships?.some(
-        (membership) => membership.userId === userId
-      ) === false
-    ) {
-      this.logger.info("Assigning user to existing team", {
-        teamId: existingTeams[0].id,
-        userId,
-      });
-      // add the user to the one existing team
-      await this.prisma.userTeamMembership.create({
-        data: {
-          userId,
-          teamId: existingTeams[0]!.id,
-        },
+      this.logger.info("Creating initial team for new user", { userId });
+      await this.teamService.createTeam(userId, {
+        name: "My Team",
+        teamId: null,
       });
     }
-  };
-
-  public getTeams = async (_userId: string) => {
-    // Currently we only support multiple users that are all automatically in the same team.
-    // We can add full team support later, by allowing users to invite other users to their team.
-    return this.prisma.team.findMany({
-      include: {
-        teamMemberships: true,
-      },
-    });
-  };
-
-  public getById = async (teamId: string) =>
-    this.prisma.team.findUnique({
-      where: {
-        id: teamId,
-      },
-    });
-
-  public getAllTeams = async () => this.prisma.team.findMany();
-
-  public getDefaultTeam = async (userId: string) => {
-    const team = await this.prisma.team.findFirst({
-      where: {
-        teamMemberships: {
-          some: {
-            userId,
-          },
-        },
-      },
-    });
-
-    if (!team) {
-      throw new Error("No default team found");
-    }
-
-    return team;
-  };
-
-  public isTeamMember = async (
-    userId: string,
-    teamId: string
-  ): Promise<boolean> => {
-    return (
-      (await this.prisma.team.count({
-        where: {
-          id: teamId,
-          teamMemberships: {
-            some: {
-              userId,
-            },
-          },
-        },
-      })) > 0
-    );
-  };
-
-  public requireTeamMembership = async (userId: string, teamId: string) => {
-    if (!(await this.isTeamMember(userId, teamId))) {
-      this.logger.error("User is not a member of required team", {
-        userId,
-        teamId,
-      });
-      throw new Error("Team not found");
-    }
-  };
-
-  public updateTeam = async (userId: string, input: TeamUpdateRequest) => {
-    await this.requireTeamMembership(userId, input.teamId);
-
-    await this.prisma.team.update({
-      where: {
-        id: input.teamId,
-      },
-      data: {
-        name: input.name,
-      },
-    });
-    this.logger.info("Updated team", {
-      userId,
-      teamId: input.teamId,
-    });
   };
 }

@@ -6,16 +6,16 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { api } from "~/utils/api";
 
 export default function Dashboard() {
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const { data: stats } = api.stats.get.useQuery(
     {
-      teamId: defaultTeam?.id ?? "",
+      teamId: team?.id ?? "",
     },
-    { enabled: !isLoadingDefaultTeam }
+    { enabled: !!team }
   );
   return (
     <Box as="section" py={{ base: "4", md: "8" }}>

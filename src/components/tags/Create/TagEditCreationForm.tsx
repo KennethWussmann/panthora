@@ -20,6 +20,7 @@ import { Controller, useForm } from "react-hook-form";
 import { type TagCreateEditRequest } from "~/server/lib/tags/tagCreateEditRequest";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 export const TagEditCreationForm = ({
   tag,
@@ -42,8 +43,7 @@ export const TagEditCreationForm = ({
       teamId: tag?.teamId ?? undefined,
     },
   });
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
 
   const {
     mutateAsync: createTag,
@@ -59,7 +59,7 @@ export const TagEditCreationForm = ({
   } = useErrorHandlingMutation(api.tag.update);
 
   const onSubmit = (data: TagCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
 
@@ -71,24 +71,24 @@ export const TagEditCreationForm = ({
   };
 
   const onCreate = async (data: TagCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
     await createTag({
       ...data,
       id: null,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     reset();
   };
 
   const onUpdate = async (data: TagCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
     await updateTag({
       ...data,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     refetch?.();
   };
@@ -156,9 +156,7 @@ export const TagEditCreationForm = ({
               colorScheme="green"
               type="submit"
               isDisabled={!isDirty}
-              isLoading={
-                isLoadingDefaultTeam || isLoadingUpdate || isLoadingCreation
-              }
+              isLoading={!team || isLoadingUpdate || isLoadingCreation}
             >
               {tag ? "Save" : "Create"}
             </Button>

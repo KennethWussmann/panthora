@@ -5,13 +5,13 @@ import { type Tag } from "./tag";
 import { type TagDeleteRequest } from "./tagDeleteRequest";
 import { type Logger } from "winston";
 import { type TagSearchService } from "../search/tagSearchService";
-import { type UserService } from "../user/userService";
+import { type TeamService } from "../user/teamService";
 
 export class TagService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
-    private readonly userService: UserService,
+    private readonly teamService: TeamService,
     private readonly tagSearchService: TagSearchService
   ) {}
 
@@ -20,7 +20,7 @@ export class TagService {
     createRequest: TagCreateEditRequest
   ) => {
     this.logger.debug("Creating tag", { createRequest });
-    await this.userService.requireTeamMembership(userId, createRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, createRequest.teamId);
 
     if (createRequest.parentId) {
       const parentTag = await this.prisma.tag.findUnique({
@@ -46,7 +46,7 @@ export class TagService {
       },
     });
     this.logger.info("Created tag", { tagId: tag.id });
-    void this.tagSearchService.indexTag(tag);
+    void this.tagSearchService.add(tag);
     return tag;
   };
 
@@ -63,7 +63,7 @@ export class TagService {
       throw new Error("Tag id required");
     }
 
-    await this.userService.requireTeamMembership(userId, updateRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, updateRequest.teamId);
 
     if (updateRequest.parentId) {
       const parentTag = await this.prisma.tag.findUnique({
@@ -92,7 +92,7 @@ export class TagService {
       },
     });
     this.logger.info("Updated tag", { tagId: tag.id });
-    void this.tagSearchService.indexTag(tag);
+    void this.tagSearchService.add(tag);
     return tag;
   };
 
@@ -100,7 +100,7 @@ export class TagService {
     userId: string,
     listRequest: TagListRequest
   ): Promise<Tag[]> => {
-    await this.userService.requireTeamMembership(userId, listRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, listRequest.teamId);
     const fetchTagsAndChildren = async (
       tagId: string | null
     ): Promise<Tag[]> => {
@@ -133,7 +133,7 @@ export class TagService {
       throw new Error("Tag not found");
     }
 
-    await this.userService.requireTeamMembership(userId, shallowTag.teamId);
+    await this.teamService.requireTeamMembership(userId, shallowTag.teamId);
 
     const fetchChildren = async (tagId: string | null): Promise<Tag[]> => {
       const tags = (await this.prisma.tag.findMany({
@@ -167,7 +167,7 @@ export class TagService {
     deleteRequest: TagDeleteRequest
   ) => {
     this.logger.debug("Deleting tag", { deleteRequest });
-    await this.userService.requireTeamMembership(userId, deleteRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, deleteRequest.teamId);
     const tag = await this.prisma.tag.findUnique({
       where: {
         teamId: deleteRequest.teamId,
@@ -196,6 +196,6 @@ export class TagService {
       }),
     ]);
     this.logger.info("Deleted tag", { tagId: tag.id });
-    void this.tagSearchService.deleteTag(tag);
+    void this.tagSearchService.delete(tag);
   };
 }

@@ -1,4 +1,3 @@
-import { type UserService } from "../user/userService";
 import {
   type AssetSearchDocument,
   type AssetSearchService,
@@ -19,12 +18,14 @@ import type MeiliSearch from "meilisearch";
 import { type SearchRequest } from "./searchRequest";
 import { type SearchResult } from "./searchResponse";
 import { parseQuery } from "./queryParser";
+import { type TeamService } from "../user/teamService";
+import { type AssetWithFields } from "../assets/asset";
 
 export class SearchService {
   constructor(
     private readonly logger: Logger,
     private readonly meiliSearch: MeiliSearch,
-    private readonly userService: UserService,
+    private readonly teamService: TeamService,
     private readonly assetService: AssetService,
     private readonly assetTypeService: AssetTypeService,
     private readonly tagService: TagService,
@@ -61,14 +62,16 @@ export class SearchService {
   public rebuildIndexes = async (teamId: string) => {
     this.logger.debug("Rebuilding indexes", { teamId });
     await this.waitForInitialization();
-    const team = await this.userService.getById(teamId);
+    const team = await this.teamService.getById(teamId);
     if (!team) {
       throw new Error("Team not found");
     }
     await Promise.all([
       this.assetSearchService.rebuildIndex(
         team,
-        await this.assetService.getSearchableAssets(team.id)
+        (await this.assetService.getSearchableAssets(
+          team.id
+        )) as unknown as AssetWithFields[]
       ),
       this.tagSearchService.rebuildIndex(
         team,
@@ -81,13 +84,22 @@ export class SearchService {
     ]);
   };
 
+  public deleteIndexes = async (teamId: string) => {
+    this.logger.info("Deleting all search indexes of team", { teamId });
+    await Promise.all([
+      this.assetSearchService.deleteIndex(teamId),
+      this.tagSearchService.deleteIndex(teamId),
+      this.assetTypeSearchService.deleteIndex(teamId),
+    ]);
+  };
+
   public rebuildIndexesByUser = async (userId: string, teamId: string) => {
-    await this.userService.requireTeamMembership(userId, teamId);
+    await this.teamService.requireTeamMembership(userId, teamId);
     await this.rebuildIndexes(teamId);
   };
 
   public getTasks = async (userId: string, teamId: string) => {
-    await this.userService.requireTeamMembership(userId, teamId);
+    await this.teamService.requireTeamMembership(userId, teamId);
     const { results: tasks } = await this.meiliSearch.getTasks({
       limit: 20,
       indexUids: [
@@ -105,7 +117,7 @@ export class SearchService {
     search: SearchRequest
   ): Promise<SearchResult[]> => {
     this.logger.debug("Searching for query", { search });
-    await this.userService.requireTeamMembership(userId, search.teamId);
+    await this.teamService.requireTeamMembership(userId, search.teamId);
     const parsedQuery = parseQuery(search.query);
     this.logger.debug("Parsed query", { search, parsedQuery });
 

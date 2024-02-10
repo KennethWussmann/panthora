@@ -1,16 +1,16 @@
 import { type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
-import { type UserService } from "./user/userService";
+import { type TeamService } from "./user/teamService";
 
 export class StatsService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
-    private readonly userService: UserService
+    private readonly teamService: TeamService
   ) {}
 
   public getStats = async (userId: string, teamId: string) => {
-    await this.userService.requireTeamMembership(userId, teamId);
+    await this.teamService.requireTeamMembership(userId, teamId);
     const team = await this.prisma.team.findUnique({
       where: {
         id: teamId,

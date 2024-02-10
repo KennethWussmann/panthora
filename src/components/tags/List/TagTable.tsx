@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { TagsBreadcrumbs } from "../TagsBreadcrumbs";
 import { api } from "~/utils/api";
 import { type Tag } from "~/server/lib/tags/tag";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 const renderNestedTags = (
   tags: Tag[],
@@ -32,10 +33,10 @@ const renderNestedTags = (
 
 export const TagTable: React.FC = () => {
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const tagQuery = api.tag.list.useQuery(
-    { teamId: defaultTeam?.id ?? "" },
-    { enabled: !!defaultTeam }
+    { teamId: team?.id ?? "" },
+    { enabled: !!team }
   );
 
   return (

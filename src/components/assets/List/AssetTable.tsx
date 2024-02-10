@@ -32,26 +32,27 @@ import { Link } from "@chakra-ui/next-js";
 import { uniqBy } from "lodash";
 import { useSelectedAssets } from "~/lib/SelectedAssetsProvider";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 export const AssetTable: React.FC = () => {
   const { selectedAssets, setSelectedAssets, setSelectedLabelTemplate } =
     useSelectedAssets();
   const [isLoadingPrintView, setLoadingPrintView] = useBoolean();
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const { data: assets, refetch: refetchAssets } = api.asset.list.useQuery(
-    { teamId: defaultTeam?.id ?? "" },
-    { enabled: !!defaultTeam }
+    { teamId: team?.id ?? "" },
+    { enabled: !!team }
   );
   const { data: assetTypes, isLoading: isLoadingAssetTypes } =
     api.assetType.list.useQuery(
-      { teamId: defaultTeam?.id ?? "" },
-      { enabled: !!defaultTeam }
+      { teamId: team?.id ?? "" },
+      { enabled: !!team }
     );
   const { data: labelTemplates, isLoading: isLoadingLabelTemplates } =
     api.labelTemplate.list.useQuery(
-      { teamId: defaultTeam?.id ?? "" },
-      { enabled: !!defaultTeam }
+      { teamId: team?.id ?? "" },
+      { enabled: !!team }
     );
 
   const showAssetTypeMissingNotice = assetTypes?.length === 0;

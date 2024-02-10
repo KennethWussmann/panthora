@@ -30,6 +30,7 @@ import { api } from "~/utils/api";
 import { LabelTemplatePrintPreview } from "./LabelTemplatePrintPreview";
 import { LabelComponents } from "@prisma/client";
 import { useEffect } from "react";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 
 export const LabelTemplateCreateEditForm = ({
   labelTemplate,
@@ -66,8 +67,7 @@ export const LabelTemplateCreateEditForm = ({
   });
   const components = watch("components");
 
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const {
     mutateAsync: createLabelTemplate,
     isError: isErrorCreation,
@@ -89,7 +89,7 @@ export const LabelTemplateCreateEditForm = ({
   };
 
   const onSubmit = (data: LabelTemplateCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
 
@@ -101,24 +101,24 @@ export const LabelTemplateCreateEditForm = ({
   };
 
   const onCreate = async (data: LabelTemplateCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
     await createLabelTemplate({
       ...data,
       id: null,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     reset();
   };
 
   const onUpdate = async (data: LabelTemplateCreateEditRequest) => {
-    if (!defaultTeam) {
+    if (!team) {
       throw new Error("No default team found");
     }
     await updateLabelTemplate({
       ...data,
-      teamId: defaultTeam.id,
+      teamId: team.id,
     });
     refetch?.();
   };
@@ -310,22 +310,17 @@ export const LabelTemplateCreateEditForm = ({
               colorScheme="green"
               type="submit"
               isDisabled={!isDirty}
-              isLoading={
-                isLoadingDefaultTeam || isLoadingUpdate || isLoadingCreation
-              }
+              isLoading={!team || isLoadingUpdate || isLoadingCreation}
             >
               {labelTemplate ? "Save" : "Create"}
             </Button>
           </Flex>
 
-          {defaultTeam && (
+          {team && (
             <>
               <Heading size={"md"}>Preview</Heading>
               <Divider />
-              <LabelTemplatePrintPreview
-                control={control}
-                teamId={defaultTeam.id}
-              />
+              <LabelTemplatePrintPreview control={control} teamId={team.id} />
             </>
           )}
         </Stack>

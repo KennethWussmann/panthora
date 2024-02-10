@@ -3,6 +3,7 @@ import { LabelComponents } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type LabelTemplate } from "~/server/lib/label-templates/labelTemplate";
 import { api } from "~/utils/api";
@@ -20,18 +21,18 @@ const LabelTemplateActions = ({
   onDelete: VoidFunction;
 }) => {
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const deleteLabelTemplate = useErrorHandlingMutation(
     api.labelTemplate.delete
   );
 
   const handleDelete = async () => {
-    if (!defaultTeam) {
+    if (!team) {
       return;
     }
 
     await deleteLabelTemplate.mutateAsync({
-      teamId: defaultTeam.id,
+      teamId: team.id,
       id: labelTemplate.id,
     });
     onDelete();

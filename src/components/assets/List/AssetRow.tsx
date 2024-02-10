@@ -3,6 +3,7 @@ import { FieldType, type CustomField } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit, FiPrinter } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type AssetWithFields } from "~/server/lib/assets/asset";
 import { api } from "~/utils/api";
@@ -23,16 +24,16 @@ const AssetActions = ({
   onDelete: VoidFunction;
 }) => {
   const { push } = useRouter();
-  const { data: defaultTeam } = api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
   const deleteAsset = useErrorHandlingMutation(api.asset.delete);
 
   const handleDelete = async () => {
-    if (!defaultTeam) {
+    if (!team) {
       return;
     }
 
     await deleteAsset.mutateAsync({
-      teamId: defaultTeam.id,
+      teamId: team.id,
       id: asset.id,
     });
     onDelete();

@@ -1,4 +1,8 @@
-import { FieldType, LabelComponents } from "@prisma/client";
+import {
+  FieldType,
+  LabelComponents,
+  UserTeamMembershipRole,
+} from "@prisma/client";
 import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
 const { prismaClient, logger: rootLogger } = defaultApplicationContext;
@@ -207,9 +211,38 @@ const seed = async () => {
     labelTemplateId: labelTemplate.id,
   });
 
+  await createDummyUsers(team.id);
+
   logger.info("Seeding done, rebuilding search indexes");
   await defaultApplicationContext.searchService.rebuildIndexes(team.id);
   logger.info("Indexes rebuilt");
+};
+
+const createDummyUsers = async (teamId: string) => {
+  const emails = [
+    "john.doe@example.com",
+    "jane.doe@example.com",
+    "foo.bar@example.com",
+  ];
+
+  const users = await prismaClient.$transaction(
+    emails.map((email) =>
+      prismaClient.user.create({
+        data: {
+          email,
+        },
+      })
+    )
+  );
+  await prismaClient.userTeamMembership.createMany({
+    data: users.map((user) => ({
+      userId: user.id,
+      teamId,
+      role: UserTeamMembershipRole.MEMBER,
+    })),
+  });
+
+  logger.info("Created dummy users and added them to the team");
 };
 
 seed()

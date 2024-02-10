@@ -1,5 +1,6 @@
 import { Select } from "@chakra-ui/react";
 import React from "react";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { type Tag } from "~/server/lib/tags/tag";
 import { api } from "~/utils/api";
 
@@ -26,19 +27,18 @@ export const TagSelector = ({
   isDisabled?: boolean;
   allowParentsOnly?: boolean;
 }) => {
-  const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-    api.user.defaultTeam.useQuery();
+  const { team } = useTeam();
 
   const { data: tags } = api.tag.list.useQuery(
-    { teamId: defaultTeam?.id ?? "", parentsOnly: allowParentsOnly },
-    { enabled: !!defaultTeam }
+    { teamId: team?.id ?? "", parentsOnly: allowParentsOnly },
+    { enabled: !!team }
   );
   return (
     <Select
       placeholder="None"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      isDisabled={isDisabled || isLoadingDefaultTeam}
+      isDisabled={isDisabled || !team}
     >
       {tags && renderNestedTags(tags)}
     </Select>

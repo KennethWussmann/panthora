@@ -11,6 +11,8 @@ import { TagSearchService } from "./search/tagSearchService";
 import { AssetTypeSearchService } from "./search/assetTypeSearchService";
 import { StatsService } from "./statsService";
 import { LabelTemplateService } from "./label-templates/labelTemplateService";
+import { TeamService } from "./user/teamService";
+import { TeamDeletionService } from "./user/TeamDeletionService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -19,54 +21,59 @@ export class ApplicationContext {
     host: process.env.MEILI_URL!,
     apiKey: process.env.MEILI_MASTER_KEY!,
   });
+  public readonly teamService = new TeamService(
+    this.logger.child({ name: "TeamService" }),
+    this.prismaClient
+  );
   public readonly userService = new UserService(
     this.logger.child({ name: "UserService" }),
-    this.prismaClient
+    this.prismaClient,
+    this.teamService
   );
   public readonly assetTypeSearchService = new AssetTypeSearchService(
     this.logger.child({ name: "AssetTypeSearchService" }),
     this.meiliSearch,
-    this.userService
+    this.teamService
   );
   public readonly assetTypeService = new AssetTypeService(
     this.logger.child({ name: "AssetTypeService" }),
     this.prismaClient,
-    this.userService,
+    this.teamService,
     this.assetTypeSearchService
   );
   public readonly assetSearchService = new AssetSearchService(
     this.logger.child({ name: "AssetSearchService" }),
     this.meiliSearch,
-    this.userService,
+    this.teamService,
     this.assetTypeService
   );
   public readonly tagSearchService = new TagSearchService(
     this.logger.child({ name: "TagSearchService" }),
     this.meiliSearch,
-    this.userService
+    this.teamService
   );
   public readonly assetService = new AssetService(
     this.logger.child({ name: "AssetService" }),
     this.prismaClient,
-    this.userService,
+    this.teamService,
     this.assetTypeService,
     this.assetSearchService
   );
   public readonly tagService = new TagService(
     this.logger.child({ name: "TagService" }),
     this.prismaClient,
-    this.userService,
+    this.teamService,
     this.tagSearchService
   );
   public readonly labelTemplateService = new LabelTemplateService(
     this.logger.child({ name: "LabelTemplateService" }),
     this.prismaClient,
-    this.userService
+    this.teamService
   );
   public readonly searchService = new SearchService(
     this.logger.child({ name: "SearchService" }),
     this.meiliSearch,
-    this.userService,
+    this.teamService,
     this.assetService,
     this.assetTypeService,
     this.tagService,
@@ -74,10 +81,16 @@ export class ApplicationContext {
     this.tagSearchService,
     this.assetTypeSearchService
   );
+  public readonly teamDeletionService = new TeamDeletionService(
+    this.logger.child({ name: "TeamDeletionService" }),
+    this.prismaClient,
+    this.teamService,
+    this.searchService
+  );
   public readonly statsService = new StatsService(
     this.logger.child({ name: "StatsService" }),
     this.prismaClient,
-    this.userService
+    this.teamService
   );
 }
 

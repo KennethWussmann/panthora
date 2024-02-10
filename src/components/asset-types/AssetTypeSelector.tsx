@@ -1,5 +1,6 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import React, { forwardRef } from "react";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { type AssetType } from "~/server/lib/asset-types/assetType";
 import { api } from "~/utils/api";
 
@@ -21,13 +22,12 @@ const renderNestedAssetTypes = (assetTypes: AssetType[], level = 0) => {
 // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
 export const AssetTypeSelector = forwardRef<HTMLSelectElement, any>(
   ({ label, ...selectProps }, ref) => {
-    const { data: defaultTeam, isLoading: isLoadingDefaultTeam } =
-      api.user.defaultTeam.useQuery();
+    const { team } = useTeam();
 
     const { data: assetTypes, isLoading: isLoadingAssetTypes } =
       api.assetType.list.useQuery(
-        { teamId: defaultTeam?.id ?? "" },
-        { enabled: !!defaultTeam }
+        { teamId: team?.id ?? "" },
+        { enabled: !!team }
       );
 
     return (
@@ -37,7 +37,7 @@ export const AssetTypeSelector = forwardRef<HTMLSelectElement, any>(
           ref={ref}
           placeholder="None"
           {...selectProps}
-          isDisabled={isLoadingDefaultTeam || isLoadingAssetTypes}
+          isDisabled={!team || isLoadingAssetTypes}
         >
           {assetTypes && renderNestedAssetTypes(assetTypes)}
         </Select>

@@ -1,23 +1,23 @@
 import { type PrismaClient } from "@prisma/client";
-import { type UserService } from "../user/userService";
 import { type Logger } from "winston";
 import { type LabelTemplateListRequest } from "./labelTemplateListRequest";
 import { type LabelTemplate } from "./labelTemplate";
 import { type LabelTemplateDeleteRequest } from "./labelTemplateDeleteRequest";
 import { type LabelTemplateCreateEditRequest } from "./labelTemplateCreateEditRequest";
+import { type TeamService } from "../user/teamService";
 
 export class LabelTemplateService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
-    private readonly userService: UserService
+    private readonly teamService: TeamService
   ) {}
 
   getLabelTemplates = async (
     userId: string,
     listRequest: LabelTemplateListRequest
   ): Promise<LabelTemplate[]> => {
-    await this.userService.requireTeamMembership(userId, listRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, listRequest.teamId);
     return await this.prisma.labelTemplate.findMany({
       where: {
         teamId: listRequest.teamId,
@@ -48,7 +48,7 @@ export class LabelTemplateService {
       throw new Error("Label template not found");
     }
 
-    await this.userService.requireTeamMembership(userId, labelTemplate.teamId);
+    await this.teamService.requireTeamMembership(userId, labelTemplate.teamId);
 
     return labelTemplate;
   };
@@ -59,7 +59,7 @@ export class LabelTemplateService {
   ) => {
     this.logger.debug("Deleting label template", { deleteRequest, userId });
 
-    await this.userService.requireTeamMembership(userId, deleteRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, deleteRequest.teamId);
     const labelTemplate = await this.prisma.labelTemplate.findUnique({
       where: {
         teamId: deleteRequest.teamId,
@@ -125,11 +125,11 @@ export class LabelTemplateService {
       throw new Error("Label template not found");
     }
 
-    await this.userService.requireTeamMembership(
+    await this.teamService.requireTeamMembership(
       userId,
       oldLabelTemplate.teamId
     );
-    await this.userService.requireTeamMembership(userId, updateRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, updateRequest.teamId);
 
     if (oldLabelTemplate.default && !updateRequest.default) {
       this.logger.error("Cannot unset default label template", {
@@ -175,7 +175,7 @@ export class LabelTemplateService {
     createRequest: LabelTemplateCreateEditRequest
   ) => {
     this.logger.debug("Creating label template", { createRequest, userId });
-    await this.userService.requireTeamMembership(userId, createRequest.teamId);
+    await this.teamService.requireTeamMembership(userId, createRequest.teamId);
     const labelTemplate = await this.prisma.labelTemplate.create({
       data: {
         teamId: createRequest.teamId,
@@ -207,7 +207,7 @@ export class LabelTemplateService {
     userId: string,
     teamId: string
   ): Promise<LabelTemplate> => {
-    await this.userService.requireTeamMembership(userId, teamId);
+    await this.teamService.requireTeamMembership(userId, teamId);
 
     const labelTemplate = await this.prisma.labelTemplate.findFirst({
       where: {
