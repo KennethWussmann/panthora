@@ -26,6 +26,7 @@ import { getServerAuthSession } from "~/server/auth/auth";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import BlankLayout from "~/components/layout/BlankLayout";
+import { CredentialsLoginForm } from "./CredentialsLoginForm";
 
 const providerIcons: Record<string, ReactElement> = {
   cognito: <FaAws />,
@@ -34,10 +35,6 @@ const providerIcons: Record<string, ReactElement> = {
   github: <FaGithub />,
 };
 
-type Credentials = {
-  email: string;
-  password: string;
-};
 
 export default function SignIn({
   providers,
@@ -47,34 +44,11 @@ export default function SignIn({
   const hasThirdPartyProviders = isPasswordAuthEnabled
     ? Object.keys(providers).length > 1
     : Object.keys(providers).length > 0;
-  const {
-    register,
-    formState: { errors, isDirty, isLoading },
-    handleSubmit,
-    setError,
-  } = useForm<Credentials>();
-  const [loginError, setLoginError] = useBoolean();
   const [autoSignIn, setAutoSignIn] = useBoolean();
   const {
     push,
     query: { error, logout },
   } = useRouter();
-
-  const onCredentialsLogin = async (data: Credentials) => {
-    setLoginError.off();
-    const result = await signIn("password", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
-    if (result?.error) {
-      setLoginError.on();
-      setError("email", { message: "Invalid credentials" });
-      setError("password", { message: "Invalid credentials" });
-    } else {
-      await push("/dashboard");
-    }
-  };
 
   useEffect(() => {
     if (
@@ -136,42 +110,7 @@ export default function SignIn({
           <Stack spacing="6">
             {isPasswordAuthEnabled && (
               <>
-                <form onSubmit={handleSubmit(onCredentialsLogin)}>
-                  <Stack spacing="4">
-                    {loginError && (
-                      <Alert status="error">
-                        <AlertIcon />
-                        <AlertDescription>
-                          E-Mail or password is incorrect
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                    <Stack>
-                      <FormControl isInvalid={!!errors.email}>
-                        <Input
-                          type="email"
-                          placeholder="E-Mail"
-                          {...register("email", { required: true })}
-                        />
-                      </FormControl>
-                      <FormControl isInvalid={!!errors.password}>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          {...register("password", { required: true })}
-                        />
-                      </FormControl>
-                    </Stack>
-                    <Button
-                      type="submit"
-                      leftIcon={<FiLogIn />}
-                      isDisabled={!isDirty}
-                      isLoading={isLoading}
-                    >
-                      Login
-                    </Button>
-                  </Stack>
-                </form>
+                <CredentialsLoginForm />
                 {hasThirdPartyProviders && (
                   <HStack>
                     <Divider />
@@ -199,7 +138,7 @@ export default function SignIn({
                     onClick={() =>
                       signIn(provider.id, { callbackUrl: "/dashboard" })
                     }
-                    variant={"ghost"}
+                    variant={"outline"}
                     w={"full"}
                     leftIcon={providerIcons[provider.id]}
                     isLoading={autoSignIn}
