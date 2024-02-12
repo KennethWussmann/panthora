@@ -1,3 +1,4 @@
+import { usePrevious, useToast } from "@chakra-ui/react";
 import { type Team } from "@prisma/client";
 import React, {
   createContext,
@@ -14,6 +15,8 @@ type SelectedTeamContextType = {
   team: Team | undefined;
   setTeam: Dispatch<SetStateAction<Team | undefined>>;
   refetch: () => Promise<void>;
+  teams: Team[] | undefined;
+  isLoading: boolean;
 };
 
 const SelectedTeamContext = createContext<SelectedTeamContextType | undefined>(
@@ -36,15 +39,42 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
   children,
 }) => {
   const [team, setTeam] = useState<Team | undefined>();
-  const { data: teamData, refetch } = api.team.get.useQuery(team?.id ?? "", {
-    enabled: !!team,
+  const previousTeam = usePrevious(team);
+  const {
+    data: teamData,
+    refetch,
+    isLoading: isLoadingTeam,
+  } = api.team.get.useQuery(team?.id ?? "", {
+    enabled: team !== undefined,
   });
+  const {
+    data: teams,
+    refetch: refetchTeams,
+    isLoading: isLoadingTeams,
+  } = api.team.list.useQuery();
+
+  const toast = useToast();
 
   useEffect(() => {
     if (teamData && team && teamData.id === team.id) {
       setTeam(teamData);
     }
-  }, [teamData, team, setTeam]);
+    if (teams && (!team || !teams.map((t) => t.id).includes(team.id))) {
+      setTeam(teams[0]);
+    }
+  }, [teamData, team, setTeam, teams]);
+
+  useEffect(() => {
+    if (team && team.id !== previousTeam?.id) {
+      toast({
+        title: "Team updated",
+        description: `You are now viewing the ${team.name} team`,
+        status: "info",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  }, [team, previousTeam, toast]);
 
   return (
     <SelectedTeamContext.Provider
@@ -52,8 +82,10 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
         team,
         setTeam,
         refetch: async () => {
-          await refetch();
+          await Promise.all([refetch(), refetchTeams()]);
         },
+        teams,
+        isLoading: isLoadingTeam || isLoadingTeams,
       }}
     >
       {children}

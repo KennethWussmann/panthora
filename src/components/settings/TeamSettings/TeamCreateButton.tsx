@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { useTeam } from "~/lib/SelectedTeamProvider";
-import { TeamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
+import { type TeamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
 import { api } from "~/utils/api";
 
 export const TeamCreateButton = () => {
@@ -36,7 +36,7 @@ export const TeamCreateButton = () => {
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
 
-  const { setTeam } = useTeam();
+  const { setTeam, refetch } = useTeam();
 
   const onSubmit = async (data: TeamCreateEditRequest) => {
     setLoading(true);
@@ -44,11 +44,13 @@ export const TeamCreateButton = () => {
     toast({
       title: "Team created successfully",
       status: "success",
-      duration: 30000,
+      duration: 10000,
+      isClosable: true,
     });
     setTeam(createdTeam);
     onClose();
     setLoading(false);
+    void refetch();
   };
 
   return (

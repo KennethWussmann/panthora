@@ -2,13 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  AlertTitle,
-  Box,
   Button,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -30,6 +24,7 @@ import {
 import { type Team } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { FiTrash } from "react-icons/fi";
+import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { api } from "~/utils/api";
 
@@ -44,6 +39,7 @@ export const TeamDeleteButton = ({ team }: { team: Team }) => {
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
   const [isDeletionBlocked, setDeletionBlocked] = useState(true);
+  const { refetch } = useTeam();
 
   const onDelete = async () => {
     setLoading(true);
@@ -52,10 +48,12 @@ export const TeamDeleteButton = ({ team }: { team: Team }) => {
       toast({
         title: "Team deleted successfully",
         status: "success",
-        duration: 30000,
+        duration: 10000,
+        isClosable: true,
       });
       onClose();
       setLoading(false);
+      void refetch();
     } catch (error: unknown) {
       setLoading(false);
     }
