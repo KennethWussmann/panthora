@@ -1,4 +1,4 @@
-import { UserTeamMembershipRole } from "@prisma/client";
+import { type UserTeamMembershipRole } from "@prisma/client";
 
 export type Member = {
   id: string;

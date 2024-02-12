@@ -11,6 +11,7 @@ import { type Logger } from "winston";
 import { type AssetTypeSearchService } from "../search/assetTypeSearchService";
 import { type TeamService } from "../user/teamService";
 import slugify from "slugify";
+import { type TeamId } from "../user/team";
 
 export class AssetTypeService {
   constructor(
@@ -458,6 +459,14 @@ export class AssetTypeService {
     );
   };
 
-  public getSearchableCustomFields = async (): Promise<CustomField[]> =>
-    this.prisma.customField.findMany();
+  public getSearchableCustomFields = async (
+    teamIds: TeamId[]
+  ): Promise<CustomField[]> =>
+    this.prisma.customField.findMany({
+      where: {
+        teamId: {
+          in: teamIds,
+        },
+      },
+    });
 }

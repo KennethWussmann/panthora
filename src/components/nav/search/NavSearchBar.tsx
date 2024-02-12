@@ -106,6 +106,10 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
     "rgba(255, 255, 255, 0.8)",
     "rgba(0, 0, 0, 0.8)"
   );
+  const selectedSearchResultBackgroundColor = useColorModeValue(
+    "gray.100",
+    "gray.600"
+  );
 
   useSearchShortcut(onToggle);
 
@@ -260,9 +264,14 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                       {searchResults.map((result, index) => (
                         <Tr
                           key={index}
-                          _hover={{ bgColor: "gray.100", cursor: "pointer" }}
+                          _hover={{
+                            bgColor: selectedSearchResultBackgroundColor,
+                            cursor: "pointer",
+                          }}
                           backgroundColor={
-                            selectedIndex === index ? "gray.100" : undefined
+                            selectedIndex === index
+                              ? selectedSearchResultBackgroundColor
+                              : undefined
                           }
                           onClick={() => openResult(result)}
                         >

@@ -1,7 +1,7 @@
 import { Flex, Progress, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import {
-  Team,
-  UserTeamMembership,
+  type Team,
+  type UserTeamMembership,
   UserTeamMembershipRole,
 } from "@prisma/client";
 import { api } from "~/utils/api";

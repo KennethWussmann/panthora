@@ -32,8 +32,7 @@ export class ApplicationContext {
   );
   public readonly assetTypeSearchService = new AssetTypeSearchService(
     this.logger.child({ name: "AssetTypeSearchService" }),
-    this.meiliSearch,
-    this.teamService
+    this.meiliSearch
   );
   public readonly assetTypeService = new AssetTypeService(
     this.logger.child({ name: "AssetTypeService" }),
@@ -44,13 +43,11 @@ export class ApplicationContext {
   public readonly assetSearchService = new AssetSearchService(
     this.logger.child({ name: "AssetSearchService" }),
     this.meiliSearch,
-    this.teamService,
     this.assetTypeService
   );
   public readonly tagSearchService = new TagSearchService(
     this.logger.child({ name: "TagSearchService" }),
-    this.meiliSearch,
-    this.teamService
+    this.meiliSearch
   );
   public readonly assetService = new AssetService(
     this.logger.child({ name: "AssetService" }),
