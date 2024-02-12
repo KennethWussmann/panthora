@@ -1,6 +1,8 @@
 import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { type TeamId } from "../user/team";
+import { type Index } from "meilisearch";
+import { waitForTasks } from "../user/meiliSearchUtils";
 
 type TeamOwnedIdentifiable = {
   id: string;
@@ -24,9 +26,35 @@ export abstract class AbstractSearchService<
       return;
     }
     this.logger.debug("Initializing search service");
+    await this.createMissingIndexes(teamIds);
     await this.onInitialize(teamIds);
     this.initialized = true;
     this.logger.debug("Search service initialized");
+  };
+
+  private createMissingIndexes = async (teamIds: TeamId[]) => {
+    const { results: indexes } = await this.meilisearch.getIndexes({
+      limit: Number.MAX_SAFE_INTEGER,
+    });
+
+    const indexesMissing = teamIds.filter((teamId) => {
+      const exists = indexes.some(
+        (index: Index<TDoc>) => index.uid === this.getIndexName(teamId)
+      );
+
+      return !exists;
+    });
+
+    await waitForTasks(
+      this.meilisearch,
+      indexesMissing.map(async (teamId) => {
+        this.logger.info("Creating missing index", { teamId });
+        return this.meilisearch.createIndex(this.getIndexName(teamId), {
+          primaryKey: "id",
+        });
+      })
+    );
+    this.logger.debug("Creating missing indexes done");
   };
 
   protected abstract onInitialize: (teamIds: TeamId[]) => Promise<void>;

@@ -34,33 +34,7 @@ export class TagSearchService extends AbstractSearchService<
   }
 
   protected onInitialize = async (teamIds: TeamId[]) => {
-    await this.createMissingIndexes(teamIds);
     await this.syncFilterableAttributes(teamIds);
-  };
-
-  private createMissingIndexes = async (teamIds: TeamId[]) => {
-    const { results: indexes } = await this.meilisearch.getIndexes({
-      limit: Number.MAX_SAFE_INTEGER,
-    });
-
-    const indexesMissing = teamIds.filter(
-      (teamId) =>
-        !indexes.some(
-          (index: Index<TagSearchDocument>) =>
-            index.uid === this.getIndexName(teamId)
-        )
-    );
-
-    await waitForTasks(
-      this.meilisearch,
-      indexesMissing.map(async (teamId) => {
-        this.logger.info("Creating missing index", { teamId });
-        return this.meilisearch.createIndex(this.getIndexName(teamId), {
-          primaryKey: "id",
-        });
-      })
-    );
-    this.logger.debug("Creating missing indexes done");
   };
 
   public syncFilterableAttributes = async (teamIds: TeamId[]) => {
