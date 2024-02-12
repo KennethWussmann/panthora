@@ -1,6 +1,8 @@
 import { type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
 import { type TeamService } from "./teamService";
+import { type UserRegisterRequest } from "./userRegisterRequest";
+import bcrypt from "bcrypt";
 
 export class UserService {
   constructor(
@@ -24,5 +26,29 @@ export class UserService {
         teamId: null,
       });
     }
+  };
+
+  public register = async (request: UserRegisterRequest) => {
+    const { email, password } = request;
+    const sanitizedEmail = email.toLowerCase().trim();
+    const exists = await this.prisma.user.count({
+      where: { email: sanitizedEmail },
+    });
+    if (exists > 0) {
+      throw new Error("User already exists");
+    }
+    this.logger.info("Registering new user", { email: request.email });
+    const user = await this.prisma.user.create({
+      data: {
+        email: sanitizedEmail,
+        password: await bcrypt.hash(password, 12),
+      },
+    });
+    await this.initialize(user.id);
+    this.logger.info("New user registered", {
+      id: user.id,
+      email: request.email,
+    });
+    return { id: user.id, email };
   };
 }

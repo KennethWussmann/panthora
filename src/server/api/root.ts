@@ -6,6 +6,7 @@ import { teamRouter } from "./routers/team";
 import { searchRouter } from "./routers/search";
 import { labelTemplateRouter } from "./routers/labelTemplate";
 import { statsRouter } from "./routers/stats";
+import { userRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   search: searchRouter,
   labelTemplate: labelTemplateRouter,
   stats: statsRouter,
+  user: userRouter,
 });
 
 // export type definition of API

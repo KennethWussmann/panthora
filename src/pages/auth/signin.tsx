@@ -6,10 +6,8 @@ import {
   Button,
   Container,
   Divider,
-  FormControl,
   HStack,
   Heading,
-  Input,
   Stack,
   Text,
   useBoolean,
@@ -19,14 +17,14 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import { getProviders, signIn } from "next-auth/react";
-import { useEffect, type ReactElement } from "react";
-import { FiLogIn } from "react-icons/fi";
+import { useEffect, type ReactElement, useState } from "react";
 import { FaAws, FaDiscord, FaGithub, FaGoogle } from "react-icons/fa";
 import { getServerAuthSession } from "~/server/auth/auth";
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import BlankLayout from "~/components/layout/BlankLayout";
 import { CredentialsLoginForm } from "./CredentialsLoginForm";
+import { CredentialsRegisterForm } from "./CredentialsRegisterForm";
+import { FiLogIn, FiUserPlus } from "react-icons/fi";
 
 const providerIcons: Record<string, ReactElement> = {
   cognito: <FaAws />,
@@ -34,7 +32,6 @@ const providerIcons: Record<string, ReactElement> = {
   google: <FaGoogle />,
   github: <FaGithub />,
 };
-
 
 export default function SignIn({
   providers,
@@ -46,9 +43,11 @@ export default function SignIn({
     : Object.keys(providers).length > 0;
   const [autoSignIn, setAutoSignIn] = useBoolean();
   const {
-    push,
     query: { error, logout },
   } = useRouter();
+  const [credentialsForm, setCredentialsForm] = useState<
+    "login" | "register" | "none"
+  >(isPasswordAuthEnabled ? "login" : "none");
 
   useEffect(() => {
     if (
@@ -71,8 +70,11 @@ export default function SignIn({
           <Stack spacing="6">
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
               <Heading size={"lg"}>Tory</Heading>
-              {isPasswordAuthEnabled && (
+              {credentialsForm === "login" && (
                 <Text color="fg.muted">Login with your credentials</Text>
+              )}
+              {credentialsForm === "register" && (
+                <Text color="fg.muted">Register a new account</Text>
               )}
             </Stack>
           </Stack>
@@ -110,7 +112,34 @@ export default function SignIn({
           <Stack spacing="6">
             {isPasswordAuthEnabled && (
               <>
-                <CredentialsLoginForm />
+                {credentialsForm === "login" && (
+                  <Stack>
+                    <CredentialsLoginForm />
+                    <Divider />
+                    <Button
+                      leftIcon={<FiUserPlus />}
+                      onClick={() => {
+                        setCredentialsForm("register");
+                      }}
+                    >
+                      Create Account
+                    </Button>
+                  </Stack>
+                )}
+                {credentialsForm === "register" && (
+                  <Stack>
+                    <CredentialsRegisterForm />
+                    <Divider />
+                    <Button
+                      leftIcon={<FiLogIn />}
+                      onClick={() => {
+                        setCredentialsForm("login");
+                      }}
+                    >
+                      Login
+                    </Button>
+                  </Stack>
+                )}
                 {hasThirdPartyProviders && (
                   <HStack>
                     <Divider />
