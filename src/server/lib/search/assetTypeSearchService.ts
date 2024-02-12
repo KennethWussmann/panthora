@@ -1,9 +1,7 @@
-import { type Index } from "meilisearch";
 import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { z } from "zod";
 import { type AssetType } from "../asset-types/assetType";
-import { waitForTasks } from "../user/meiliSearchUtils";
 import { AbstractSearchService } from "./abstractSearchService";
 import { type TeamId } from "../user/team";
 

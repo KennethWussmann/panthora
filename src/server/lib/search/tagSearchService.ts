@@ -1,9 +1,7 @@
-import { type Index } from "meilisearch";
 import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { type Tag } from "@prisma/client";
 import { z } from "zod";
-import { waitForTasks } from "../user/meiliSearchUtils";
 import { AbstractSearchService } from "./abstractSearchService";
 import { type TeamId } from "../user/team";
 
