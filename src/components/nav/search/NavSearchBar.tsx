@@ -182,14 +182,9 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
 
   useEffect(() => {
     // Reset the selected index when the search results change
-    console.log("Resetting selected index");
     setSelectedIndex(searchResults.length > 0 ? 0 : -1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
-
-  useEffect(() => {
-    console.log("selectedIndex", selectedIndex);
-  }, [selectedIndex]);
 
   return (
     <>
