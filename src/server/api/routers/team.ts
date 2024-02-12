@@ -1,4 +1,4 @@
-import { Team } from "@prisma/client";
+import { type Team } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { teamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";

@@ -1,13 +1,10 @@
-import { type Index } from "meilisearch";
 import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { z } from "zod";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
-import { type Team } from "@prisma/client";
 import { type AssetWithFields } from "../assets/asset";
-import { waitForTasks } from "../user/meiliSearchUtils";
-import { type TeamService } from "../user/teamService";
 import { AbstractSearchService } from "./abstractSearchService";
+import { type TeamId } from "../user/team";
 
 export const assetDocumentSchema = z.record(
   z.union([z.string(), z.number(), z.boolean(), z.null()])
@@ -30,69 +27,27 @@ export class AssetSearchService extends AbstractSearchService<
   constructor(
     readonly logger: Logger,
     readonly meilisearch: MeiliSearch,
-    private readonly teamService: TeamService,
     private readonly assetTypeService: AssetTypeService
   ) {
     super(logger, meilisearch, "assets");
   }
 
-  public initialize = async () => {
-    this.logger.debug("Initializing asset search indexes");
-
-    const teams = await this.teamService.getAllTeams();
-    await this.createMissingIndexes(teams);
-    await this.syncFilterableAttributes(teams);
-
-    this.logger.debug("Initializing asset search indexes done");
+  protected onInitialize = async (teamIds: TeamId[]) => {
+    await this.syncFilterableAttributes(teamIds);
   };
 
-  private createMissingIndexes = async (teams: Team[]) => {
-    const { results: indexes } = await this.meilisearch.getIndexes({
-      limit: Number.MAX_SAFE_INTEGER,
-    });
-
-    const indexesMissing = teams.filter((team) => {
-      const exists = indexes.some((index: Index<AssetSearchDocument>) => {
-        const compare = index.uid === this.getIndexName(team.id);
-        this.logger.debug("Index compare", {
-          indexId: index.uid,
-          compare,
-          name: this.getIndexName(team.id),
-        });
-        return compare;
-      });
-      this.logger.debug("Index existance", {
-        teamId: team.id,
-        exists,
-        name: this.getIndexName(team.id),
-      });
-
-      return !exists;
-    });
-
-    await waitForTasks(
-      this.meilisearch,
-      indexesMissing.map(async (team) => {
-        this.logger.info("Creating missing index", { teamId: team.id });
-        return this.meilisearch.createIndex(this.getIndexName(team.id), {
-          primaryKey: "id",
-        });
-      })
+  public syncFilterableAttributes = async (teamIds: TeamId[]) => {
+    const customFields = await this.assetTypeService.getSearchableCustomFields(
+      teamIds
     );
-    this.logger.debug("Creating missing indexes done");
-  };
-
-  public syncFilterableAttributes = async (teams: Team[]) => {
-    const customFields =
-      await this.assetTypeService.getSearchableCustomFields();
 
     await Promise.all(
-      teams.map(async (team) => {
+      teamIds.map(async (teamId) => {
         const index = this.meilisearch.index<AssetSearchDocument>(
-          this.getIndexName(team.id)
+          this.getIndexName(teamId)
         );
         const customFieldsForTeam = customFields.filter(
-          (field) => field.teamId === team.id
+          (field) => field.teamId === teamId
         );
         const customFieldsAndBaseAttributes = [
           ...baseAttributes,
@@ -118,16 +73,16 @@ export class AssetSearchService extends AbstractSearchService<
           this.logger.info(
             "Filterable attributes have changed. Applying new config now. This may take a while!",
             {
-              teamId: team.id,
+              teamId,
             }
           );
           this.logger.debug("New filterable attributes", {
-            teamId: team.id,
+            teamId,
             attributes: notYetFilterableAttributes.map((attr) => attr.slug),
           });
           await index.updateFilterableAttributes(customFieldsAndBaseAttributes);
           this.logger.info("Applying filterable attributes done", {
-            teamId: team.id,
+            teamId,
           });
         }
 
@@ -135,16 +90,16 @@ export class AssetSearchService extends AbstractSearchService<
           this.logger.info(
             "Sortable attributes have changed. Applying new config now. This may take a while!",
             {
-              teamId: team.id,
+              teamId,
             }
           );
           this.logger.debug("New sortable attributes", {
-            teamId: team.id,
+            teamId,
             attributes: notYetSortableAttributes.map((attr) => attr.slug),
           });
           await index.updateSortableAttributes(customFieldsAndBaseAttributes);
           this.logger.info("Applying sortable attributes done", {
-            teamId: team.id,
+            teamId,
           });
         }
       })
