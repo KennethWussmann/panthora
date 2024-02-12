@@ -16,7 +16,9 @@ datasource db {
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(uuid())
+    id                String   @id @default(uuid())
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
     userId            String
     type              String
     provider          String
@@ -28,13 +30,15 @@ model Account {
     scope             String?
     id_token          String? // @db.Text
     session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
 
 model Session {
     id           String   @id @default(uuid())
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
     sessionToken String   @unique
     userId       String
     expires      DateTime
@@ -42,6 +46,8 @@ model Session {
 }
 
 model VerificationToken {
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
     identifier String
     token      String   @unique
     expires    DateTime
@@ -57,17 +63,21 @@ enum UserTeamMembershipRole {
 
 // User Management
 model UserTeamMembership {
-    userId String
-    teamId String
-    team   Team                   @relation(fields: [teamId], references: [id])
-    user   User                   @relation(fields: [userId], references: [id])
-    role   UserTeamMembershipRole @default(MEMBER)
+    createdAt DateTime               @default(now())
+    updatedAt DateTime               @updatedAt
+    userId    String
+    teamId    String
+    team      Team                   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    user      User                   @relation(fields: [userId], references: [id])
+    role      UserTeamMembershipRole @default(MEMBER)
 
     @@id([userId, teamId])
 }
 
 model Team {
     id              String               @id @default(uuid())
+    createdAt       DateTime             @default(now())
+    updatedAt       DateTime             @updatedAt
     name            String
     // Relate other data models to Team
     tags            Tag[]
@@ -80,6 +90,8 @@ model Team {
 
 model User {
     id              String               @id @default(uuid())
+    createdAt       DateTime             @default(now())
+    updatedAt       DateTime             @updatedAt
     name            String?
     email           String?              @unique
     emailVerified   DateTime?
@@ -101,7 +113,7 @@ model Tag {
     parent      Tag?          @relation("TagToTag", fields: [parentId], references: [id])
     children    Tag[]         @relation("TagToTag")
     customField CustomField[]
-    team        Team?         @relation(fields: [teamId], references: [id])
+    team        Team?         @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId      String?
     fieldValues FieldValue[]
 }
@@ -116,7 +128,7 @@ model AssetType {
     children  AssetType[]   @relation("AssetTypeToAssetType")
     fields    CustomField[]
     asset     Asset[]
-    team      Team?         @relation(fields: [teamId], references: [id])
+    team      Team?         @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId    String?
 }
 
@@ -137,7 +149,7 @@ model CustomField {
     tagId         String?
     tag           Tag?         @relation(fields: [tagId], references: [id])
     fieldValue    FieldValue[]
-    Team          Team?        @relation(fields: [teamId], references: [id])
+    Team          Team?        @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId        String?
 }
 
@@ -159,7 +171,7 @@ model Asset {
     assetTypeId String
     assetType   AssetType    @relation(fields: [assetTypeId], references: [id])
     fieldValues FieldValue[]
-    team        Team?        @relation(fields: [teamId], references: [id])
+    team        Team?        @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId      String?
 }
 
@@ -193,6 +205,6 @@ model LabelTemplate {
     fontSize    Int               @default(7)
     qrCodeScale Decimal           @default(2)
     components  LabelComponents[] @default([QR_CODE, ASSET_ID, ASSET_VALUES])
-    team        Team?             @relation(fields: [teamId], references: [id])
+    team        Team?             @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId      String?
 }

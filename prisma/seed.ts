@@ -225,15 +225,17 @@ const createDummyUsers = async (teamId: string) => {
     "foo.bar@example.com",
   ];
 
-  const users = await prismaClient.$transaction(
-    emails.map((email) =>
-      prismaClient.user.create({
-        data: {
-          email,
-        },
-      })
-    )
-  );
+  await prismaClient.user.createMany({
+    data: emails.map((email) => ({ email })),
+  });
+  const users = await prismaClient.user.findMany({
+    where: {
+      email: {
+        in: emails,
+      },
+    },
+  });
+  
   await prismaClient.userTeamMembership.createMany({
     data: users.map((user) => ({
       userId: user.id,

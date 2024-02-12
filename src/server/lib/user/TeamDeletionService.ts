@@ -35,30 +35,23 @@ export class TeamDeletionService {
     }
 
     this.logger.info("Deleting team", { userId, teamId });
-    await this.prisma.$transaction([
-      this.prisma.userTeamMembership.deleteMany({
-        where: {
-          teamId,
-        },
-      }),
-      this.prisma.team.delete({
-        where: {
-          id: teamId,
-        },
-        include: {
-          teamMemberships: true,
-          assets: true,
-          customFields: {
-            include: {
-              fieldValue: true,
-            },
+    await this.prisma.team.delete({
+      where: {
+        id: teamId,
+      },
+      include: {
+        teamMemberships: true,
+        assets: true,
+        customFields: {
+          include: {
+            fieldValue: true,
           },
-          assetTypes: true,
-          tags: true,
-          labelTemplates: true,
         },
-      }),
-    ]);
+        assetTypes: true,
+        tags: true,
+        labelTemplates: true,
+      },
+    });
     void this.searchService.deleteIndexes(teamId);
     this.logger.info("Deleted team", { userId, teamId });
   };

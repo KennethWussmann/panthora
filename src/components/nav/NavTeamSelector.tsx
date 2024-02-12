@@ -1,11 +1,9 @@
 import { HStack, Select, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useTeam } from "~/lib/SelectedTeamProvider";
-import { api } from "~/utils/api";
 
 export const NavTeamSelector = () => {
-  const { data: teams, isLoading } = api.team.list.useQuery();
-  const { team, setTeam } = useTeam();
+  const { team, setTeam, teams, isLoading } = useTeam();
 
   useEffect(() => {
     if (isLoading || !teams) {
