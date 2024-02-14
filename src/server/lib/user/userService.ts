@@ -2,7 +2,8 @@ import { type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
 import { type TeamService } from "./teamService";
 import { type UserRegisterRequest } from "./userRegisterRequest";
-import bcrypt from "bcrypt";
+import { validateEmail } from "../utils/emailUtils";
+import { hashPassword } from "../utils/passwordUtils";
 
 export class UserService {
   constructor(
@@ -37,11 +38,20 @@ export class UserService {
     if (exists > 0) {
       throw new Error("User already exists");
     }
+    if (!validateEmail(sanitizedEmail)) {
+      throw new Error("Invalid email address");
+    }
+    if (password.length < 8) {
+      throw new Error("Password must be at least 8 characters long");
+    }
+    if (password.length > 255) {
+      throw new Error("Password must be at most 255 characters long");
+    }
     this.logger.info("Registering new user", { email: request.email });
     const user = await this.prisma.user.create({
       data: {
         email: sanitizedEmail,
-        password: await bcrypt.hash(password, 12),
+        password: await hashPassword(password),
       },
     });
     await this.initialize(user.id);
