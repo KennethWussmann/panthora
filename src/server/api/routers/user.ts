@@ -12,6 +12,9 @@ export const userRouter = createTRPCRouter({
       if (ctx.session?.user) {
         throw new Error("User already logged in");
       }
-      await ctx.applicationContext.userService.register(input);
+      await ctx.applicationContext.userService.register(
+        ctx.remoteAddress,
+        input
+      );
     }),
 });

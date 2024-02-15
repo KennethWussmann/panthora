@@ -208,3 +208,9 @@ model LabelTemplate {
     team        Team?             @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId      String?
 }
+
+model RateLimit {
+    key    String @id
+    points Int    @default(0)
+    expire BigInt
+}

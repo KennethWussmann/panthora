@@ -1,6 +1,8 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 import { db } from "../db";
+import { verifyPassword } from "../lib/utils/passwordUtils";
+import { defaultApplicationContext } from "../lib/applicationContext";
+import { sanitizeEmail } from "../lib/utils/emailUtils";
 
 export const CustomCredentialsProvider = () =>
   CredentialsProvider({
@@ -9,29 +11,56 @@ export const CustomCredentialsProvider = () =>
       email: { label: "E-Mail", type: "email" },
       password: { label: "Password", type: "password" },
     },
-    async authorize(credentials) {
+    async authorize(credentials, req) {
+      const { rateLimitService } = defaultApplicationContext;
+
       if (!credentials) {
         return null;
       }
+
+      const email = sanitizeEmail(credentials.email);
+
+      const ip = (req.headers?.["x-forwarded-for"] ||
+        req.headers?.["remote-addr"]) as string | undefined;
+
+      if (!ip) {
+        throw new Error("No IP address found in request");
+      }
+
+      const isBlocked = await rateLimitService.isBlockedBySome(
+        ["login_failed_by_ip", "login_failed_by_ip_user"],
+        ip,
+        email
+      );
+
+      if (isBlocked) {
+        return null;
+      }
+
       try {
         const user = await db.user.findFirst({
           where: {
-            email: {
-              equals: credentials.email,
-              mode: "insensitive",
-            },
+            email,
           },
         });
 
-        if (user?.password && credentials) {
-          const validPassword = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+        const isLoggedIn =
+          user?.password &&
+          credentials &&
+          (await verifyPassword(user.password, credentials.password));
 
-          if (validPassword) {
-            return user;
+        if (!isLoggedIn) {
+          await rateLimitService.consume("login_failed_by_ip", ip);
+          if (user) {
+            await rateLimitService.consume(
+              "login_failed_by_ip_user",
+              ip,
+              email
+            );
           }
+        } else {
+          await rateLimitService.delete("login_failed_by_ip_user", ip, email);
+          return user;
         }
       } catch (error) {
         console.error(error);

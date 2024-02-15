@@ -16,6 +16,8 @@ import { ApplicationContext } from "~/server/lib/applicationContext";
 
 import { getServerAuthSession } from "~/server/auth/auth";
 import { db } from "~/server/db";
+import { RateLimitType } from "../lib/user/rateLimitService";
+import { env } from "~/env.mjs";
 
 /**
  * 1. CONTEXT
@@ -27,6 +29,7 @@ import { db } from "~/server/db";
 
 interface CreateContextOptions {
   session: Session | null;
+  remoteAddress: string;
   applicationContext: ApplicationContext;
 }
 
@@ -59,8 +62,24 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   // Get the session from the server using the getServerSession wrapper function
   const session = await getServerAuthSession({ req, res });
 
+  const xForwardedFor = req.headers["x-forwarded-for"];
+  let remoteAddress = req.socket.remoteAddress;
+  if (xForwardedFor) {
+    remoteAddress = Array.isArray(xForwardedFor)
+      ? xForwardedFor[0]
+      : xForwardedFor.split(",")[0];
+  }
+
+  if (!remoteAddress || remoteAddress.length === 0) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Could not determine remote address",
+    });
+  }
+
   return createInnerTRPCContext({
     session,
+    remoteAddress,
     applicationContext: new ApplicationContext(),
   });
 };
@@ -101,6 +120,25 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 
+export const rateLimit = (type: RateLimitType) =>
+  t.middleware(async ({ ctx, next }) => {
+    try {
+      await ctx.applicationContext.rateLimitService.consume(
+        type,
+        ctx.remoteAddress,
+        ctx.session?.user?.id
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: e.message });
+      } else {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      }
+    }
+
+    return next();
+  });
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -108,7 +146,7 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(rateLimit("request"));
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
@@ -134,4 +172,6 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const protectedProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(rateLimit("request"));

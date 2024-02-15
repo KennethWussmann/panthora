@@ -2,14 +2,16 @@ import { type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
 import { type TeamService } from "./teamService";
 import { type UserRegisterRequest } from "./userRegisterRequest";
-import { validateEmail } from "../utils/emailUtils";
+import { sanitizeEmail, validateEmail } from "../utils/emailUtils";
 import { hashPassword } from "../utils/passwordUtils";
+import { type RateLimitService } from "./rateLimitService";
 
 export class UserService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient,
-    private readonly teamService: TeamService
+    private readonly teamService: TeamService,
+    private readonly rateLimitService: RateLimitService
   ) {}
 
   public initialize = async (userId: string) => {
@@ -29,25 +31,47 @@ export class UserService {
     }
   };
 
-  public register = async (request: UserRegisterRequest) => {
+  public register = async (
+    remoteAddress: string,
+    request: UserRegisterRequest
+  ) => {
     const { email, password } = request;
-    const sanitizedEmail = email.toLowerCase().trim();
+    const sanitizedEmail = sanitizeEmail(email);
     const exists = await this.prisma.user.count({
       where: { email: sanitizedEmail },
     });
+
+    const isBlocked = await this.rateLimitService.isBlockedBySome(
+      ["register_failed", "register_success"],
+      remoteAddress
+    );
+
+    if (isBlocked) {
+      this.logger.error("Failed to register account: Rate limit exceeded", {
+        remoteAddress,
+        email,
+      });
+      throw new Error("Something went wrong");
+    }
+
     if (exists > 0) {
+      await this.rateLimitService.consume("register_failed", remoteAddress);
       throw new Error("User already exists");
     }
     if (!validateEmail(sanitizedEmail)) {
+      await this.rateLimitService.consume("register_failed", remoteAddress);
       throw new Error("Invalid email address");
     }
     if (password.length < 8) {
+      await this.rateLimitService.consume("register_failed", remoteAddress);
       throw new Error("Password must be at least 8 characters long");
     }
     if (password.length > 255) {
+      await this.rateLimitService.consume("register_failed", remoteAddress);
       throw new Error("Password must be at most 255 characters long");
     }
     this.logger.info("Registering new user", { email: request.email });
+    await this.rateLimitService.consume("register_success", remoteAddress);
     const user = await this.prisma.user.create({
       data: {
         email: sanitizedEmail,
