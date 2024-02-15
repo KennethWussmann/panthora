@@ -13,6 +13,10 @@ import { StatsService } from "./statsService";
 import { LabelTemplateService } from "./label-templates/labelTemplateService";
 import { TeamService } from "./user/teamService";
 import { TeamDeletionService } from "./user/TeamDeletionService";
+import { parseDatabaseUrl } from "./utils/parseDatabaseUrl";
+import { env } from "~/env.mjs";
+import { RateLimitService } from "./user/rateLimitService";
+import { Pool } from "pg";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -88,6 +92,10 @@ export class ApplicationContext {
     this.logger.child({ name: "StatsService" }),
     this.prismaClient,
     this.teamService
+  );
+  public readonly rateLimitService = new RateLimitService(
+    this.logger.child({ name: "RateLimitService" }),
+    new Pool(parseDatabaseUrl(env.DATABASE_URL))
   );
 }
 

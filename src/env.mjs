@@ -25,6 +25,7 @@ export const env = createEnv({
     APP_BASE_URL: z.string().url(),
     MEILI_URL: z.string().url(),
     MEILI_MASTER_KEY: z.string(),
+    DISABLE_RATE_LIMIT: z.boolean().optional().default(false),
 
     PASSWORD_AUTH_ENABLED: z
       .string()
@@ -67,6 +68,7 @@ export const env = createEnv({
     APP_BASE_URL: process.env.APP_BASE_URL,
     MEILI_URL: process.env.MEILI_URL,
     MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
+    DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT,
 
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
