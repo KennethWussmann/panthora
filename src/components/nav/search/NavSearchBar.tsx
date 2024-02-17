@@ -1,7 +1,4 @@
 import {
-  Box,
-  CircularProgress,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -9,20 +6,12 @@ import {
   InputRightElement,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Progress,
   Stack,
-  Table,
-  TableCaption,
-  TableContainer,
   Tag,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -35,145 +24,70 @@ import {
 } from "react-icons/fi";
 import { AdvancedSearchExplanation } from "./AdvancedSearchExplanation";
 import { api } from "~/utils/api";
-import {
-  type ReactNode,
-  useEffect,
-  useState,
-  type KeyboardEventHandler,
-  type KeyboardEvent,
-  useMemo,
-} from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { type SearchResult } from "~/server/lib/search/searchResponse";
 import { useSearchShortcut } from "./useSearchShortcut";
+import { useTeam } from "~/lib/SelectedTeamProvider";
+import { ResultGroup } from "./ResultGroup";
 import {
-  type ActionSearchResult,
+  type ActionShortcut,
   useActionShortcutSearch,
 } from "./useActionShortcutSearch";
-import { useTeam } from "~/lib/SelectedTeamProvider";
-
-const AssetSearchResultTypeColumn = () => (
-  <Td fontWeight={"bold"}>
-    <Icon fontSize={"1.2rem"}>
-      <FiBox />
-    </Icon>
-    Asset
-  </Td>
-);
-const AssetTypeSearchResultTypeColumn = () => (
-  <Td fontWeight={"bold"}>
-    <Icon fontSize={"1.2rem"}>
-      <FiFolder />
-    </Icon>
-    Asset Type
-  </Td>
-);
-const TagSearchResultTypeColumn = () => (
-  <Td fontWeight={"bold"}>
-    <Icon fontSize={"1.2rem"}>
-      <FiTag />
-    </Icon>
-    Tag
-  </Td>
-);
-const ActionResultTypeColumn = () => (
-  <Td fontWeight={"bold"}>
-    <Icon fontSize={"1.2rem"}>
-      <FiCommand />
-    </Icon>
-    Action
-  </Td>
-);
-
-const searchResultTypeMap: Record<
-  "assetTypes" | "assets" | "tags" | "actions",
-  ReactNode
-> = {
-  assetTypes: <AssetTypeSearchResultTypeColumn />,
-  assets: <AssetSearchResultTypeColumn />,
-  tags: <TagSearchResultTypeColumn />,
-  actions: <ActionResultTypeColumn />,
-};
 
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const { team } = useTeam();
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [loadingRouter, setLoadingRouter] = useState(false);
-  const modalOverlayLoadingBackgroundColor = useColorModeValue(
-    "rgba(255, 255, 255, 0.8)",
-    "rgba(0, 0, 0, 0.8)"
-  );
-  const selectedSearchResultBackgroundColor = useColorModeValue(
-    "gray.100",
-    "gray.600"
-  );
 
   useSearchShortcut(onToggle);
 
-  const { data: entitiesSearchResults } = api.search.search.useQuery(
-    {
-      query: searchQuery,
-      teamId: team?.id ?? "",
-    },
-    {
-      enabled: team && searchQuery.length > 0,
-    }
-  );
-
+  const { data: entitiesSearchResults, isLoading: isSearching } =
+    api.search.search.useQuery(
+      {
+        query: searchQuery,
+        teamId: team?.id ?? "",
+      },
+      {
+        enabled: team && searchQuery.length > 0,
+      }
+    );
   const actionResults = useActionShortcutSearch(searchQuery);
 
-  const searchResults = useMemo(
-    () => [...(actionResults ?? []), ...(entitiesSearchResults ?? [])],
-    [actionResults, entitiesSearchResults]
+  const results = useMemo(
+    () => ({
+      assets: entitiesSearchResults?.assets ?? [],
+      assetTypes: entitiesSearchResults?.assetTypes ?? [],
+      tags: entitiesSearchResults?.tags ?? [],
+      actions: actionResults,
+    }),
+    [entitiesSearchResults, actionResults]
   );
 
-  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (
-    e: KeyboardEvent
-  ) => {
-    if (!searchResults) return;
-
-    switch (e.key) {
-      case "ArrowDown":
-        setSelectedIndex(
-          (selectedIndex) => (selectedIndex + 1) % searchResults.length
-        );
-        break;
-      case "ArrowUp":
-        setSelectedIndex(
-          (selectedIndex) =>
-            (selectedIndex - 1 + searchResults.length) % searchResults.length
-        );
-        break;
-      case "Enter":
-        if (selectedIndex >= 0) {
-          void openResult(searchResults.at(selectedIndex)!);
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
-  const openResult = async (result: SearchResult | ActionSearchResult) => {
+  const hasAssets = results.assets.length > 0;
+  const hasAssetTypes = results.assetTypes.length > 0;
+  const hasTags = results.tags.length > 0;
+  const hasActions = results.actions.length > 0;
+  const hasResults = hasAssets || hasAssetTypes || hasTags || hasActions;
+  const openResult = async (result: SearchResult | ActionShortcut) => {
     setLoadingRouter(true);
     switch (result.index) {
       case "assets":
-        await push(`/assets/edit/${result.result.id}`);
+        await push(`/assets/edit/${result.id}`);
         break;
       case "assetTypes":
-        await push(`/asset-types/edit/${result.result.id}`);
+        await push(`/asset-types/edit/${result.id}`);
         break;
       case "tags":
-        await push(`/tags/edit/${result.result.id}`);
+        await push(`/tags/edit/${result.id}`);
         break;
       case "actions":
-        if (result.result.href) {
-          await push(result.result.href);
+        if (result.href) {
+          await push(result.href);
         }
-        await result.result.onClick?.();
+        await result.onClick?.();
         break;
     }
     setLoadingRouter(false);
@@ -183,38 +97,13 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   useEffect(() => {
     setSearchQuery("");
   }, [isOpen]);
-
-  useEffect(() => {
-    // Reset the selected index when the search results change
-    setSelectedIndex(searchResults.length > 0 ? 0 : -1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
-
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size={"3xl"}>
-        <ModalOverlay />
-        <ModalContent onKeyDown={handleKeyDown} position={"relative"}>
-          {loadingRouter && (
-            <Box
-              position="absolute"
-              rounded={"md"}
-              top={0}
-              left={0}
-              right={0}
-              bottom={0}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              zIndex={100}
-              backgroundColor={modalOverlayLoadingBackgroundColor}
-            >
-              <CircularProgress isIndeterminate />
-            </Box>
-          )}
-          <ModalCloseButton />
-          <ModalBody mt={10} mb={4}>
-            <Stack gap={4}>
+      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+        <ModalOverlay bg={"rgba(0,0,0,0.3)"} />
+        <ModalContent>
+          <ModalBody p={2}>
+            <Stack>
               <InputGroup>
                 <InputLeftElement
                   pointerEvents="none"
@@ -226,8 +115,9 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                   <FiSearch />
                 </InputLeftElement>
                 <Input
+                  isDisabled={loadingRouter}
                   placeholder="Search"
-                  variant={"outline"}
+                  variant={"flushed"}
                   size={"lg"}
                   autoFocus
                   value={searchQuery}
@@ -244,44 +134,55 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                   />
                 </InputRightElement>
               </InputGroup>
+              {(loadingRouter || (isSearching && searchQuery.length > 0)) && (
+                <Progress
+                  isIndeterminate
+                  size="xs"
+                  mt={"-2"}
+                  rounded={"full"}
+                />
+              )}
 
-              <AdvancedSearchExplanation />
+              {!hasResults && searchQuery.length === 0 && (
+                <AdvancedSearchExplanation />
+              )}
+              {!isSearching && !hasResults && searchQuery.length > 0 && (
+                <Text textAlign={"center"} color="fg.muted">
+                  No results found
+                </Text>
+              )}
 
-              {searchResults && (
-                <TableContainer>
-                  <Table variant="simple">
-                    <TableCaption>
-                      {searchResults.length}{" "}
-                      {searchResults.length === 1 ? "result" : "results"}
-                    </TableCaption>
-                    <Thead>
-                      <Tr>
-                        <Th>Type</Th>
-                        <Th>Name</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {searchResults.map((result, index) => (
-                        <Tr
-                          key={index}
-                          _hover={{
-                            bgColor: selectedSearchResultBackgroundColor,
-                            cursor: "pointer",
-                          }}
-                          backgroundColor={
-                            selectedIndex === index
-                              ? selectedSearchResultBackgroundColor
-                              : undefined
-                          }
-                          onClick={() => openResult(result)}
-                        >
-                          {searchResultTypeMap[result.index]}
-                          <Td>{result.result.name}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
+              {hasAssets && (
+                <ResultGroup
+                  title="Assets"
+                  icon={<FiBox />}
+                  results={results.assets}
+                  onClick={(result) => openResult(result)}
+                />
+              )}
+              {hasAssetTypes && (
+                <ResultGroup
+                  title="Asset Types"
+                  icon={<FiFolder />}
+                  results={results.assetTypes}
+                  onClick={(result) => openResult(result)}
+                />
+              )}
+              {hasTags && (
+                <ResultGroup
+                  title="Tags"
+                  icon={<FiTag />}
+                  results={results.tags}
+                  onClick={(result) => openResult(result)}
+                />
+              )}
+              {hasActions && (
+                <ResultGroup
+                  title="Actions"
+                  icon={<FiCommand />}
+                  results={results.actions}
+                  onClick={(result) => openResult(result)}
+                />
               )}
             </Stack>
           </ModalBody>

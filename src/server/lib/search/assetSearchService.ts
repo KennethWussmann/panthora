@@ -6,9 +6,9 @@ import { type AssetWithFields } from "../assets/asset";
 import { AbstractSearchService } from "./abstractSearchService";
 import { type TeamId } from "../user/team";
 
-export const assetDocumentSchema = z.record(
-  z.union([z.string(), z.number(), z.boolean(), z.null()])
-);
+export const assetDocumentSchema = z
+  .object({ id: z.string() })
+  .and(z.record(z.union([z.string(), z.number(), z.boolean(), z.null()])));
 
 export type AssetSearchDocument = z.infer<typeof assetDocumentSchema>;
 
