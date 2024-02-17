@@ -1,6 +1,5 @@
 FROM node:16-alpine AS builder
 ARG DATABASE_URL
-ARG NEXT_PUBLIC_CLIENTVAR
 ENV SKIP_ENV_VALIDATION true
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -35,6 +34,8 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/docker-start.sh ./docker-start.sh
+COPY --from=builder /app/prisma ./prisma
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
@@ -43,4 +44,4 @@ USER nextjs
 EXPOSE 3000
 ENV PORT 3000
 
-CMD ["node", "server.js"]
+CMD ["sh", "docker-start.sh"]
