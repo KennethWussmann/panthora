@@ -1,4 +1,4 @@
-import { IconButton, Stack, Tag, Td, Tooltip, Tr } from "@chakra-ui/react";
+import { IconButton, Tag, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { LabelComponents } from "@prisma/client";
 import { useRouter } from "next/router";
 import { FiEdit } from "react-icons/fi";
