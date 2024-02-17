@@ -22,8 +22,8 @@ import { FaAws, FaDiscord, FaGithub, FaGoogle } from "react-icons/fa";
 import { getServerAuthSession } from "~/server/auth/auth";
 import { useRouter } from "next/router";
 import BlankLayout from "~/components/layout/BlankLayout";
-import { CredentialsLoginForm } from "./CredentialsLoginForm";
-import { CredentialsRegisterForm } from "./CredentialsRegisterForm";
+import { CredentialsLoginForm } from "../../components/auth/CredentialsLoginForm";
+import { CredentialsRegisterForm } from "../../components/auth/CredentialsRegisterForm";
 import { FiLogIn, FiUserPlus } from "react-icons/fi";
 
 const providerIcons: Record<string, ReactElement> = {

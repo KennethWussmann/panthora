@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Tag,
   Td,
   Tr,
   useDisclosure,
@@ -87,7 +86,6 @@ export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
   const updateMemberRole = useErrorHandlingMutation(api.team.updateMemberRole);
   const toast = useToast();
 
-  const isMe = ownMembership.userId === member.id;
   const adminsCanModifyMembers =
     ownMembership.role === UserTeamMembershipRole.ADMIN &&
     member.role === UserTeamMembershipRole.MEMBER;

@@ -7,7 +7,6 @@ import {
   Text,
   IconButton,
   ButtonGroup,
-  Flex,
   Box,
 } from "@chakra-ui/react";
 import Link from "next/link";

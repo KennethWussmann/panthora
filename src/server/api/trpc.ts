@@ -16,8 +16,7 @@ import { ApplicationContext } from "~/server/lib/applicationContext";
 
 import { getServerAuthSession } from "~/server/auth/auth";
 import { db } from "~/server/db";
-import { RateLimitType } from "../lib/user/rateLimitService";
-import { env } from "~/env.mjs";
+import { type RateLimitType } from "../lib/user/rateLimitService";
 
 /**
  * 1. CONTEXT

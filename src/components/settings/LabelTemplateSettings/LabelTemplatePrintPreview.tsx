@@ -22,6 +22,7 @@ export const LabelTemplatePrintPreview = ({
     limit: 3,
   });
   const labelTemplateDraft = useWatch({ control });
+  const { id: _id, ...labelTemplateDraftWithoutDefaults } = labelTemplateDraft;
 
   if (!assets) {
     return <Progress size="xs" isIndeterminate />;
@@ -55,13 +56,15 @@ export const LabelTemplatePrintPreview = ({
         padding: 2,
         fontSize: 7,
         team: {
+          createdAt: new Date(),
+          updatedAt: new Date(),
           id: teamId,
           name: "Preview",
         },
         components: [],
         default: false,
         qrCodeScale: 2,
-        ...labelTemplateDraft,
+        ...labelTemplateDraftWithoutDefaults,
       }}
       showPrintDialog={false}
     />

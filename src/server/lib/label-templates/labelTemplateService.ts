@@ -1,10 +1,14 @@
-import { type PrismaClient } from "@prisma/client";
+import {
+  type PrismaClient,
+  type LabelTemplate as LabelTemplateRelation,
+} from "@prisma/client";
 import { type Logger } from "winston";
 import { type LabelTemplateListRequest } from "./labelTemplateListRequest";
 import { type LabelTemplate } from "./labelTemplate";
 import { type LabelTemplateDeleteRequest } from "./labelTemplateDeleteRequest";
 import { type LabelTemplateCreateEditRequest } from "./labelTemplateCreateEditRequest";
 import { type TeamService } from "../user/teamService";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export class LabelTemplateService {
   constructor(
@@ -18,7 +22,7 @@ export class LabelTemplateService {
     listRequest: LabelTemplateListRequest
   ): Promise<LabelTemplate[]> => {
     await this.teamService.requireTeamMembership(userId, listRequest.teamId);
-    return await this.prisma.labelTemplate.findMany({
+    const templates = await this.prisma.labelTemplate.findMany({
       where: {
         teamId: listRequest.teamId,
       },
@@ -28,9 +32,16 @@ export class LabelTemplateService {
         team: true,
       },
     });
+    return templates.map((template) => ({
+      ...template,
+      qrCodeScale: template.qrCodeScale.toNumber(),
+    }));
   };
 
-  getById = async (userId: string, labelTemplateId: string) => {
+  getById = async (
+    userId: string,
+    labelTemplateId: string
+  ): Promise<LabelTemplate> => {
     const labelTemplate = await this.prisma.labelTemplate.findUnique({
       where: {
         id: labelTemplateId,
@@ -50,7 +61,10 @@ export class LabelTemplateService {
 
     await this.teamService.requireTeamMembership(userId, labelTemplate.teamId);
 
-    return labelTemplate;
+    return {
+      ...labelTemplate,
+      qrCodeScale: labelTemplate.qrCodeScale.toNumber(),
+    };
   };
 
   deleteLabelTemplate = async (
@@ -149,7 +163,7 @@ export class LabelTemplateService {
         height: updateRequest.height,
         padding: updateRequest.padding,
         fontSize: updateRequest.fontSize,
-        qrCodeScale: updateRequest.qrCodeScale,
+        qrCodeScale: new Decimal(updateRequest.qrCodeScale ?? 2),
         components: updateRequest.components,
       },
       where: {
@@ -226,10 +240,15 @@ export class LabelTemplateService {
       });
       throw new Error("No default label template found");
     }
-    return labelTemplate;
+    return {
+      ...labelTemplate,
+      qrCodeScale: labelTemplate.qrCodeScale.toNumber(),
+    };
   };
 
-  private setDefaultLabelTemplate = async (labelTemplate: LabelTemplate) => {
+  private setDefaultLabelTemplate = async (
+    labelTemplate: LabelTemplateRelation
+  ) => {
     await this.prisma.labelTemplate.updateMany({
       where: {
         teamId: labelTemplate.teamId,
