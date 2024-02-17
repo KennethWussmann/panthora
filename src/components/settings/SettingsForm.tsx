@@ -1,4 +1,4 @@
-import { Heading, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { SearchSettingsForm } from "./SearchSettings/SearchSettingsForm";
 import { LabelTemplatesSettingsView } from "./LabelTemplateSettings/LabelTemplateSettingsView";
 import { useTeam } from "~/lib/SelectedTeamProvider";
@@ -12,7 +12,6 @@ export const SettingsForm = () => {
   }
   return (
     <Stack gap={4}>
-      <Heading size={"lg"}>Settings</Heading>
       <TeamSettingsView team={team} refetch={refetch} />
       <LabelTemplatesSettingsView team={team} />
       <SearchSettingsForm team={team} />

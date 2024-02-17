@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import { useRouter } from "next/router";
-import { AssetTypeBreadcrumbs } from "../AssetTypeBreadcrumbs";
 import { AssetTypeExplanation } from "./AssetTypeExplanation";
 import { AssetTypeRow, EmptyAssetTypeRow } from "./AssetTypeRow";
 import { api } from "~/utils/api";
@@ -50,7 +49,6 @@ export const AssetTypeTable: React.FC = () => {
 
   return (
     <Stack gap={2}>
-      <AssetTypeBreadcrumbs />
       <AssetTypeExplanation />
       <Flex justify="end">
         <Button

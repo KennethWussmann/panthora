@@ -6,7 +6,6 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
 import { CreateAssetExplanation } from "./CreateAssetExplanation";
 import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -139,10 +138,6 @@ export const AssetCreateEditForm = ({
 
   return (
     <Stack gap={2}>
-      <AssetBreadcrumbs
-        create={!asset}
-        edit={asset?.id ? String(asset.id) : undefined}
-      />
       {!asset && <CreateAssetExplanation />}
       {isErrorCreate && (
         <Alert status="error">

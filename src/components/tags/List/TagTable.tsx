@@ -13,7 +13,6 @@ import { EmptyTagRow, TagRow } from "./TagRow";
 import { FiPlus } from "react-icons/fi";
 import { TagExplanation } from "./TagExplanation";
 import { useRouter } from "next/router";
-import { TagsBreadcrumbs } from "../TagsBreadcrumbs";
 import { api } from "~/utils/api";
 import { type Tag } from "~/server/lib/tags/tag";
 import { useTeam } from "~/lib/SelectedTeamProvider";
@@ -41,7 +40,6 @@ export const TagTable: React.FC = () => {
 
   return (
     <Stack gap={2}>
-      <TagsBreadcrumbs />
       <TagExplanation />
       <Flex justify="end">
         <Button

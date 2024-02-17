@@ -25,7 +25,6 @@ import {
 import { FiChevronDown, FiPlus, FiPrinter } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
-import { AssetBreadcrumbs } from "../AssetBreadcrumbs";
 import { AssetRow } from "./AssetRow";
 import { api } from "~/utils/api";
 import { Link } from "@chakra-ui/next-js";
@@ -70,7 +69,6 @@ export const AssetTable: React.FC = () => {
 
   return (
     <Stack gap={2}>
-      <AssetBreadcrumbs />
       <AssetExplanation />
       {showAssetTypeMissingNotice && (
         <Alert status="info">

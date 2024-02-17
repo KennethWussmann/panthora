@@ -13,7 +13,6 @@ import { FiSave } from "react-icons/fi";
 import { api } from "~/utils/api";
 import React from "react";
 import { CreateAssetTypeExplanation } from "./CreateAssetTypeExplanation";
-import { AssetTypeBreadcrumbs } from "../AssetTypeBreadcrumbs";
 import { type AssetType } from "~/server/lib/asset-types/assetType";
 import { CustomFieldCreationForm } from "./CustomFieldCreateEditForm";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -116,7 +115,6 @@ export const AssetTypeCreateEditForm = ({
 
   return (
     <Stack gap={2}>
-      <AssetTypeBreadcrumbs create={!assetType} edit={assetType?.id} />
       {!assetType && <CreateAssetTypeExplanation />}
       {isErrorCreation && (
         <Alert status="error">

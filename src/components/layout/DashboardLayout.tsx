@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { NavSidebar } from "../nav/NavSidebar";
 import { Container, Flex, Show, Spacer } from "@chakra-ui/react";
 import { NavTopbar } from "../nav/NavTopbar";
+import { Breadcrumbs } from "../breadcrumbs/Breadcrumbs";
 
 const DesktopLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -10,6 +11,7 @@ const DesktopLayout = ({ children }: { children: ReactNode }) => {
         <NavSidebar />
       </Flex>
       <Flex flex="1" p={6} direction="column" overflowY="scroll">
+        <Breadcrumbs />
         {children}
       </Flex>
     </Flex>
@@ -22,6 +24,7 @@ const MobileLayout = ({ children }: { children: ReactNode }) => {
       <NavTopbar />
       <Spacer mt={"70px"} />
       <Container maxW={"container.lg"} py={6}>
+        <Breadcrumbs />
         {children}
       </Container>
     </>

@@ -9,7 +9,6 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import { TagsBreadcrumbs } from "../TagsBreadcrumbs";
 import { CreateTagExplanation } from "./CreateTagExplanation";
 import { FiSave } from "react-icons/fi";
 import { api } from "~/utils/api";
@@ -95,7 +94,6 @@ export const TagEditCreationForm = ({
 
   return (
     <Stack gap={2}>
-      <TagsBreadcrumbs create={!tag} edit={tag?.id} />
       {!tag && <CreateTagExplanation />}
       {isErrorCreation && (
         <Alert status="error">
