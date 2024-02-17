@@ -5,6 +5,7 @@ import {
   AlertTitle,
   Progress,
 } from "@chakra-ui/react";
+import { Decimal } from "@prisma/client/runtime/library";
 import { type Control, useWatch } from "react-hook-form";
 import { LabelPDF } from "~/lib/pdf/LabelPDF";
 import { type LabelTemplateCreateEditRequest } from "~/server/lib/label-templates/labelTemplateCreateEditRequest";
@@ -22,6 +23,11 @@ export const LabelTemplatePrintPreview = ({
     limit: 3,
   });
   const labelTemplateDraft = useWatch({ control });
+  const {
+    id: _,
+    qrCodeScale: __,
+    ...labelTemplateDraftWithoutDefaults
+  } = labelTemplateDraft;
 
   if (!assets) {
     return <Progress size="xs" isIndeterminate />;
@@ -55,13 +61,17 @@ export const LabelTemplatePrintPreview = ({
         padding: 2,
         fontSize: 7,
         team: {
+          createdAt: new Date(),
+          updatedAt: new Date(),
           id: teamId,
           name: "Preview",
         },
         components: [],
         default: false,
-        qrCodeScale: 2,
-        ...labelTemplateDraft,
+        qrCodeScale: labelTemplateDraft.qrCodeScale
+          ? new Decimal(labelTemplateDraft.qrCodeScale)
+          : new Decimal(2),
+        ...labelTemplateDraftWithoutDefaults,
       }}
       showPrintDialog={false}
     />
