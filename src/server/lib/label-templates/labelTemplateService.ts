@@ -38,7 +38,10 @@ export class LabelTemplateService {
     }));
   };
 
-  getById = async (userId: string, labelTemplateId: string) => {
+  getById = async (
+    userId: string,
+    labelTemplateId: string
+  ): Promise<LabelTemplate> => {
     const labelTemplate = await this.prisma.labelTemplate.findUnique({
       where: {
         id: labelTemplateId,
@@ -58,7 +61,10 @@ export class LabelTemplateService {
 
     await this.teamService.requireTeamMembership(userId, labelTemplate.teamId);
 
-    return labelTemplate;
+    return {
+      ...labelTemplate,
+      qrCodeScale: labelTemplate.qrCodeScale.toNumber(),
+    };
   };
 
   deleteLabelTemplate = async (
