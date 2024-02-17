@@ -29,10 +29,15 @@ export class ApplicationContext {
     this.logger.child({ name: "TeamService" }),
     this.prismaClient
   );
+  public readonly rateLimitService = new RateLimitService(
+    this.logger.child({ name: "RateLimitService" }),
+    new Pool(parseDatabaseUrl(env.DATABASE_URL))
+  );
   public readonly userService = new UserService(
     this.logger.child({ name: "UserService" }),
     this.prismaClient,
-    this.teamService
+    this.teamService,
+    this.rateLimitService
   );
   public readonly assetTypeSearchService = new AssetTypeSearchService(
     this.logger.child({ name: "AssetTypeSearchService" }),
@@ -92,10 +97,6 @@ export class ApplicationContext {
     this.logger.child({ name: "StatsService" }),
     this.prismaClient,
     this.teamService
-  );
-  public readonly rateLimitService = new RateLimitService(
-    this.logger.child({ name: "RateLimitService" }),
-    new Pool(parseDatabaseUrl(env.DATABASE_URL))
   );
 }
 

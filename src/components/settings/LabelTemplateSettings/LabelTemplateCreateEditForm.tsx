@@ -57,7 +57,7 @@ export const LabelTemplateCreateEditForm = ({
       height: labelTemplate?.height,
       padding: labelTemplate?.padding,
       fontSize: labelTemplate?.fontSize,
-      qrCodeScale: labelTemplate?.qrCodeScale?.toNumber(),
+      qrCodeScale: labelTemplate?.qrCodeScale,
       components: labelTemplate?.components ?? [
         LabelComponents.QR_CODE,
         LabelComponents.ASSET_ID,
