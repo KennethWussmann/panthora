@@ -22,7 +22,7 @@ export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
   public readonly logger = createLogger({});
   private readonly meiliSearch = new MeiliSearch({
-    host: process.env.MEILI_URL!,
+    host: process.env.MEILI_URL ?? "http://127.0.0.1:7700",
     apiKey: process.env.MEILI_MASTER_KEY!,
   });
   public readonly teamService = new TeamService(
@@ -31,7 +31,11 @@ export class ApplicationContext {
   );
   public readonly rateLimitService = new RateLimitService(
     this.logger.child({ name: "RateLimitService" }),
-    new Pool(parseDatabaseUrl(env.DATABASE_URL))
+    new Pool(
+      parseDatabaseUrl(
+        env.DATABASE_URL ?? "postgres://troy:tory@localhost:5432/tory"
+      )
+    )
   );
   public readonly userService = new UserService(
     this.logger.child({ name: "UserService" }),
