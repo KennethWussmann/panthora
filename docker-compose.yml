@@ -20,19 +20,31 @@ services:
       #MEILI_ENV: production
       MEILI_NO_ANALYTICS: true
       MEILI_MASTER_KEY: rjzMJ0waScOlLGpEjRwy8Zx7fOlN06ZcZXcEhGvnYeFuiJuqPgpxGWv7IK5Gqw9h
-  #app:
-  #  platform: "linux/amd64"
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile
-  #    args:
-  #      NEXT_PUBLIC_CLIENTVAR: "clientvar"
-  #  working_dir: /app
-  #  ports:
-  #    - "3000:3000"
-  #  image: t3-app
-  #  environment:
-  #    - DATABASE_URL=database_url_goes_here
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: ./.env
+        required: true
+    environment:
+      DATABASE_URL: postgresql://tory:tory@database:5432/tory
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_URL_INTERNAL: http://app:3000
+      COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID}
+      COGNITO_CLIENT_SECRET: ${COGNITO_CLIENT_SECRET}
+      COGNITO_ISSUER: ${COGNITO_ISSUER}
+      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
+      LOG_LEVEL: ${LOG_LEVEL}
+      APP_BASE_URL: ${APP_BASE_URL}
+      MEILI_URL: http://search:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      PASSWORD_AUTH_ENABLED: ${PASSWORD_AUTH_ENABLED}
+      NODE_ENV: ${NODE_ENV}
 
 volumes:
   database:
