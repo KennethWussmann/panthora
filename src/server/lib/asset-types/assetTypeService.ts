@@ -60,6 +60,23 @@ export class AssetTypeService {
   ) => {
     this.logger.debug("Creating new asset type", { createRequest, userId });
     await this.teamService.requireTeamMembership(userId, createRequest.teamId);
+
+    if (createRequest.parentId) {
+      const parentAssetType = await this.prisma.assetType.findUnique({
+        where: {
+          id: createRequest.parentId,
+          teamId: createRequest.teamId,
+        },
+      });
+      if (!parentAssetType) {
+        this.logger.error("User specified an invalid parent asset type id", {
+          createRequest,
+          userId,
+        });
+        throw new Error("Parent Asset Type not found");
+      }
+    }
+
     const assetType = await this.prisma.assetType.create({
       data: {
         teamId: createRequest.teamId,
@@ -229,6 +246,29 @@ export class AssetTypeService {
       userId,
       existingAssetType.teamId
     );
+
+    if (updateRequest.parentId) {
+      const parentAssetType = await this.prisma.assetType.findUnique({
+        where: {
+          id: updateRequest.parentId,
+          teamId: updateRequest.teamId,
+        },
+      });
+      if (!parentAssetType) {
+        this.logger.error("User specified an invalid parent asset type id", {
+          updateRequest,
+          userId,
+        });
+        throw new Error("Parent Asset Type not found");
+      }
+      if (parentAssetType.id === assetTypeId) {
+        this.logger.error("Asset type cannot be its own parent", {
+          assetTypeId,
+          userId,
+        });
+        throw new Error("Asset type cannot be its own parent");
+      }
+    }
 
     await this.prisma.$transaction([
       this.prisma.assetType.update({

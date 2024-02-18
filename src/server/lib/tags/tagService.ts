@@ -79,6 +79,13 @@ export class TagService {
         });
         throw new Error("Parent tag not found");
       }
+      if (updateRequest.id === updateRequest.parentId) {
+        this.logger.error("User specified a tag as its own parent", {
+          updateRequest,
+          userId,
+        });
+        throw new Error("Tag cannot be its own parent");
+      }
     }
 
     const tag = await this.prisma.tag.update({
