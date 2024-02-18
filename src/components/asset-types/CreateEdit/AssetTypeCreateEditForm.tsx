@@ -94,6 +94,8 @@ export const AssetTypeCreateEditForm = ({
     }
     await createAssetType({
       ...data,
+      parentId:
+        data.parentId && data.parentId.length === 0 ? null : data.parentId,
       id: null,
       teamId: team.id,
     });
@@ -108,6 +110,8 @@ export const AssetTypeCreateEditForm = ({
     }
     await updateAssetType({
       ...data,
+      parentId:
+        data.parentId && data.parentId.length === 0 ? null : data.parentId,
       teamId: team.id,
     });
     refetch?.();
