@@ -454,9 +454,10 @@ export class AssetTypeService {
       assetTypeId: deleteRequest.id,
       userId,
     });
-    void this.assetTypeSearchService.delete(
-      await this.getByIdWithFieldsAndChildrenByUser(userId, assetType.id)
-    );
+    void this.assetTypeSearchService.delete({
+      id: assetType.id,
+      teamId: assetType.teamId,
+    });
   };
 
   public getSearchableCustomFields = async (
