@@ -65,7 +65,13 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
   }, [teamData, team, setTeam, teams]);
 
   useEffect(() => {
-    if (team && team.id !== previousTeam?.id) {
+    if (
+      team &&
+      team.id !== previousTeam?.id &&
+      !isLoadingTeams &&
+      teams &&
+      teams.length > 1
+    ) {
       toast({
         title: "Team updated",
         description: `You are now viewing the ${team.name} team`,
@@ -74,7 +80,7 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
         isClosable: true,
       });
     }
-  }, [team, previousTeam, toast]);
+  }, [team, previousTeam, toast, teams, isLoadingTeams]);
 
   return (
     <SelectedTeamContext.Provider
