@@ -134,13 +134,13 @@ export class RateLimitService {
       );
     } catch (e) {
       if (e instanceof RateLimiterRes) {
-        this.logger.info(`Rate limit exceeded`, {
+        this.logger.info(`Rate limit ${type} exceeded`, {
           error: e,
           remoteAddress,
           type,
         });
       }
-      throw new Error(`Rate limit exceeded`);
+      throw new Error(`Rate limit ${type} exceeded`);
     }
   };
 
