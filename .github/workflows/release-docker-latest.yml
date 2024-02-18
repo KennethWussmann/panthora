@@ -11,8 +11,15 @@ env:
   FORCE_COLOR: 1
 
 jobs:
-  release:
-    runs-on: buildjet-8vcpu-ubuntu-2204-arm
+  build:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - runner: buildjet-8vcpu-ubuntu-2204-arm
+            arch: arm64
+          - runner: buildjet-8vcpu-ubuntu-2204
+            arch: amd64
     permissions:
       packages: write
       contents: read
@@ -24,5 +31,29 @@ jobs:
       - uses: ./.github/actions/docker-publish
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          tags: ghcr.io/kennethwussmann/tory:${{ steps.vars.outputs.tag }},ghcr.io/kennethwussmann/tory:latest
+          tags: ghcr.io/kennethwussmann/tory:${{ matrix.arch }}-${{ steps.vars.outputs.tag }}
           build-args: VERSION=${{ steps.vars.outputs.tag }}
+
+  create-and-push-manifest:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+      - name: Create and push Docker manifest
+        run: |
+          docker manifest create ghcr.io/kennethwussmann/tory:${{ needs.build.outputs.tag }} \
+            --amend ghcr.io/kennethwussmann/tory:amd64-${{ needs.build.outputs.tag }} \
+            --amend ghcr.io/kennethwussmann/tory:arm64-${{ needs.build.outputs.tag }}
+          docker manifest push ghcr.io/kennethwussmann/tory:${{ needs.build.outputs.tag }}
+          docker manifest create ghcr.io/kennethwussmann/tory:latest \
+            --amend ghcr.io/kennethwussmann/tory:amd64-${{ needs.build.outputs.tag }} \
+            --amend ghcr.io/kennethwussmann/tory:arm64-${{ needs.build.outputs.tag }}
+          docker manifest push ghcr.io/kennethwussmann/tory:latest
