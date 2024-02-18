@@ -56,6 +56,9 @@ export const providers: Provider[] = [
       DiscordProvider({
         clientId: validatedEnv.DISCORD_CLIENT_ID,
         clientSecret: validatedEnv.DISCORD_CLIENT_SECRET,
+        httpOptions: {
+          timeout: 30000,
+        },
       })
   ),
   initializeProvider(
@@ -64,6 +67,9 @@ export const providers: Provider[] = [
       GoogleProvider({
         clientId: validatedEnv.GOOGLE_CLIENT_ID,
         clientSecret: validatedEnv.GOOGLE_CLIENT_SECRET,
+        httpOptions: {
+          timeout: 30000,
+        },
       })
   ),
   initializeProvider(
@@ -72,6 +78,9 @@ export const providers: Provider[] = [
       GitHubProvider({
         clientId: validatedEnv.GITHUB_CLIENT_ID,
         clientSecret: validatedEnv.GITHUB_CLIENT_SECRET,
+        httpOptions: {
+          timeout: 30000,
+        },
       })
   ),
   env.PASSWORD_AUTH_ENABLED ? CustomCredentialsProvider() : null,

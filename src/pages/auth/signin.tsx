@@ -48,6 +48,7 @@ export default function SignIn({
   const [credentialsForm, setCredentialsForm] = useState<
     "login" | "register" | "none"
   >(isPasswordAuthEnabled ? "login" : "none");
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     if (
@@ -58,6 +59,7 @@ export default function SignIn({
     ) {
       // if there is only one third-party provider, sign in with it.
       setAutoSignIn.on();
+      setLoading(true);
       void signIn(Object.keys(providers)[0], { callbackUrl: "/dashboard" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,13 +166,15 @@ export default function SignIn({
                 .map((provider) => (
                   <Button
                     key={provider.name}
-                    onClick={() =>
-                      signIn(provider.id, { callbackUrl: "/dashboard" })
-                    }
+                    onClick={() => {
+                      setLoading(true);
+                      void signIn(provider.id, { callbackUrl: "/dashboard" });
+                    }}
                     variant={"outline"}
                     w={"full"}
                     leftIcon={providerIcons[provider.id]}
-                    isLoading={autoSignIn}
+                    loadingText={provider.name}
+                    isLoading={autoSignIn || isLoading}
                   >
                     {provider.name}
                   </Button>
