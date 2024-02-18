@@ -45,6 +45,9 @@ export const providers: Provider[] = [
         clientId: validatedEnv.COGNITO_CLIENT_ID,
         clientSecret: validatedEnv.COGNITO_CLIENT_SECRET,
         issuer: validatedEnv.COGNITO_ISSUER,
+        httpOptions: {
+          timeout: 30000,
+        },
       })
   ),
   initializeProvider(
