@@ -9,7 +9,6 @@ import {
   Divider,
   useOutsideClick,
   useColorModeValue,
-  Flex,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
@@ -42,10 +41,8 @@ export const NavTopbar = () => {
     >
       <Container maxW="container.xl">
         <HStack justifyContent={"space-between"}>
-          <Flex justify={"space-between"}>
-            <Logo />
-            <NavTeamSelector />
-          </Flex>
+          <Logo />
+          <NavTeamSelector w={"full"} />
           <Spacer />
           <NavSearchBar hideShortcut />
           <Spacer />

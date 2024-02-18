@@ -1,4 +1,5 @@
 import {
+  Hide,
   IconButton,
   Input,
   InputGroup,
@@ -9,6 +10,7 @@ import {
   ModalContent,
   ModalOverlay,
   Progress,
+  Show,
   Stack,
   Tag,
   Text,
@@ -99,9 +101,9 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   }, [isOpen]);
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+      <Modal isOpen={isOpen} onClose={onClose} size={"2xl"}>
         <ModalOverlay bg={"rgba(0,0,0,0.3)"} />
-        <ModalContent>
+        <ModalContent mx={4}>
           <ModalBody p={2}>
             <Stack>
               <InputGroup>
@@ -188,38 +190,53 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <InputGroup
-        onClick={(e) => {
-          if (!team) {
-            return;
-          }
-          onOpen();
-          e.preventDefault();
-        }}
-      >
-        <InputLeftElement
-          pointerEvents="none"
-          color="gray.300"
-          fontSize="1.2em"
-        >
-          <FiSearch />
-        </InputLeftElement>
-        <Input
-          placeholder="Search"
+      <Show breakpoint="(max-width: 500px)">
+        <IconButton
+          icon={<FiSearch />}
+          aria-label="Search"
           variant={"outline"}
-          isDisabled={!team || isOpen}
+          onClick={() => {
+            if (!team) {
+              return;
+            }
+            onOpen();
+          }}
         />
-        {!hideShortcut && (
-          <InputRightElement
+      </Show>
+      <Hide breakpoint="(max-width: 500px)">
+        <InputGroup
+          onClick={(e) => {
+            if (!team) {
+              return;
+            }
+            onOpen();
+            e.preventDefault();
+          }}
+        >
+          <InputLeftElement
             pointerEvents="none"
             color="gray.300"
             fontSize="1.2em"
-            marginRight={2}
           >
-            <Tag>⌘K</Tag>
-          </InputRightElement>
-        )}
-      </InputGroup>
+            <FiSearch />
+          </InputLeftElement>
+          <Input
+            placeholder="Search"
+            variant={"outline"}
+            isDisabled={!team || isOpen}
+          />
+          {!hideShortcut && (
+            <InputRightElement
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              marginRight={2}
+            >
+              <Tag>⌘K</Tag>
+            </InputRightElement>
+          )}
+        </InputGroup>
+      </Hide>
     </>
   );
 };

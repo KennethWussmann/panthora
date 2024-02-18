@@ -25,7 +25,11 @@ export const env = createEnv({
     APP_BASE_URL: z.string().url(),
     MEILI_URL: z.string().url(),
     MEILI_MASTER_KEY: z.string(),
-    DISABLE_RATE_LIMIT: z.boolean().optional().default(false),
+    DISABLE_RATE_LIMIT: z
+      .string()
+      .optional()
+      .default("false")
+      .transform((val) => val?.toLowerCase() === "true"),
 
     PASSWORD_AUTH_ENABLED: z
       .string()
