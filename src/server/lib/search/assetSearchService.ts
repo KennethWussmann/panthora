@@ -5,6 +5,7 @@ import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type AssetWithFields } from "../assets/asset";
 import { AbstractSearchService } from "./abstractSearchService";
 import { type TeamId } from "../user/team";
+import { getFieldValueModel } from "../utils/fieldValueUtils";
 
 export const assetDocumentSchema = z
   .object({ id: z.string() })
@@ -114,7 +115,10 @@ export class AssetSearchService extends AbstractSearchService<
     teamId: asset.teamId,
     teamName: asset.team?.name ?? null,
     ...Object.fromEntries(
-      asset.fieldValues.map((field) => [field.customField.slug, field.value])
+      asset.fieldValues.map((field) => [
+        field.customField.slug,
+        getFieldValueModel(field, "name"),
+      ])
     ),
   });
 }

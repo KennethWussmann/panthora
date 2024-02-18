@@ -2,19 +2,26 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
   Button,
   Flex,
   Stack,
 } from "@chakra-ui/react";
 import { CreateAssetExplanation } from "./CreateAssetExplanation";
-import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
+import {
+  type AssetCreateEditCustomFieldValue,
+  type AssetCreateEditRequest,
+} from "~/server/lib/assets/assetCreateEditRequest";
 import { useFieldArray, useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { AssetTypeSelector } from "~/components/asset-types/AssetTypeSelector";
 import { FiSave } from "react-icons/fi";
 import { AssetCreateEditCustomFieldsForm } from "./AssetCreateEditCustomFieldsForm";
 import { useEffect } from "react";
-import { type AssetWithFields } from "~/server/lib/assets/asset";
+import {
+  type AssetFieldValue,
+  type AssetWithFields,
+} from "~/server/lib/assets/asset";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { useTeam } from "~/lib/SelectedTeamProvider";
 
@@ -41,20 +48,34 @@ export const AssetCreateEditForm = ({
             assetTypeId: asset.assetTypeId,
             teamId: asset.teamId ?? undefined,
             customFieldValues:
-              asset.assetType.fields?.map((field) => {
-                const customFieldValue = asset.fieldValues?.find(
-                  (value) => value.customFieldId === field.id
-                );
-                return customFieldValue
-                  ? {
-                      fieldId: customFieldValue.customFieldId,
-                      value: customFieldValue.value,
-                    }
-                  : {
-                      fieldId: field.id,
-                      value: "",
-                    };
-              }) ?? [],
+              asset.assetType.fields?.map(
+                (field): AssetCreateEditCustomFieldValue => {
+                  const customFieldValue: AssetFieldValue | undefined =
+                    asset.fieldValues?.find(
+                      (value) => value.customFieldId === field.id
+                    );
+                  return customFieldValue
+                    ? {
+                        fieldId: customFieldValue.customFieldId,
+                        booleanValue: customFieldValue.booleanValue ?? null,
+                        dateTimeValue: customFieldValue.dateTimeValue ?? null,
+                        decimalValue: customFieldValue.decimalValue ?? null,
+                        numberValue: customFieldValue.intValue ?? null,
+                        stringValue: customFieldValue.stringValue ?? null,
+                        tagsValue:
+                          customFieldValue.tagsValue?.map((t) => t.id) ?? [],
+                      }
+                    : {
+                        fieldId: field.id,
+                        booleanValue: null,
+                        dateTimeValue: null,
+                        decimalValue: null,
+                        numberValue: null,
+                        stringValue: null,
+                        tagsValue: [],
+                      };
+                }
+              ) ?? [],
           },
         }
       : undefined
@@ -111,7 +132,6 @@ export const AssetCreateEditForm = ({
     if (!team) {
       throw new Error("No default team found");
     }
-    console.log(data);
     await updateAsset({
       ...data,
       teamId: team.id,
@@ -131,7 +151,12 @@ export const AssetCreateEditForm = ({
       "customFieldValues",
       assetType.fields.map((field) => ({
         fieldId: field.id,
-        value: "",
+        booleanValue: null,
+        dateTimeValue: null,
+        decimalValue: null,
+        numberValue: null,
+        stringValue: "",
+        tagsValue: [],
       }))
     );
   }, [asset, assetType?.fields, setValue]);
@@ -172,12 +197,14 @@ export const AssetCreateEditForm = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={2}>
           {!asset && (
-            <AssetTypeSelector
-              label="Asset Type"
-              {...register("assetTypeId", {
-                required: true,
-              })}
-            />
+            <Box mt={4}>
+              <AssetTypeSelector
+                label="Asset Type"
+                {...register("assetTypeId", {
+                  required: true,
+                })}
+              />
+            </Box>
           )}
           {hasNoFields && (
             <Alert status="error">

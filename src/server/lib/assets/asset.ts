@@ -7,10 +7,15 @@ import {
 } from "@prisma/client";
 import { type AssetType } from "../asset-types/assetType";
 
+export type AssetFieldValue = Omit<FieldValueRelation, "decimalValue"> & {
+  customField: CustomFieldRelation;
+} & {
+  decimalValue: number | null;
+  tagsValue: TagRelation[];
+};
+
 export type AssetWithFields = AssetRelation & {
   assetType: AssetType;
-  fieldValues: (FieldValueRelation & {
-    customField: CustomFieldRelation;
-  } & { tags: TagRelation[] })[];
+  fieldValues: AssetFieldValue[];
   team: TeamRelation | null;
 };

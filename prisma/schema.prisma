@@ -176,15 +176,21 @@ model Asset {
 }
 
 model FieldValue {
-    id            String      @id @default(uuid())
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-    value         String?
+    id            String    @id @default(uuid())
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    type          FieldType
+    stringValue   String?
+    intValue      Int?
+    decimalValue  Decimal?
+    booleanValue  Boolean?
+    dateTimeValue DateTime?
+    tagsValue     Tag[]
+
     assetId       String
     asset         Asset       @relation(fields: [assetId], references: [id])
     customFieldId String
     customField   CustomField @relation(fields: [customFieldId], references: [id])
-    tags          Tag[]
 }
 
 enum LabelComponents {

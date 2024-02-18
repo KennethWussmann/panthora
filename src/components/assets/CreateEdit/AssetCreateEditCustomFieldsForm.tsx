@@ -1,4 +1,4 @@
-import { HStack, Heading, VStack } from "@chakra-ui/react";
+import { Divider, Heading, VStack } from "@chakra-ui/react";
 import { type Control } from "react-hook-form";
 import { type AssetType } from "~/server/lib/asset-types/assetType";
 import {
@@ -18,9 +18,10 @@ export const AssetCreateEditCustomFieldsForm = ({
 }) => {
   return (
     <VStack spacing={2} align={"stretch"}>
-      <HStack>
-        <Heading size={"sx"}>Configuration</Heading>
-      </HStack>
+      <Heading size={"md"} mt={8}>
+        Configuration
+      </Heading>
+      <Divider mb={2} />
       {customFieldValues.map((customFieldValue, index) => (
         <AssetCreateEditCustomFieldInput
           key={customFieldValue.fieldId}
