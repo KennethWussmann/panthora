@@ -98,6 +98,11 @@ export class AssetTypeService {
             assetType: {
               connect: assetType,
             },
+            Team: {
+              connect: {
+                id: createRequest.teamId,
+              },
+            },
             ...this.getAssetTypeUpdateFields(field),
           },
         })
@@ -307,6 +312,11 @@ export class AssetTypeService {
               assetType: {
                 connect: { id: assetTypeId },
               },
+              Team: {
+                connect: {
+                  id: updateRequest.teamId,
+                },
+              },
               ...this.getAssetTypeUpdateFields(field),
             },
             update: {
@@ -314,6 +324,11 @@ export class AssetTypeService {
               name: field.name,
               inputRequired: field.inputRequired,
               showInTable: field.showInTable,
+              Team: {
+                connect: {
+                  id: updateRequest.teamId,
+                },
+              },
               ...this.getAssetTypeUpdateFields(field),
             },
           });

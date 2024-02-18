@@ -1,4 +1,4 @@
-import { type PrismaClient } from "@prisma/client";
+import { type CustomField, FieldType, type PrismaClient } from "@prisma/client";
 import {
   type AssetCreateEditCustomFieldValue,
   type AssetCreateEditRequest,
@@ -31,12 +31,9 @@ export class AssetService {
     teamId: string,
     fieldValues: AssetCreateEditCustomFieldValue[]
   ): Promise<Record<string, string[] | undefined>> => {
-    const rawTagIds = fieldValues.flatMap((fieldValue) => {
-      if (Array.isArray(fieldValue.value)) {
-        return fieldValue.value;
-      }
-      return [];
-    });
+    const rawTagIds = fieldValues.flatMap(
+      (fieldValue) => fieldValue.tagsValue ?? []
+    );
 
     const filteredTagIds = await this.prisma.tag.findMany({
       select: { id: true },
@@ -50,10 +47,10 @@ export class AssetService {
 
     const fieldValueToTagIds = Object.fromEntries(
       fieldValues.map((fieldValue) => {
-        if (Array.isArray(fieldValue.value)) {
+        if (fieldValue.tagsValue) {
           return [
             fieldValue.fieldId,
-            fieldValue.value.filter((tagId) =>
+            fieldValue.tagsValue.filter((tagId) =>
               filteredTagIds.find((filteredTagId) => filteredTagId.id == tagId)
             ),
           ];
@@ -62,6 +59,37 @@ export class AssetService {
       })
     );
     return fieldValueToTagIds;
+  };
+
+  private findCustomFieldsOfFieldValues = async (
+    teamId: string,
+    fieldValues: AssetCreateEditCustomFieldValue[]
+  ): Promise<Record<string, CustomField>> => {
+    const rawCustomFieldIds = fieldValues.flatMap(
+      (fieldValue) => fieldValue.fieldId ?? []
+    );
+
+    const customFields = await this.prisma.customField.findMany({
+      where: {
+        teamId,
+        id: {
+          in: rawCustomFieldIds,
+        },
+      },
+    });
+
+    const fieldValueToCustomField = Object.fromEntries(
+      fieldValues.map((fieldValue) => {
+        const customField = customFields.find(
+          (customField) => customField.id == fieldValue.fieldId
+        );
+        if (!customField) {
+          throw new Error(`Custom field not found: ${fieldValue.fieldId}`);
+        }
+        return [fieldValue.fieldId, customField];
+      })
+    );
+    return fieldValueToCustomField;
   };
 
   public createAsset = async (
@@ -89,37 +117,33 @@ export class AssetService {
       createRequest.customFieldValues
     );
 
-    await this.prisma.$transaction(
+    const customFieldsOfFieldValues = await this.findCustomFieldsOfFieldValues(
+      createRequest.teamId,
       createRequest.customFieldValues
-        .filter((fieldValue) => !!fieldValue.value)
-        .map((fieldValue) => {
-          console.log({
-            data: {
-              value: Array.isArray(fieldValue.value)
-                ? undefined
-                : String(fieldValue.value),
-              customFieldId: fieldValue.fieldId,
-              assetId: asset.id,
-              tags: {
-                connect: tagsOfFieldValues[fieldValue.fieldId]?.map(
-                  (tagId) => ({ id: tagId })
-                ),
-              },
+    );
+
+    await this.prisma.$transaction(
+      createRequest.customFieldValues.map((fieldValue) => {
+        return this.prisma.fieldValue.create({
+          data: {
+            customFieldId: fieldValue.fieldId,
+            type:
+              customFieldsOfFieldValues[fieldValue.fieldId]?.fieldType ??
+              FieldType.STRING,
+            assetId: asset.id,
+            booleanValue: fieldValue.booleanValue ?? undefined,
+            stringValue: fieldValue.stringValue ?? undefined,
+            decimalValue: fieldValue.decimalValue ?? undefined,
+            intValue: fieldValue.numberValue ?? undefined,
+            dateTimeValue: fieldValue.dateTimeValue ?? undefined,
+            tagsValue: {
+              connect: tagsOfFieldValues[fieldValue.fieldId]?.map((tagId) => ({
+                id: tagId,
+              })),
             },
-          });
-          return this.prisma.fieldValue.create({
-            data: {
-              value: fieldValue.value ? String(fieldValue.value) : undefined,
-              customFieldId: fieldValue.fieldId,
-              assetId: asset.id,
-              tags: {
-                connect: tagsOfFieldValues[fieldValue.fieldId]?.map(
-                  (tagId) => ({ id: tagId })
-                ),
-              },
-            },
-          });
-        })
+          },
+        });
+      })
     );
     this.logger.info("Created custom fields", { assetId: asset.id, userId });
     void this.assetSearchService.add(await this.getById(userId, asset.id));
@@ -182,7 +206,11 @@ export class AssetService {
         id: updateRequest.id,
       },
       include: {
-        fieldValues: true,
+        fieldValues: {
+          include: {
+            tagsValue: true,
+          },
+        },
       },
     });
 
@@ -197,7 +225,22 @@ export class AssetService {
     await this.teamService.requireTeamMembership(userId, oldAsset.teamId);
     await this.teamService.requireTeamMembership(userId, updateRequest.teamId);
 
+    // tags of field values
     const tagsOfFieldValues = await this.findTagsOfFieldValues(
+      updateRequest.teamId,
+      updateRequest.customFieldValues
+    );
+    // tags that have been removed from a field value and need to be disconnected
+    const disconnectTagsOfFieldValues = Object.fromEntries(
+      oldAsset.fieldValues.map((fieldValue) => {
+        const newTags = tagsOfFieldValues[fieldValue.customFieldId] ?? [];
+        const oldTags = fieldValue.tagsValue.map((tag) => tag.id);
+        const tagsToRemove = oldTags.filter((tag) => !newTags?.includes(tag));
+        return [fieldValue.customFieldId, tagsToRemove];
+      })
+    );
+
+    const customFieldsOfFieldValues = await this.findCustomFieldsOfFieldValues(
       updateRequest.teamId,
       updateRequest.customFieldValues
     );
@@ -219,27 +262,42 @@ export class AssetService {
               )?.id ?? randomUUID(),
           },
           create: {
-            value: Array.isArray(fieldValue.value)
-              ? undefined
-              : String(fieldValue.value),
             customFieldId: fieldValue.fieldId,
+            type:
+              customFieldsOfFieldValues[fieldValue.fieldId]?.fieldType ??
+              FieldType.STRING,
             assetId: oldAsset.id,
-            tags: {
+            booleanValue: fieldValue.booleanValue ?? undefined,
+            stringValue: fieldValue.stringValue ?? undefined,
+            decimalValue: fieldValue.decimalValue ?? undefined,
+            intValue: fieldValue.numberValue ?? undefined,
+            dateTimeValue: fieldValue.dateTimeValue ?? undefined,
+            tagsValue: {
               connect: tagsOfFieldValues[fieldValue.fieldId]?.map((tagId) => ({
                 id: tagId,
               })),
             },
           },
           update: {
-            value: Array.isArray(fieldValue.value)
-              ? undefined
-              : String(fieldValue.value),
             customFieldId: fieldValue.fieldId,
+            type:
+              customFieldsOfFieldValues[fieldValue.fieldId]?.fieldType ??
+              FieldType.STRING,
             assetId: oldAsset.id,
-            tags: {
+            booleanValue: fieldValue.booleanValue ?? undefined,
+            stringValue: fieldValue.stringValue ?? undefined,
+            decimalValue: fieldValue.decimalValue ?? undefined,
+            intValue: fieldValue.numberValue ?? undefined,
+            dateTimeValue: fieldValue.dateTimeValue ?? undefined,
+            tagsValue: {
               connect: tagsOfFieldValues[fieldValue.fieldId]?.map((tagId) => ({
                 id: tagId,
               })),
+              disconnect: disconnectTagsOfFieldValues[fieldValue.fieldId]?.map(
+                (tagId) => ({
+                  id: tagId,
+                })
+              ),
             },
           },
         })
@@ -266,7 +324,7 @@ export class AssetService {
       include: {
         fieldValues: {
           include: {
-            tags: true,
+            tagsValue: true,
             customField: true,
           },
         },
@@ -277,6 +335,10 @@ export class AssetService {
     return Promise.all(
       assets.map(async (asset) => ({
         ...asset,
+        fieldValues: asset.fieldValues.map((fieldValue) => ({
+          ...fieldValue,
+          decimalValue: fieldValue.decimalValue?.toNumber() ?? null,
+        })),
         assetType:
           await this.assetTypeService.getByIdWithFieldsAndChildrenByUser(
             userId,
@@ -321,7 +383,7 @@ export class AssetService {
       include: {
         fieldValues: {
           include: {
-            tags: true,
+            tagsValue: true,
             customField: true,
           },
         },
@@ -340,6 +402,13 @@ export class AssetService {
         asset.assetTypeId
       );
 
-    return { ...asset, assetType };
+    return {
+      ...asset,
+      fieldValues: asset.fieldValues.map((fieldValue) => ({
+        ...fieldValue,
+        decimalValue: fieldValue.decimalValue?.toNumber() ?? null,
+      })),
+      assetType,
+    };
   };
 }

@@ -58,9 +58,9 @@ const assetText = (row: Row, asset: AssetWithFields) => {
   });
   fieldsToShow.forEach(({ value, field: { fieldType } }) => {
     if (fieldType === FieldType.TAG) {
-      textCell.text(value.tags.map((tag) => tag.name).join(", "));
+      textCell.text(value.tagsValue.map((tag) => tag.name).join(", "));
     } else {
-      textCell.text(String(value.value));
+      textCell.text(String(value.stringValue));
     }
   });
 };

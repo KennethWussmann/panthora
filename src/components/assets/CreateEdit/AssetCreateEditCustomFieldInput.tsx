@@ -10,7 +10,12 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { type CustomField, FieldType } from "@prisma/client";
-import { type Control, Controller } from "react-hook-form";
+import {
+  type Control,
+  Controller,
+  type FieldPath,
+  type RegisterOptions,
+} from "react-hook-form";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { numberOrNull } from "~/lib/reactHookFormUtils";
 import { type AssetCreateEditRequest } from "~/server/lib/assets/assetCreateEditRequest";
@@ -20,14 +25,17 @@ import { api } from "~/utils/api";
 import { useTeam } from "~/lib/SelectedTeamProvider";
 
 const getRegisterOptions = (customField: CustomField) => {
-  const registerOptions: Record<string, unknown> = {
+  const registerOptions: RegisterOptions<
+    AssetCreateEditRequest,
+    FieldPath<AssetCreateEditRequest>
+  > = {
     required: customField.inputRequired,
   };
   if (
     customField.fieldType === FieldType.NUMBER ||
     customField.fieldType === FieldType.CURRENCY
   ) {
-    registerOptions.valueAs = numberOrNull;
+    registerOptions.setValueAs = numberOrNull;
     if (customField.inputMin !== null) {
       registerOptions.min = customField.inputMin;
     }
@@ -46,6 +54,20 @@ const getRegisterOptions = (customField: CustomField) => {
   return registerOptions;
 };
 
+const fieldTypeToFieldPath: Record<
+  FieldType,
+  (index: number) => FieldPath<AssetCreateEditRequest>
+> = {
+  [FieldType.STRING]: (i) => `customFieldValues.${i}.stringValue`,
+  [FieldType.BOOLEAN]: (i) => `customFieldValues.${i}.booleanValue`,
+  [FieldType.NUMBER]: (i) => `customFieldValues.${i}.numberValue`,
+  [FieldType.DATE]: (i) => `customFieldValues.${i}.dateTimeValue`,
+  [FieldType.DATETIME]: (i) => `customFieldValues.${i}.dateTimeValue`,
+  [FieldType.TIME]: (i) => `customFieldValues.${i}.dateTimeValue`,
+  [FieldType.CURRENCY]: (i) => `customFieldValues.${i}.numberValue`,
+  [FieldType.TAG]: (i) => `customFieldValues.${i}.tagsValue`,
+};
+
 export const AssetCreateEditCustomFieldInput = ({
   index,
   customField,
@@ -60,7 +82,7 @@ export const AssetCreateEditCustomFieldInput = ({
     _formState: { errors: formErrors },
   } = control;
   const errors = formErrors.customFieldValues?.[index];
-  const formFieldName = `customFieldValues.${index}.value` as const;
+  const formFieldName = fieldTypeToFieldPath[customField.fieldType](index);
   const inputProps = register(formFieldName, getRegisterOptions(customField));
   const { team } = useTeam();
   const { data: tags } = api.tag.list.useQuery(
@@ -75,7 +97,7 @@ export const AssetCreateEditCustomFieldInput = ({
 
   return (
     <>
-      <FormControl>
+      <FormControl mb={4}>
         <FormLabel>{customField.name}</FormLabel>
         {(customField.fieldType === FieldType.NUMBER ||
           customField.fieldType === FieldType.CURRENCY) && (
@@ -139,7 +161,7 @@ export const AssetCreateEditCustomFieldInput = ({
         )}
         {customField.fieldType === FieldType.TAG && (
           <Controller
-            name={formFieldName}
+            name={`customFieldValues.${index}.tagsValue`}
             control={control}
             render={({ field: { onChange, value } }) => (
               <TagSearchInput
@@ -147,7 +169,7 @@ export const AssetCreateEditCustomFieldInput = ({
                 onTagsChange={(tagIds) => {
                   onChange(tagIds);
                 }}
-                value={value && Array.isArray(value) ? value : []}
+                value={value ?? []}
                 setValue={onChange}
                 max={customField.inputMax ?? undefined}
                 min={customField.inputMin ?? undefined}
@@ -155,7 +177,7 @@ export const AssetCreateEditCustomFieldInput = ({
             )}
           />
         )}
-        {errors?.value && <FormFieldRequiredErrorMessage />}
+        {errors?.stringValue && <FormFieldRequiredErrorMessage />}
       </FormControl>
     </>
   );

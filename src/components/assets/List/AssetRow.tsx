@@ -58,7 +58,7 @@ const AssetActions = ({
         />
       </Tooltip>
       <DeleteIconButton
-        itemName={asset.fieldValues?.[0]?.value ?? asset.id}
+        itemName={asset.fieldValues?.[0]?.stringValue ?? asset.id}
         onConfirm={handleDelete}
       />
     </>
@@ -89,7 +89,7 @@ export const AssetRow = ({
         if (fieldValue?.customField.fieldType === FieldType.TAG) {
           return (
             <Td key={field.id}>
-              {fieldValue?.tags?.map((tag) => (
+              {fieldValue?.tagsValue?.map((tag) => (
                 <Tag
                   key={tag.id}
                   mr={2}
@@ -105,7 +105,7 @@ export const AssetRow = ({
             </Td>
           );
         }
-        return <Td key={field.id}>{fieldValue?.value ?? ""}</Td>;
+        return <Td key={field.id}>{fieldValue?.stringValue ?? ""}</Td>;
       })}
       <Td textAlign="right">
         <AssetActions asset={asset} onDelete={refetchAssets} />
