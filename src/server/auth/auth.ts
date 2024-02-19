@@ -35,8 +35,8 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, token }) => ({
       ...session,
       user: {
-        ...session.user,
         id: token.sub,
+        email: session.user.email,
       },
     }),
     redirect: ({ url, baseUrl }) => {

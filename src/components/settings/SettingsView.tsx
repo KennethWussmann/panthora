@@ -4,7 +4,7 @@ import { LabelTemplatesSettingsView } from "./LabelTemplateSettings/LabelTemplat
 import { useTeam } from "~/lib/SelectedTeamProvider";
 import { TeamSettingsView } from "./TeamSettings/TeamSettingsView";
 
-export const SettingsForm = () => {
+export const SettingsView = () => {
   const { team, refetch } = useTeam();
 
   if (!team) {

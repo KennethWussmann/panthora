@@ -9,12 +9,28 @@ import { type TeamCreateEditRequest } from "./teamCreateEditRequest";
 import { type TeamAddMemberRequest } from "./teamAddMemberRequest";
 import { type Member } from "./member";
 import { type TeamRemoveMemberRequest } from "./teamRemoveMemberRequest";
+import { type TeamListRequest } from "./teamListRequest";
 
 export class TeamService {
   constructor(
     private readonly logger: Logger,
     private readonly prisma: PrismaClient
   ) {}
+
+  /**
+   * Administrative feature
+   * @param listRequest
+   * @returns
+   */
+  public getAllTeams = async (
+    listRequest: TeamListRequest = {}
+  ): Promise<Team[]> => {
+    return await this.prisma.team.findMany({
+      orderBy: { name: "asc" },
+      take: listRequest.limit,
+      skip: listRequest.offset,
+    });
+  };
 
   updateTeam = async (userId: string, updateRequest: TeamCreateEditRequest) => {
     if (!updateRequest.teamId) {
@@ -419,6 +435,4 @@ export class TeamService {
       },
     });
   };
-
-  public getAllTeams = async () => this.prisma.team.findMany();
 }

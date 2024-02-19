@@ -1,11 +1,21 @@
 import { type Team } from "@prisma/client";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  instanceAdminProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 import { teamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
 import { teamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
+import { teamListRequest } from "~/server/lib/user/teamListRequest";
 import { teamRemoveMemberRequest } from "~/server/lib/user/teamRemoveMemberRequest";
 
 export const teamRouter = createTRPCRouter({
+  listAll: instanceAdminProcedure
+    .input(teamListRequest)
+    .query(async ({ input, ctx }) => {
+      return await ctx.applicationContext.teamService.getAllTeams(input);
+    }),
   list: protectedProcedure.query(async ({ ctx }) => {
     try {
       return await ctx.applicationContext.teamService.getTeams(

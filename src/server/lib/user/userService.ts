@@ -1,10 +1,12 @@
-import { type PrismaClient } from "@prisma/client";
+import { UserRole, type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
 import { type TeamService } from "./teamService";
 import { type UserRegisterRequest } from "./userRegisterRequest";
 import { sanitizeEmail, validateEmail } from "../utils/emailUtils";
 import { hashPassword } from "../utils/passwordUtils";
 import { type RateLimitService } from "./rateLimitService";
+import { type User } from "./user";
+import { type UserListRequest } from "./userListRequest";
 
 export class UserService {
   constructor(
@@ -31,15 +33,38 @@ export class UserService {
     }
   };
 
+  /**
+   * Administrative feature
+   * @param listRequest
+   * @returns
+   */
+  public getAllUsers = async (
+    listRequest: UserListRequest
+  ): Promise<User[]> => {
+    return await this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: { email: "asc" },
+      take: listRequest.limit,
+      skip: listRequest.offset,
+    });
+  };
+
   public register = async (
     remoteAddress: string,
     request: UserRegisterRequest
-  ) => {
+  ): Promise<User> => {
     const { email, password } = request;
     const sanitizedEmail = sanitizeEmail(email);
     const exists = await this.prisma.user.count({
       where: { email: sanitizedEmail },
     });
+    const totalUserCount = await this.prisma.user.count();
 
     const isBlocked = await this.rateLimitService.isBlockedBySome(
       ["register_failed", "register_success"],
@@ -73,16 +98,42 @@ export class UserService {
     this.logger.info("Registering new user", { email: request.email });
     await this.rateLimitService.consume("register_success", remoteAddress);
     const user = await this.prisma.user.create({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       data: {
         email: sanitizedEmail,
         password: await hashPassword(password),
+        role: totalUserCount === 0 ? UserRole.ADMIN : UserRole.USER,
       },
     });
     await this.initialize(user.id);
     this.logger.info("New user registered", {
       id: user.id,
       email: request.email,
+      role: user.role,
     });
-    return { id: user.id, email };
+    return user;
+  };
+
+  public getMe = async (userId: string): Promise<User> => {
+    const user = await this.prisma.user.findUnique({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
   };
 }

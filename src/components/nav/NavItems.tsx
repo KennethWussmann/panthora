@@ -5,9 +5,12 @@ import {
   FiFolder,
   FiPlus,
   FiSettings,
+  FiShield,
   FiTag,
 } from "react-icons/fi";
 import { NavButton } from "./NavButton";
+import { useUser } from "~/lib/UserProvider";
+import { UserRole } from "@prisma/client";
 
 type NavigationItem = {
   icon: As;
@@ -18,6 +21,7 @@ type NavigationItem = {
     icon: As;
     href: string;
   };
+  administrative?: boolean;
 } | null;
 
 export const navigationItems: NavigationItem[] = [
@@ -52,22 +56,39 @@ export const navigationItems: NavigationItem[] = [
     label: "Settings",
     href: "/settings",
   },
+  {
+    icon: FiShield,
+    label: "Administration",
+    href: "/administration",
+    administrative: true,
+  },
 ];
 
 export const NavItems = () => {
+  const { user } = useUser();
+
+  const canSee = (item: NavigationItem) => {
+    if (!item?.administrative) {
+      return true;
+    }
+    return user?.role === UserRole.ADMIN;
+  };
+
   return (
     <>
       {navigationItems.map((item, index) =>
         item ? (
-          <NavButton
-            key={index}
-            icon={item.icon}
-            label={item.label}
-            onClick={item.onClick}
-            href={item.href}
-            isActive={window.location.pathname.startsWith(item.href ?? "/")}
-            secondaryAction={item.secondaryAction}
-          />
+          canSee(item) ? (
+            <NavButton
+              key={index}
+              icon={item.icon}
+              label={item.label}
+              onClick={item.onClick}
+              href={item.href}
+              isActive={window.location.pathname.startsWith(item.href ?? "/")}
+              secondaryAction={item.secondaryAction}
+            />
+          ) : null
         ) : (
           <Divider key={index} />
         )

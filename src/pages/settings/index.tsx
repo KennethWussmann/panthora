@@ -1,7 +1,7 @@
-import { SettingsForm } from "~/components/settings/SettingsForm";
+import { SettingsView } from "~/components/settings/SettingsView";
 
 export default function Settings() {
-  return <SettingsForm />;
+  return <SettingsView />;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -2,7 +2,7 @@ import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { type TeamId } from "../user/team";
 import { type Index } from "meilisearch";
-import { waitForTasks } from "../user/meiliSearchUtils";
+import { waitForTasks } from "../utils/meiliSearchUtils";
 
 type TeamOwnedIdentifiable = {
   id: string;

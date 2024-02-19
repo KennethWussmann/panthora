@@ -3,6 +3,7 @@ import { db } from "../db";
 import { verifyPassword } from "../lib/utils/passwordUtils";
 import { defaultApplicationContext } from "../lib/applicationContext";
 import { sanitizeEmail } from "../lib/utils/emailUtils";
+import { type User } from "../lib/user/user";
 
 export const CustomCredentialsProvider = () =>
   CredentialsProvider({
@@ -11,7 +12,7 @@ export const CustomCredentialsProvider = () =>
       email: { label: "E-Mail", type: "email" },
       password: { label: "Password", type: "password" },
     },
-    async authorize(credentials, req) {
+    async authorize(credentials, req): Promise<User | null> {
       const { rateLimitService } = defaultApplicationContext;
 
       if (!credentials) {
@@ -60,7 +61,13 @@ export const CustomCredentialsProvider = () =>
           }
         } else {
           await rateLimitService.delete("login_failed_by_ip_user", ip, email);
-          return user;
+          return {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          };
         }
       } catch (error) {
         console.error(error);
