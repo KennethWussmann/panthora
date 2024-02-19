@@ -154,8 +154,6 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  await ctx.applicationContext.userService.initialize(ctx.session.user.id);
-
   return next({
     ctx: {
       // infers the `session` as non-nullable

@@ -1,4 +1,3 @@
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, {
   createContext,
@@ -44,14 +43,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     if (isError || isRefetchError) {
       setCurrentUser(undefined);
-
-      signOut({ redirect: false })
-        .then(() => {
-          void push("/auth/signin?logout=true");
-        })
-        .catch(() => {
-          // Do nothing
-        });
     } else if (user) {
       setCurrentUser(user);
     }

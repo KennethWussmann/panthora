@@ -17,6 +17,7 @@ import { parseDatabaseUrl } from "./utils/parseDatabaseUrl";
 import { env } from "~/env.mjs";
 import { RateLimitService } from "./user/rateLimitService";
 import { Pool } from "pg";
+import { TeamCreationService } from "./user/TeamCreationService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -95,6 +96,11 @@ export class ApplicationContext {
     this.logger.child({ name: "TeamDeletionService" }),
     this.prismaClient,
     this.teamService,
+    this.searchService
+  );
+  public readonly teamCreationService = new TeamCreationService(
+    this.logger.child({ name: "TeamCreationService" }),
+    this.prismaClient,
     this.searchService
   );
   public readonly statsService = new StatsService(

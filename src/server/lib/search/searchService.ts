@@ -41,8 +41,13 @@ export class SearchService {
       this.logger.debug("Search service already initialized");
       return;
     }
-    this.logger.debug("Waiting for search services to initialize");
     const teamIds = (await this.teamService.getAllTeams()).map((t) => t.id);
+    await this.initializeIndexes(teamIds);
+    this.initialized = true;
+  };
+
+  public initializeIndexes = async (teamIds: string[]) => {
+    this.logger.debug("Waiting for search services to initialize");
     await Promise.all([
       await this.assetSearchService.initialize(teamIds),
       await this.tagSearchService.initialize(teamIds),
@@ -66,7 +71,6 @@ export class SearchService {
     } else {
       this.logger.debug("Meilisearch has no tasks to wait for");
     }
-    this.initialized = true;
   };
 
   public rebuildIndexes = async (teamId: string) => {

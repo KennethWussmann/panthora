@@ -16,23 +16,6 @@ export class UserService {
     private readonly rateLimitService: RateLimitService
   ) {}
 
-  public initialize = async (userId: string) => {
-    const existingTeams = await this.teamService.getTeams(userId);
-    this.logger.debug(
-      `Found ${existingTeams.length} teams for user ${userId}`,
-      { existingTeams }
-    );
-    if (existingTeams.length === 0) {
-      // create a default team
-      // we dont want full blown team support yet, but having one team with every user in it makes it easier to implement later.
-      this.logger.info("Creating initial team for new user", { userId });
-      await this.teamService.createTeam(userId, {
-        name: "My Team",
-        teamId: null,
-      });
-    }
-  };
-
   /**
    * Administrative feature
    * @param listRequest
@@ -111,7 +94,6 @@ export class UserService {
         role: totalUserCount === 0 ? UserRole.ADMIN : UserRole.USER,
       },
     });
-    await this.initialize(user.id);
     this.logger.info("New user registered", {
       id: user.id,
       email: request.email,
