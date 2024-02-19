@@ -1,21 +1,26 @@
-import { Flex, IconButton, Text, Tooltip } from "@chakra-ui/react";
-import { signOut, useSession } from "next-auth/react";
+import { Box, Flex, Icon, IconButton, Text, Tooltip } from "@chakra-ui/react";
+import { UserRole } from "@prisma/client";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiShield } from "react-icons/fi";
+import { useUser } from "~/lib/UserProvider";
 
 export const NavLogout = () => {
-  const { data: session } = useSession();
+  const { user } = useUser();
   const { push } = useRouter();
-
-  if (!session) {
-    return;
-  }
 
   return (
     <Flex justifyContent={"space-between"} alignItems={"center"}>
       <Text textStyle="sm" fontWeight="medium">
-        {session.user.email}
+        {user?.email}
       </Text>
+      {user?.role === UserRole.ADMIN && (
+        <Tooltip label="You are an Admin" placement="top">
+          <Box mt={2}>
+            <Icon as={FiShield} h={5} w={5} />
+          </Box>
+        </Tooltip>
+      )}
       <Tooltip label="Log out">
         <IconButton
           variant={"ghost"}

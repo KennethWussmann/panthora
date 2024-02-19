@@ -17,6 +17,7 @@ import { ApplicationContext } from "~/server/lib/applicationContext";
 import { getServerAuthSession } from "~/server/auth/auth";
 import { db } from "~/server/db";
 import { type RateLimitType } from "../lib/user/rateLimitService";
+import { UserRole } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -163,6 +164,25 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   });
 });
 
+const enforceUserIsInstanceAdmin = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const { role } = await ctx.applicationContext.userService.getMe(
+    ctx.session.user.id
+  );
+
+  if (role !== UserRole.ADMIN) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
 /**
  * Protected (authenticated) procedure
  *
@@ -173,4 +193,8 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
  */
 export const protectedProcedure = t.procedure
   .use(enforceUserIsAuthed)
+  .use(rateLimit("request"));
+
+export const instanceAdminProcedure = t.procedure
+  .use(enforceUserIsInstanceAdmin)
   .use(rateLimit("request"));

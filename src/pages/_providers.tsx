@@ -6,6 +6,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { SelectedAssetProvider } from "~/lib/SelectedAssetsProvider";
 import { SelectedTeamProvider } from "~/lib/SelectedTeamProvider";
+import { UserProvider } from "~/lib/UserProvider";
 
 const theme = extendTheme({
   config: {
@@ -27,9 +28,11 @@ function Providers({
         {/* eslint-disable-next-line */}
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <SessionProvider session={session}>
-          <SelectedTeamProvider>
-            <SelectedAssetProvider>{children}</SelectedAssetProvider>
-          </SelectedTeamProvider>
+          <UserProvider>
+            <SelectedTeamProvider>
+              <SelectedAssetProvider>{children}</SelectedAssetProvider>
+            </SelectedTeamProvider>
+          </UserProvider>
         </SessionProvider>
       </ChakraProvider>
     </CacheProvider>
