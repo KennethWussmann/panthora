@@ -74,57 +74,6 @@ export class TeamService {
     });
   };
 
-  createTeam = async (
-    userId: string,
-    createRequest: TeamCreateEditRequest
-  ): Promise<Team> => {
-    this.logger.info("Creating team", { userId, createRequest });
-
-    const team = await this.prisma.team.create({
-      data: {
-        name: createRequest.name,
-      },
-    });
-    this.logger.info("Created team", {
-      userId,
-      teamId: team.id,
-    });
-
-    await this.prisma.userTeamMembership.create({
-      data: {
-        userId,
-        teamId: team.id,
-        role: UserTeamMembershipRole.OWNER,
-      },
-    });
-    this.logger.info("Added user as Owner to new team", {
-      userId,
-      teamId: team.id,
-    });
-
-    await this.initializeTeam(team);
-
-    return team;
-  };
-
-  /**
-   * Create default entities for a new team
-   * @param team
-   */
-  private initializeTeam = async (team: Team) => {
-    const template = await this.prisma.labelTemplate.create({
-      data: {
-        teamId: team.id,
-        default: true,
-        name: "Default",
-      },
-    });
-    this.logger.info("Created default label template for new team", {
-      teamId: team.id,
-      labelTemplateId: template.id,
-    });
-  };
-
   isTeamMember = async (userId: string, teamId: string): Promise<boolean> => {
     return (
       (await this.prisma.team.count({

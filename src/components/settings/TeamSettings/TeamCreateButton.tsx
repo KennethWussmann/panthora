@@ -88,7 +88,10 @@ export const TeamCreateButton = () => {
 
                 <FormControl isInvalid={!!errors.name}>
                   <FormLabel>Name</FormLabel>
-                  <Input type="text" {...register("name")} />
+                  <Input
+                    type="text"
+                    {...register("name", { required: true })}
+                  />
                   {errors?.name && <FormFieldRequiredErrorMessage />}
                   <FormHelperText>Give your team a name</FormHelperText>
                 </FormControl>

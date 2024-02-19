@@ -82,7 +82,7 @@ export const teamRouter = createTRPCRouter({
   create: protectedProcedure
     .input(teamCreateEditRequest)
     .mutation(async ({ ctx, input }): Promise<Team> => {
-      return await ctx.applicationContext.teamService.createTeam(
+      return await ctx.applicationContext.teamCreationService.createTeam(
         ctx.session.user.id,
         input
       );

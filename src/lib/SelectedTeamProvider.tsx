@@ -1,5 +1,6 @@
 import { usePrevious, useToast } from "@chakra-ui/react";
 import { type Team } from "@prisma/client";
+import { useRouter } from "next/router";
 import React, {
   createContext,
   useContext,
@@ -47,6 +48,7 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
   } = api.team.get.useQuery(team?.id ?? "", {
     enabled: team !== undefined,
   });
+  const { push, asPath } = useRouter();
   const {
     data: teams,
     refetch: refetchTeams,
@@ -62,7 +64,11 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
     if (teams && (!team || !teams.map((t) => t.id).includes(team.id))) {
       setTeam(teams[0]);
     }
-  }, [teamData, team, setTeam, teams]);
+    if (teams && teams.length === 0 && asPath !== "/onboarding") {
+      console.log("Redirecting to onboarding");
+      void push("/onboarding");
+    }
+  }, [teamData, team, setTeam, teams, push, asPath]);
 
   useEffect(() => {
     if (
