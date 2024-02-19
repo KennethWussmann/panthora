@@ -39,7 +39,7 @@ export const TagTable: React.FC = () => {
   );
 
   return (
-    <Stack gap={2}>
+    <Stack gap={6}>
       <TagExplanation />
       <Flex justify="end">
         <Button

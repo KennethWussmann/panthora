@@ -48,7 +48,7 @@ export const AssetTypeTable: React.FC = () => {
   );
 
   return (
-    <Stack gap={2}>
+    <Stack gap={6}>
       <AssetTypeExplanation />
       <Flex justify="end">
         <Button

@@ -13,12 +13,12 @@ import {
   Show,
   Stack,
   Tag,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
   FiBox,
   FiCommand,
+  FiDelete,
   FiFolder,
   FiSearch,
   FiTag,
@@ -36,6 +36,7 @@ import {
   type ActionShortcut,
   useActionShortcutSearch,
 } from "./useActionShortcutSearch";
+import { EmptyListIcon } from "~/components/common/EmptyListIcon";
 
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
@@ -127,12 +128,20 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                 />
                 <InputRightElement marginTop={1} marginRight={1}>
                   <IconButton
-                    icon={<FiX />}
-                    aria-label="Clear"
+                    icon={searchQuery.length === 0 ? <FiX /> : <FiDelete />}
+                    aria-label={
+                      searchQuery.length === 0 ? "Close Search" : "Clear Search"
+                    }
                     variant={"ghost"}
                     size={"sm"}
                     disabled={searchQuery.length === 0}
-                    onClick={() => setSearchQuery("")}
+                    onClick={() => {
+                      if (searchQuery.trim().length === 0) {
+                        onClose();
+                      } else {
+                        setSearchQuery("");
+                      }
+                    }}
                   />
                 </InputRightElement>
               </InputGroup>
@@ -149,9 +158,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
                 <AdvancedSearchExplanation />
               )}
               {!isSearching && !hasResults && searchQuery.length > 0 && (
-                <Text textAlign={"center"} color="fg.muted">
-                  No results found
-                </Text>
+                <EmptyListIcon icon={FiSearch} label={"No results found"} />
               )}
 
               {hasAssets && (
