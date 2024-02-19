@@ -1,8 +1,9 @@
 import { Box, Flex, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { BiSubdirectoryRight } from "react-icons/bi";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiFolder } from "react-icons/fi";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
+import { EmptyListIcon } from "~/components/common/EmptyListIcon";
 import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type AssetType } from "~/server/lib/asset-types/assetType";
@@ -83,7 +84,13 @@ export const AssetTypeRow: React.FC<AssetTypeRowProps> = ({
 export const EmptyAssetTypeRow = () => {
   return (
     <Tr>
-      <Td colSpan={2}>No asset types found</Td>
+      <Td colSpan={2}>
+        <EmptyListIcon
+          icon={FiFolder}
+          label={"No asset types found"}
+          createHref="/asset-types/create"
+        />
+      </Td>
     </Tr>
   );
 };

@@ -1,5 +1,5 @@
 import { Box, Flex, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiTag } from "react-icons/fi";
 import { BiSubdirectoryRight } from "react-icons/bi";
 import { type Tag } from "@prisma/client";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { useTeam } from "~/lib/SelectedTeamProvider";
+import { EmptyListIcon } from "~/components/common/EmptyListIcon";
 
 const TagActions = ({
   tag,
@@ -73,7 +74,13 @@ export const TagRow = ({
 export const EmptyTagRow = () => {
   return (
     <Tr>
-      <Td colSpan={2}>No tags found</Td>
+      <Td colSpan={2}>
+        <EmptyListIcon
+          icon={FiTag}
+          label={"No tags found"}
+          createHref="/tags/create"
+        />
+      </Td>
     </Tr>
   );
 };

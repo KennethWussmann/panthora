@@ -4,6 +4,7 @@ import {
   AlertIcon,
   Progress,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -43,28 +44,30 @@ export const SearchTaskTable = ({ team }: { team: Team }) => {
         </Alert>
       )}
       {!isLoadingTasks && tasks && tasks.length > 0 && (
-        <Table variant="simple" size={"sm"}>
-          <Thead>
-            <Tr>
-              <Th>Enqueued at</Th>
-              <Th>Index</Th>
-              <Th>Type</Th>
-              <Th>Status</Th>
-              <Th>Details</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {tasks.map((task) => (
-              <Tr key={task.uid}>
-                <Td>{String(task.enqueuedAt)}</Td>
-                <Td>{task.indexUid}</Td>
-                <Td>{task.type}</Td>
-                <Td>{task.status}</Td>
-                <Td>{task.error?.message}</Td>
+        <TableContainer>
+          <Table variant="simple" size={"sm"}>
+            <Thead>
+              <Tr>
+                <Th>Enqueued at</Th>
+                <Th>Index</Th>
+                <Th>Type</Th>
+                <Th>Status</Th>
+                <Th>Details</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {tasks.map((task) => (
+                <Tr key={task.uid}>
+                  <Td>{String(task.enqueuedAt)}</Td>
+                  <Td>{task.indexUid}</Td>
+                  <Td>{task.type}</Td>
+                  <Td>{task.status}</Td>
+                  <Td>{task.error?.message}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
       )}
     </>
   );

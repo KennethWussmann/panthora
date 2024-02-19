@@ -13,7 +13,10 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { type UserTeamMembership, UserTeamMembershipRole } from "@prisma/client";
+import {
+  type UserTeamMembership,
+  UserTeamMembershipRole,
+} from "@prisma/client";
 import { useState } from "react";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { useTeam } from "~/lib/SelectedTeamProvider";
@@ -120,6 +123,7 @@ export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
           <Select
             value={member.role}
             isDisabled={!canModify}
+            minW={"120px"}
             onChange={(e) => {
               setNewRole(
                 Object.values(UserTeamMembershipRole).find(
