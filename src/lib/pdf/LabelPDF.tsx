@@ -96,7 +96,7 @@ export const LabelPDF = ({
         assets.map(async (asset, index) => {
           const isLast = index === assets.length - 1;
           const qrCode = await QRCode.toDataURL(
-            `${appUrl()}/asset/${asset.id}`,
+            `${appUrl()}/assets/${asset.id}`,
             {
               type: "image/jpeg",
               margin: 0,
