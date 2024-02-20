@@ -301,7 +301,10 @@ export class TeamService {
     });
   };
 
-  getTeamInvitesOfTeam = async (userId: string, teamId: string) => {
+  getTeamInvitesOfTeam = async (
+    userId: string,
+    teamId: string
+  ): Promise<TeamInvite[]> => {
     await this.requireTeamMembershipAdmin(userId, teamId);
 
     const invites = await this.prisma.teamInvite.findMany({
@@ -323,6 +326,7 @@ export class TeamService {
       id: i.id,
       teamName: i.team.name,
       expires: i.expires,
+      role: i.role,
       invitedByEmail: i.from?.email ?? "",
       invitedEmail: i.email,
       createdAt: i.createdAt,
@@ -398,6 +402,7 @@ export class TeamService {
       id: i.id,
       teamName: i.team.name,
       expires: i.expires,
+      role: i.role,
       invitedByEmail: i.from?.email ?? "",
       invitedEmail: i.email,
       createdAt: i.createdAt,

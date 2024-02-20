@@ -23,6 +23,7 @@ import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
 import { type Member } from "~/server/lib/team/member";
 import { api } from "~/utils/api";
+import { roleLabels } from "./roleLabels";
 
 type TeamMemberRowProps = {
   member: Member;
@@ -73,12 +74,6 @@ const TeamMemberActions = ({
   );
 };
 
-const roleLabels: Record<UserTeamMembershipRole, string> = {
-  [UserTeamMembershipRole.OWNER]: "Owner",
-  [UserTeamMembershipRole.ADMIN]: "Admin",
-  [UserTeamMembershipRole.MEMBER]: "Member",
-};
-
 export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
   member,
   ownMembership,
@@ -117,7 +112,7 @@ export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
 
   return (
     <>
-      <Tr key={member.id}>
+      <Tr>
         <Td>{member.email}</Td>
         <Td>
           <Select
@@ -146,7 +141,7 @@ export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
               ))}
           </Select>
         </Td>
-        <Td>
+        <Td textAlign="right">
           <TeamMemberActions
             member={member}
             canModify={canModify}

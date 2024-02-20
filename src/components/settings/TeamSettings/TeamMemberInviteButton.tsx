@@ -29,10 +29,10 @@ import { api } from "~/utils/api";
 
 export const TeamMemberInviteButton = ({
   team,
-  refetchMembers,
+  refetch,
 }: {
   team: Team;
-  refetchMembers: VoidFunction;
+  refetch: VoidFunction;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -61,7 +61,7 @@ export const TeamMemberInviteButton = ({
         isClosable: true,
       });
       setLoading(false);
-      refetchMembers();
+      refetch();
       onClose();
     } catch (error) {
       setLoading(false);

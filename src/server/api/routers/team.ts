@@ -110,6 +110,14 @@ export const teamRouter = createTRPCRouter({
         input
       );
     }),
+  removePendingInvite: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.applicationContext.teamService.removeTeamInvite(
+        ctx.session.user.id,
+        input
+      );
+    }),
   create: protectedProcedure
     .input(teamCreateEditRequest)
     .mutation(async ({ ctx, input }): Promise<Team> => {
