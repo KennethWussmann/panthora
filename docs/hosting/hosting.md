@@ -3,7 +3,7 @@
 > [!WARNING]  
 > Tory is still in a pre-release phase and **not production-ready**.
 
-Hosting Tory is as best done via Docker. There are Docker images for `amd64` and `arm64`.
+Hosting Tory is best done via Docker. There are Docker images for `amd64` and `arm64`.
 
 **Image:** `ghcr.io/kennethwussmann/tory`
 
