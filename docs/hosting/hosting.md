@@ -24,7 +24,7 @@ You can host them anywhere, but best would be to set them up with Docker Compose
 
 ## Docker Compose
 
-Once deployed you can reach tory at `http://localhost:3000`.
+Once deployed you can reach tory at `http://localhost:3000`. For configuration of Tory refer to the [Configuration docs](./configuration.md).
 
 ```YAML
 version: "3.9"
