@@ -5,6 +5,7 @@ import { TeamCreateButton } from "./TeamCreateButton";
 import { TeamMemberTable } from "./TeamMemberTable";
 import { api } from "~/utils/api";
 import { TeamDeleteButton } from "./TeamDeleteButton";
+import { TeamLeaveButton } from "./TeamLeaveButton";
 
 export const TeamSettingsView = ({
   team,
@@ -24,6 +25,14 @@ export const TeamSettingsView = ({
         <Flex justifyContent={"space-between"}>
           <Heading size={"md"}>Team</Heading>
           <HStack gap={2}>
+            <TeamLeaveButton
+              team={team}
+              isDisabled={
+                membership
+                  ? membership.role === UserTeamMembershipRole.OWNER
+                  : true
+              }
+            />
             {membership?.role === UserTeamMembershipRole.OWNER && (
               <TeamDeleteButton team={team} />
             )}

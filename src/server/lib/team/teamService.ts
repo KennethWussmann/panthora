@@ -512,6 +512,35 @@ export class TeamService {
     this.logger.info("Declined team invite", { userId, inviteId });
   };
 
+  leaveTeam = async (userId: string, teamId: string) => {
+    this.logger.info("Leaving team", { userId, teamId });
+
+    await this.requireTeamMembership(userId, teamId);
+
+    const membership = await this.getTeamMembership(userId, teamId);
+
+    if (!membership) {
+      this.logger.error("User is not a member of the team", { userId, teamId });
+      throw new Error("Team not found");
+    }
+
+    if (membership.role === UserTeamMembershipRole.OWNER) {
+      this.logger.error("Owner cannot leave team", { userId, teamId });
+      throw new Error("Owner cannot leave team");
+    }
+
+    await this.prisma.userTeamMembership.delete({
+      where: {
+        userId_teamId: {
+          teamId,
+          userId,
+        },
+      },
+    });
+
+    this.logger.info("User left team", { userId, teamId });
+  };
+
   addTeamMember = async (userId: string, input: TeamAddMemberRequest) => {
     this.logger.info("Adding team member", { userId, input });
 

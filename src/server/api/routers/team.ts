@@ -134,4 +134,12 @@ export const teamRouter = createTRPCRouter({
         input
       );
     }),
+  leave: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.applicationContext.teamService.leaveTeam(
+        ctx.session.user.id,
+        input
+      );
+    }),
 });
