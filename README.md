@@ -7,10 +7,17 @@
 
 ## Features
 
-- [x] Multi-user
-  - [ ] Multi-tenant
+- [x] Keep track of all your items
+- [x] Print customizable labels for your items
+- [x] Collaborate on your inventory
 - [x] Single sign-on
-- [ ] Build your very own workflow
+
+## Getting Started
+
+> [!NOTE]  
+> Tory is still in a pre-release phase, use with caution.
+
+See the [hosting docs](./docs/hosting/) to deploy your instance today.
 
 ## Meet tory
 
@@ -33,10 +40,3 @@ This way a food item could have different set of fields than electronics.
 ### Assets
 
 Assets are the parts and items you want to store in your inventory. They use one Asset Type to determine all the fields that should be filled.
-
-## Note on multi-user and multi-tenant support
-
-Multiple users can login to the same tory instance and will see all the same data. They also have all the permissions and may view, create, update and delete everything available. 
-
-Multi-tenant support is not ready yet, but already baked into the DNA of tory. Users will be able to create multiple teams and invite other's to their team to work on the same inventory.
-
