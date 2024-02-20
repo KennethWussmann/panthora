@@ -40,3 +40,7 @@ This way a food item could have different set of fields than electronics.
 ### Assets
 
 Assets are the parts and items you want to store in your inventory. They use one Asset Type to determine all the fields that should be filled.
+
+## Documentation
+
+Find the [Documentation here](./docs/)
