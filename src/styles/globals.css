@@ -5,3 +5,8 @@
 .chakra-alert {
   border-radius: var(--chakra-radii-md);
 }
+
+.chakra-code {
+  border-radius: var(--chakra-radii-md);
+  padding-inline: 0.4em;
+}
