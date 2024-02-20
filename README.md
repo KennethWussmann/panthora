@@ -17,7 +17,7 @@
 > [!NOTE]  
 > Tory is still in a pre-release phase, use with caution.
 
-See the [hosting docs](./docs/hosting/) to deploy your instance today.
+See the [hosting docs](./docs/hosting/hosting.md) to deploy your instance today.
 
 ## Meet tory
 
