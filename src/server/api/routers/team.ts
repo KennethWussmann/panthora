@@ -11,6 +11,29 @@ import { teamListRequest } from "~/server/lib/team/teamListRequest";
 import { teamRemoveMemberRequest } from "~/server/lib/team/teamRemoveMemberRequest";
 
 export const teamRouter = createTRPCRouter({
+  invite: createTRPCRouter({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return await ctx.applicationContext.teamService.getTeamInvites(
+        ctx.session.user.id
+      );
+    }),
+    accept: protectedProcedure
+      .input(z.string())
+      .query(async ({ ctx, input }) => {
+        return await ctx.applicationContext.teamService.acceptTeamInvite(
+          ctx.session.user.id,
+          input
+        );
+      }),
+    decline: protectedProcedure
+      .input(z.string())
+      .query(async ({ ctx, input }) => {
+        return await ctx.applicationContext.teamService.acceptTeamInvite(
+          ctx.session.user.id,
+          input
+        );
+      }),
+  }),
   listAll: instanceAdminProcedure
     .input(teamListRequest)
     .query(async ({ input, ctx }) => {
@@ -75,6 +98,14 @@ export const teamRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }) => {
       return await ctx.applicationContext.teamService.getMembers(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  pendingInvites: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return await ctx.applicationContext.teamService.getTeamInvitesOfTeam(
         ctx.session.user.id,
         input
       );
