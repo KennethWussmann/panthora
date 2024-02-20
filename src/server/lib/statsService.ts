@@ -1,6 +1,6 @@
 import { type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
-import { type TeamService } from "./user/teamService";
+import { type TeamService } from "./team/teamService";
 
 export class StatsService {
   constructor(

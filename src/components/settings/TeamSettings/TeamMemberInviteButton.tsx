@@ -24,15 +24,15 @@ import { useForm } from "react-hook-form";
 import { FiUserPlus } from "react-icons/fi";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
-import { type TeamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
+import { type TeamAddMemberRequest } from "~/server/lib/team/teamAddMemberRequest";
 import { api } from "~/utils/api";
 
 export const TeamMemberInviteButton = ({
   team,
-  refetchMembers,
+  refetch,
 }: {
   team: Team;
-  refetchMembers: VoidFunction;
+  refetch: VoidFunction;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -54,13 +54,14 @@ export const TeamMemberInviteButton = ({
       });
 
       toast({
-        title: "Member added successfully",
+        title:
+          "Invite sent. If the user did not exist, they will not be notified.",
         status: "success",
         duration: 30000,
         isClosable: true,
       });
       setLoading(false);
-      refetchMembers();
+      refetch();
       onClose();
     } catch (error) {
       setLoading(false);

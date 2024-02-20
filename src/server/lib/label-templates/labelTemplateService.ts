@@ -7,7 +7,7 @@ import { type LabelTemplateListRequest } from "./labelTemplateListRequest";
 import { type LabelTemplate } from "./labelTemplate";
 import { type LabelTemplateDeleteRequest } from "./labelTemplateDeleteRequest";
 import { type LabelTemplateCreateEditRequest } from "./labelTemplateCreateEditRequest";
-import { type TeamService } from "../user/teamService";
+import { type TeamService } from "../team/teamService";
 import { Decimal } from "@prisma/client/runtime/library";
 
 export class LabelTemplateService {

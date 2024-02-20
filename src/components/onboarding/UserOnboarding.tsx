@@ -24,7 +24,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft, FiArrowRight, FiPlus } from "react-icons/fi";
 import { useTeam } from "~/lib/SelectedTeamProvider";
-import { type TeamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
+import { type TeamCreateEditRequest } from "~/server/lib/team/teamCreateEditRequest";
 import { type User } from "~/server/lib/user/user";
 import { api } from "~/utils/api";
 import { FormFieldRequiredErrorMessage } from "../common/FormFieldRequiredErrorMessage";

@@ -3,7 +3,7 @@ import { type Logger } from "winston";
 import { type Tag } from "@prisma/client";
 import { z } from "zod";
 import { AbstractSearchService } from "./abstractSearchService";
-import { type TeamId } from "../user/team";
+import { type TeamId } from "../team/team";
 
 export const tagSearchDocument = z.object({
   id: z.string(),

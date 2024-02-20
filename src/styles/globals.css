@@ -1,3 +1,7 @@
 .react-datepicker-wrapper {
   width: 100%;
 }
+
+.chakra-alert {
+  border-radius: var(--chakra-radii-md);
+}

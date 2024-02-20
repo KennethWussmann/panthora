@@ -5,12 +5,35 @@ import {
   instanceAdminProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { teamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
-import { teamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
-import { teamListRequest } from "~/server/lib/user/teamListRequest";
-import { teamRemoveMemberRequest } from "~/server/lib/user/teamRemoveMemberRequest";
+import { teamAddMemberRequest } from "~/server/lib/team/teamAddMemberRequest";
+import { teamCreateEditRequest } from "~/server/lib/team/teamCreateEditRequest";
+import { teamListRequest } from "~/server/lib/team/teamListRequest";
+import { teamRemoveMemberRequest } from "~/server/lib/team/teamRemoveMemberRequest";
 
 export const teamRouter = createTRPCRouter({
+  invite: createTRPCRouter({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return await ctx.applicationContext.teamService.getTeamInvites(
+        ctx.session.user.id
+      );
+    }),
+    accept: protectedProcedure
+      .input(z.string())
+      .mutation(async ({ ctx, input }) => {
+        return await ctx.applicationContext.teamService.acceptTeamInvite(
+          ctx.session.user.id,
+          input
+        );
+      }),
+    decline: protectedProcedure
+      .input(z.string())
+      .mutation(async ({ ctx, input }) => {
+        return await ctx.applicationContext.teamService.acceptTeamInvite(
+          ctx.session.user.id,
+          input
+        );
+      }),
+  }),
   listAll: instanceAdminProcedure
     .input(teamListRequest)
     .query(async ({ input, ctx }) => {
@@ -75,6 +98,22 @@ export const teamRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }) => {
       return await ctx.applicationContext.teamService.getMembers(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  pendingInvites: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return await ctx.applicationContext.teamService.getTeamInvitesOfTeam(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  removePendingInvite: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.applicationContext.teamService.removeTeamInvite(
         ctx.session.user.id,
         input
       );
