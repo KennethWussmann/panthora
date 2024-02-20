@@ -1,9 +1,10 @@
-import { Flex, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { NavItems } from "./NavItems";
 import { Logo } from "./Logo";
 import { NavSearchBar } from "./search/NavSearchBar";
 import { NavLogout } from "./NavLogout";
 import { NavTeamSelector } from "./NavTeamSelector";
+import Link from "next/link";
 
 export const NavSidebar = () => {
   return (
@@ -24,7 +25,14 @@ export const NavSidebar = () => {
             <NavItems />
           </Stack>
         </Stack>
-        <NavLogout />
+        <Box>
+          <Text fontSize="sm" color="gray.500">
+            <Link href="https://github.com/KennethWussmann/tory">
+              Version {process.env.NEXT_PUBLIC_VERSION ?? "unknown"}
+            </Link>
+          </Text>
+          <NavLogout />
+        </Box>
       </Stack>
     </Flex>
   );
