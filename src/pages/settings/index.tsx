@@ -1,13 +1,15 @@
-import { SettingsView } from "~/components/settings/SettingsView";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-export default function Settings() {
-  return <SettingsView />;
-}
+const Settings = () => {
+  const { back } = useRouter();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: true,
-  };
-}
+  useEffect(() => {
+    back();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return null;
+};
+
+export default Settings;

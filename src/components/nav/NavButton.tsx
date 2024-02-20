@@ -30,6 +30,7 @@ export const NavButton = (props: NavButtonProps) => {
       {...buttonProps}
       justifyContent={"start"}
       w={"full"}
+      isActive={window.location.pathname.startsWith(href ?? "/")}
       onClick={onClick ? onClick : undefined}
     >
       <HStack spacing="3">
