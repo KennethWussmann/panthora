@@ -46,7 +46,7 @@ const LabelTemplateActions = ({
           icon={<FiEdit />}
           aria-label="Edit"
           onClick={() =>
-            push(`/settings/label-templates/edit/${labelTemplate.id}`)
+            push(`/settings/team/label-templates/edit/${labelTemplate.id}`)
           }
         />
       </Tooltip>

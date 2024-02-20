@@ -21,7 +21,7 @@ export const LabelTemplatesSettingsView = ({ team }: { team: Team }) => {
           <Button
             leftIcon={<FiPlus />}
             colorScheme="green"
-            onClick={() => push("/settings/label-templates/create")}
+            onClick={() => push("/settings/team/label-templates/create")}
           >
             Create
           </Button>

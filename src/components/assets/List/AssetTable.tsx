@@ -139,7 +139,7 @@ export const AssetTable: React.FC = () => {
               <Divider />
               <MenuItem
                 onClick={() => {
-                  void push("/settings/label-templates/create");
+                  void push("/settings/team/label-templates/create");
                 }}
                 gap={4}
               >

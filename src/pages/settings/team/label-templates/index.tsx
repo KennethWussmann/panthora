@@ -5,7 +5,7 @@ const Page = () => {
   const { push } = useRouter();
 
   useEffect(() => {
-    void push("/settings");
+    void push("/settings/team");
   });
   return null;
 };

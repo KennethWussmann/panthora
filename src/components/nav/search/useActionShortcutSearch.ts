@@ -1,4 +1,6 @@
+import { UserRole } from "@prisma/client";
 import { signOut } from "next-auth/react";
+import { useUser } from "~/lib/UserProvider";
 
 export type ActionShortcut = {
   index: "actions";
@@ -6,12 +8,13 @@ export type ActionShortcut = {
   searchTerms: string[];
   href?: string;
   onClick?: VoidFunction | (() => Promise<void>);
+  administrative?: boolean;
 };
 
 const actions: ActionShortcut[] = [
   {
     index: "actions",
-    name: "Create Asset",
+    name: "Create asset",
     searchTerms: ["create", "asset", "assets"],
     href: "/assets/create",
   },
@@ -31,7 +34,7 @@ const actions: ActionShortcut[] = [
     index: "actions",
     name: "Create Label Template",
     searchTerms: ["create", "label", "template"],
-    href: "/settings/label-templates/create",
+    href: "/settings/team/label-templates/create",
   },
   {
     index: "actions",
@@ -41,7 +44,7 @@ const actions: ActionShortcut[] = [
   },
   {
     index: "actions",
-    name: "Show asset types",
+    name: "Show Asset Types",
     searchTerms: ["show", "asset", "types"],
     href: "/asset-types",
   },
@@ -53,15 +56,15 @@ const actions: ActionShortcut[] = [
   },
   {
     index: "actions",
-    name: "Show tags",
+    name: "Show Tags",
     searchTerms: ["show", "tags"],
     href: "/tags",
   },
   {
     index: "actions",
-    name: "Show label templates",
+    name: "Show Label Templates",
     searchTerms: ["show", "label", "templates"],
-    href: "/settings",
+    href: "/settings/team",
   },
   {
     index: "actions",
@@ -74,23 +77,33 @@ const actions: ActionShortcut[] = [
   },
   {
     index: "actions",
-    name: "Settings",
+    name: "Team Settings",
     searchTerms: ["settings", "rename", "team", "label", "template", "search"],
-    href: "/settings",
+    href: "/settings/team",
+  },
+  {
+    index: "actions",
+    name: "Administration Settings",
+    searchTerms: ["settings", "admin", "administrative", "user", "users"],
+    href: "/settings/administration",
+    administrative: true,
   },
 ];
 
 export const useActionShortcutSearch = (search: string): ActionShortcut[] => {
+  const { user } = useUser();
   const searchTerms = search.toLowerCase().split(" ");
 
   if (search.length === 0) {
     return [];
   }
-  return actions.filter((action) =>
-    searchTerms.every((searchTerm) =>
-      action.searchTerms.some((actionTerm) =>
-        actionTerm.toLowerCase().startsWith(searchTerm)
+  return actions
+    .filter((action) => !action.administrative || user?.role === UserRole.ADMIN)
+    .filter((action) =>
+      searchTerms.every((searchTerm) =>
+        action.searchTerms.some((actionTerm) =>
+          actionTerm.toLowerCase().startsWith(searchTerm)
+        )
       )
-    )
-  );
+    );
 };
