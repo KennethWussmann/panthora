@@ -6,6 +6,7 @@
 Hosting Tory is as best done via Docker. There are Docker images for `amd64` and `arm64`.
 
 **Image:** `ghcr.io/kennethwussmann/tory`
+
 **Tags:**
 
 - `latest` - The latest stable release
