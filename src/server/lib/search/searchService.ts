@@ -36,6 +36,8 @@ export class SearchService {
     private readonly assetTypeSearchService: AssetTypeSearchService
   ) {}
 
+  public isMeiliSearchHealthy = () => this.meiliSearch.isHealthy();
+
   public waitForInitialization = async () => {
     if (this.initialized) {
       this.logger.debug("Search service already initialized");

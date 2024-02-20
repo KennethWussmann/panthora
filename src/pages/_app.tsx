@@ -8,6 +8,7 @@ import { DashboardLayout } from "~/components/layout/DashboardLayout";
 import Head from "next/head";
 import { type FC, type ReactNode } from "react";
 import { type NextPage } from "next";
+import { ServerHealthRedirect } from "~/components/server-health/ServerHealthRedirect";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -30,6 +31,7 @@ const App = ({
         <Head>
           <title>Tory</title>
         </Head>
+        <ServerHealthRedirect />
         <Component {...pageProps} />
       </Layout>
     </Providers>
