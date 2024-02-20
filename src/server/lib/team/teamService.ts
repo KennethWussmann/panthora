@@ -519,7 +519,12 @@ export class TeamService {
 
     const membership = await this.getTeamMembership(userId, teamId);
 
-    if (membership?.role === UserTeamMembershipRole.OWNER) {
+    if (!membership) {
+      this.logger.error("User is not a member of the team", { userId, teamId });
+      throw new Error("Team not found");
+    }
+
+    if (membership.role === UserTeamMembershipRole.OWNER) {
       this.logger.error("Owner cannot leave team", { userId, teamId });
       throw new Error("Owner cannot leave team");
     }
