@@ -18,11 +18,13 @@ jobs:
         include:
           - runner: buildjet-8vcpu-ubuntu-2204-arm
             arch: arm64
-          - runner: buildjet-8vcpu-ubuntu-2204
+          - runner: ubuntu-latest
             arch: amd64
     permissions:
       packages: write
       contents: read
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - name: Get version
