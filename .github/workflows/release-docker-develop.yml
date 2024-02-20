@@ -23,6 +23,8 @@ jobs:
     permissions:
       packages: write
       contents: read
+    outputs:
+      SHORT_SHA: ${{ steps.git-commit.outputs.SHORT_SHA }}
     steps:
       - uses: actions/checkout@v4
       - name: Get git commit
