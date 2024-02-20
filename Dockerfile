@@ -1,5 +1,4 @@
 FROM node:16-alpine AS builder
-ARG VERSION
 ENV SKIP_ENV_VALIDATION true
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -21,6 +20,7 @@ RUN pnpm build
 ##### RUNNER
 
 FROM node:16-alpine AS runner
+ARG VERSION
 LABEL org.opencontainers.image.source https://github.com/KennethWussmann/tory
 
 WORKDIR /app
