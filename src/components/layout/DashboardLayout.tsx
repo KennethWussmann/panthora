@@ -3,6 +3,7 @@ import { NavSidebar } from "../nav/NavSidebar";
 import { Container, Flex, Show, Spacer } from "@chakra-ui/react";
 import { NavTopbar } from "../nav/NavTopbar";
 import { Breadcrumbs } from "../breadcrumbs/Breadcrumbs";
+import { TeamInviteBanner } from "../team-invite/TeamInviteBanner";
 
 const DesktopLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -11,7 +12,9 @@ const DesktopLayout = ({ children }: { children: ReactNode }) => {
         <NavSidebar />
       </Flex>
       <Flex flex="1" p={6} direction="column" overflowY="scroll">
+        <TeamInviteBanner />
         <Breadcrumbs />
+
         {children}
       </Flex>
     </Flex>
@@ -24,7 +27,9 @@ const MobileLayout = ({ children }: { children: ReactNode }) => {
       <NavTopbar />
       <Spacer mt={"70px"} />
       <Container maxW={"container.lg"} py={6}>
+        <TeamInviteBanner />
         <Breadcrumbs />
+
         {children}
       </Container>
     </>

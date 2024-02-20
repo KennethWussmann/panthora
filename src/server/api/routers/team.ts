@@ -19,7 +19,7 @@ export const teamRouter = createTRPCRouter({
     }),
     accept: protectedProcedure
       .input(z.string())
-      .query(async ({ ctx, input }) => {
+      .mutation(async ({ ctx, input }) => {
         return await ctx.applicationContext.teamService.acceptTeamInvite(
           ctx.session.user.id,
           input
@@ -27,7 +27,7 @@ export const teamRouter = createTRPCRouter({
       }),
     decline: protectedProcedure
       .input(z.string())
-      .query(async ({ ctx, input }) => {
+      .mutation(async ({ ctx, input }) => {
         return await ctx.applicationContext.teamService.acceptTeamInvite(
           ctx.session.user.id,
           input

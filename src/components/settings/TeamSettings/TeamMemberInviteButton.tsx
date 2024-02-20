@@ -54,7 +54,8 @@ export const TeamMemberInviteButton = ({
       });
 
       toast({
-        title: "Member added successfully",
+        title:
+          "Invite sent. If the user did not exist, they will not be notified.",
         status: "success",
         duration: 30000,
         isClosable: true,

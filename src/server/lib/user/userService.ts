@@ -32,7 +32,7 @@ export class UserService {
         createdAt: true,
         updatedAt: true,
       },
-      orderBy: { email: "asc" },
+      orderBy: { createdAt: "desc" },
       take: listRequest.limit,
       skip: listRequest.offset,
     });

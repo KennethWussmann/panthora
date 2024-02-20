@@ -29,7 +29,7 @@ export class TeamService {
     listRequest: TeamListRequest = {}
   ): Promise<Team[]> => {
     return await this.prisma.team.findMany({
-      orderBy: { name: "asc" },
+      orderBy: { createdAt: "desc" },
       take: listRequest.limit,
       skip: listRequest.offset,
     });
