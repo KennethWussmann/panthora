@@ -10,6 +10,9 @@ import { type TeamAddMemberRequest } from "./teamAddMemberRequest";
 import { type Member } from "./member";
 import { type TeamRemoveMemberRequest } from "./teamRemoveMemberRequest";
 import { type TeamListRequest } from "./teamListRequest";
+import { sanitizeEmail } from "../utils/emailUtils";
+import { add } from "date-fns";
+import { type TeamInvite } from "./teamInvite";
 
 export class TeamService {
   constructor(
@@ -136,18 +139,6 @@ export class TeamService {
     }
     return membership;
   };
-
-  // private getTeamMemberships = async (
-  //   userId: string,
-  //   teamId: string
-  // ): Promise<UserTeamMembership[]> => {
-  //   await this.requireTeamMembershipAdmin(userId, teamId);
-  //   return await this.prisma.userTeamMembership.findMany({
-  //     where: {
-  //       teamId,
-  //     },
-  //   });
-  // };
 
   getMembers = async (userId: string, teamId: string): Promise<Member[]> => {
     await this.requireTeamMembershipAdmin(userId, teamId);
@@ -281,6 +272,241 @@ export class TeamService {
     this.logger.info("Removed team member", { userId, input });
   };
 
+  private createTeamInvite = async (
+    userId: string,
+    input: TeamAddMemberRequest
+  ) => {
+    this.logger.info("Inviting team member", { userId, input });
+
+    await this.requireTeamMembershipAdmin(userId, input.teamId);
+
+    await this.prisma.teamInvite.create({
+      data: {
+        email: sanitizeEmail(input.email),
+        teamId: input.teamId,
+        role: input.role,
+        fromUserId: userId,
+        expires: add(new Date(), { hours: 48 }),
+      },
+    });
+  };
+
+  private removeExpiredTeamInvites = async () => {
+    await this.prisma.teamInvite.deleteMany({
+      where: {
+        expires: {
+          lt: new Date(),
+        },
+      },
+    });
+  };
+
+  getTeamInvitesOfTeam = async (userId: string, teamId: string) => {
+    await this.requireTeamMembershipAdmin(userId, teamId);
+
+    const invites = await this.prisma.teamInvite.findMany({
+      where: {
+        teamId,
+        expires: {
+          gte: new Date(),
+        },
+      },
+      include: {
+        from: true,
+        team: true,
+      },
+    });
+
+    await this.removeExpiredTeamInvites();
+
+    return invites.map((i) => ({
+      id: i.id,
+      teamName: i.team.name,
+      expires: i.expires,
+      invitedByEmail: i.from?.email ?? "",
+      invitedEmail: i.email,
+      createdAt: i.createdAt,
+      updatedAt: i.updatedAt,
+    }));
+  };
+
+  removeTeamInvite = async (userId: string, inviteId: string) => {
+    this.logger.info("Removing team invite", { userId, inviteId });
+
+    const invite = await this.prisma.teamInvite.findUnique({
+      where: {
+        id: inviteId,
+      },
+    });
+
+    if (!invite) {
+      this.logger.error("Invite not found", { userId, inviteId });
+      throw new Error("Invite not found");
+    }
+
+    await this.requireTeamMembershipAdmin(userId, invite.teamId);
+
+    if (
+      invite.role === UserTeamMembershipRole.ADMIN ||
+      invite.role === UserTeamMembershipRole.OWNER
+    ) {
+      // Only owners can remove invites for admins and owners
+      await this.requireTeamMembershipRole(
+        userId,
+        invite.teamId,
+        UserTeamMembershipRole.OWNER
+      );
+    }
+
+    await this.prisma.teamInvite.delete({
+      where: {
+        id: inviteId,
+      },
+    });
+
+    this.logger.info("Removed team invite", { userId, inviteId });
+  };
+
+  getTeamInvites = async (userId: string): Promise<TeamInvite[]> => {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user?.email) {
+      this.logger.error("User not found", { userId });
+      throw new Error("User not found");
+    }
+
+    const invites = await this.prisma.teamInvite.findMany({
+      where: {
+        email: sanitizeEmail(user.email),
+        expires: {
+          gte: new Date(),
+        },
+      },
+      include: {
+        team: true,
+        from: true,
+      },
+    });
+
+    await this.removeExpiredTeamInvites();
+
+    return invites.map((i) => ({
+      id: i.id,
+      teamName: i.team.name,
+      expires: i.expires,
+      invitedByEmail: i.from?.email ?? "",
+      invitedEmail: i.email,
+      createdAt: i.createdAt,
+      updatedAt: i.updatedAt,
+    }));
+  };
+
+  acceptTeamInvite = async (userId: string, inviteId: string) => {
+    this.logger.info("Accepting team invite", { userId, inviteId });
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user?.email) {
+      this.logger.error("User not found", { userId });
+      throw new Error("User not found");
+    }
+
+    const invite = await this.prisma.teamInvite.findUnique({
+      where: {
+        id: inviteId,
+        email: sanitizeEmail(user.email),
+        expires: {
+          gte: new Date(),
+        },
+      },
+    });
+
+    if (!invite) {
+      this.logger.error("Invite not found", { userId, inviteId });
+      throw new Error("Invite not found");
+    }
+
+    const currentMembership = await this.prisma.userTeamMembership.findFirst({
+      where: {
+        teamId: invite.teamId,
+        userId,
+      },
+    });
+
+    if (currentMembership) {
+      await this.prisma.teamInvite.delete({
+        where: {
+          id: inviteId,
+        },
+      });
+      this.logger.error("User is already a member of the team", {
+        userId,
+        inviteId,
+      });
+      throw new Error("User is already a member of the team");
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.userTeamMembership.create({
+        data: {
+          teamId: invite.teamId,
+          userId,
+          role: invite.role,
+        },
+      }),
+      this.prisma.teamInvite.delete({
+        where: {
+          id: inviteId,
+        },
+      }),
+    ]);
+
+    this.logger.info("Accepted team invite", { userId, inviteId });
+  };
+
+  declineTeamInvite = async (userId: string, inviteId: string) => {
+    this.logger.info("Declining team invite", { userId, inviteId });
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user?.email) {
+      this.logger.error("User not found", { userId });
+      throw new Error("User not found");
+    }
+
+    const invite = await this.prisma.teamInvite.findUnique({
+      where: {
+        id: inviteId,
+        email: sanitizeEmail(user.email),
+      },
+    });
+
+    if (!invite) {
+      this.logger.info("Invite to decline did not exist", { userId, inviteId });
+      return;
+    }
+
+    await this.prisma.teamInvite.delete({
+      where: {
+        id: inviteId,
+      },
+    });
+
+    this.logger.info("Declined team invite", { userId, inviteId });
+  };
+
   addTeamMember = async (userId: string, input: TeamAddMemberRequest) => {
     this.logger.info("Adding team member", { userId, input });
 
@@ -294,50 +520,54 @@ export class TeamService {
       throw new Error("Team ownership cannot be transferred");
     }
 
+    if (input.role === UserTeamMembershipRole.ADMIN) {
+      // Only owners can add/promote admins
+      await this.requireTeamMembershipRole(
+        userId,
+        input.teamId,
+        UserTeamMembershipRole.OWNER
+      );
+    }
+
     const userToAdd = await this.prisma.user.findUnique({
       where: {
         email: input.email,
       },
     });
 
-    if (!userToAdd) {
-      await this.requireTeamMembershipRole(
-        userId,
-        input.teamId,
-        UserTeamMembershipRole.OWNER
-      );
-
-      this.logger.error(
-        "User tried to invite someone who has never signed up.",
-        {
-          userId,
-          input,
-        }
-      );
-      throw new Error(
-        "User not found. They have to sign up before inviting them to your team."
-      );
-    }
-
-    if (!userToAdd) {
-      this.logger.error("User not found", { userId, input });
-      throw new Error("User not found");
-    }
-
-    const currentMembership = await this.getTeamMembership(
-      userToAdd.id,
-      input.teamId
-    );
-
-    if (currentMembership && currentMembership.role === input.role) {
-      this.logger.error("User is already a member of the team", {
-        userId,
-        input,
-      });
-      throw new Error("User is already member of team with that role");
-    }
+    const currentMembership = userToAdd
+      ? await this.getTeamMembership(userToAdd.id, input.teamId)
+      : undefined;
 
     if (currentMembership) {
+      if (currentMembership.role === input.role) {
+        this.logger.error("User is already a member of the team", {
+          userId,
+          input,
+        });
+        throw new Error("User is already member of team with that role");
+      }
+
+      if (
+        currentMembership.role === UserTeamMembershipRole.ADMIN &&
+        input.role === UserTeamMembershipRole.MEMBER
+      ) {
+        // Only owners can demote admins
+        await this.requireTeamMembershipRole(
+          userId,
+          input.teamId,
+          UserTeamMembershipRole.OWNER
+        );
+      }
+
+      if (currentMembership.role === UserTeamMembershipRole.OWNER) {
+        // Only owners can demote admins
+        this.logger.error("User tried to modify owner role", {
+          userId,
+          input,
+        });
+        throw new Error("Owners cannot be modified");
+      }
       await this.prisma.userTeamMembership.update({
         where: {
           userId_teamId: {
@@ -350,15 +580,11 @@ export class TeamService {
         },
       });
       this.logger.info("Updated membership role", { userId, input });
+      return { roleUpdated: true, inviteSent: false };
     } else {
-      await this.prisma.userTeamMembership.create({
-        data: {
-          userId: userToAdd.id,
-          teamId: input.teamId,
-          role: input.role,
-        },
-      });
-      this.logger.info("Added team member", { userId, input });
+      await this.createTeamInvite(userId, input);
+      this.logger.info("Created team invite", { userId, input });
+      return { roleUpdated: false, inviteSent: true };
     }
   };
 

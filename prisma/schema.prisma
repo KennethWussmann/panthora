@@ -86,6 +86,20 @@ model Team {
     assets          Asset[]
     teamMemberships UserTeamMembership[]
     labelTemplates  LabelTemplate[]
+    TeamInvite      TeamInvite[]
+}
+
+model TeamInvite {
+    id         String                 @id @default(uuid())
+    createdAt  DateTime               @default(now())
+    updatedAt  DateTime               @updatedAt
+    from       User                   @relation(fields: [fromUserId], references: [id])
+    email      String
+    teamId     String
+    team       Team                   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    role       UserTeamMembershipRole
+    expires    DateTime
+    fromUserId String
 }
 
 enum UserRole {
@@ -106,6 +120,7 @@ model User {
     sessions        Session[]
     teamMemberships UserTeamMembership[]
     role            UserRole             @default(USER)
+    TeamInvite      TeamInvite[]
 }
 
 // Data users create
