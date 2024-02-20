@@ -9,9 +9,9 @@ import { type AssetType } from "./assetType";
 import { type AssetTypeDeleteRequest } from "./assetTypeDeleteRequest";
 import { type Logger } from "winston";
 import { type AssetTypeSearchService } from "../search/assetTypeSearchService";
-import { type TeamService } from "../user/teamService";
+import { type TeamService } from "../team/teamService";
 import slugify from "slugify";
-import { type TeamId } from "../user/team";
+import { type TeamId } from "../team/team";
 
 export class AssetTypeService {
   constructor(

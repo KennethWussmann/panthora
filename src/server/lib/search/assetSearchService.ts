@@ -4,7 +4,7 @@ import { z } from "zod";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type AssetWithFields } from "../assets/asset";
 import { AbstractSearchService } from "./abstractSearchService";
-import { type TeamId } from "../user/team";
+import { type TeamId } from "../team/team";
 import { getFieldValueModel } from "../utils/fieldValueUtils";
 
 export const assetDocumentSchema = z

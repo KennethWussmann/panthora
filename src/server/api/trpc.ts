@@ -16,7 +16,7 @@ import { ApplicationContext } from "~/server/lib/applicationContext";
 
 import { getServerAuthSession } from "~/server/auth/auth";
 import { db } from "~/server/db";
-import { type RateLimitType } from "../lib/user/rateLimitService";
+import { type RateLimitType } from "../lib/rate-limit/rateLimitService";
 import { UserRole } from "@prisma/client";
 
 /**

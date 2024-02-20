@@ -5,10 +5,10 @@ import {
   instanceAdminProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { teamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
-import { teamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
-import { teamListRequest } from "~/server/lib/user/teamListRequest";
-import { teamRemoveMemberRequest } from "~/server/lib/user/teamRemoveMemberRequest";
+import { teamAddMemberRequest } from "~/server/lib/team/teamAddMemberRequest";
+import { teamCreateEditRequest } from "~/server/lib/team/teamCreateEditRequest";
+import { teamListRequest } from "~/server/lib/team/teamListRequest";
+import { teamRemoveMemberRequest } from "~/server/lib/team/teamRemoveMemberRequest";
 
 export const teamRouter = createTRPCRouter({
   listAll: instanceAdminProcedure

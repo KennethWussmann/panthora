@@ -3,7 +3,7 @@ import { type Logger } from "winston";
 import { z } from "zod";
 import { type AssetType } from "../asset-types/assetType";
 import { AbstractSearchService } from "./abstractSearchService";
-import { type TeamId } from "../user/team";
+import { type TeamId } from "../team/team";
 
 export const assetTypeSearchDocument = z.object({
   id: z.string(),

@@ -1,10 +1,10 @@
 import { UserRole, type PrismaClient } from "@prisma/client";
 import { type Logger } from "winston";
-import { type TeamService } from "./teamService";
+import { type TeamService } from "../team/teamService";
 import { type UserRegisterRequest } from "./userRegisterRequest";
 import { sanitizeEmail, validateEmail } from "../utils/emailUtils";
 import { hashPassword } from "../utils/passwordUtils";
-import { type RateLimitService } from "./rateLimitService";
+import { type RateLimitService } from "../rate-limit/rateLimitService";
 import { type User } from "./user";
 import { type UserListRequest } from "./userListRequest";
 

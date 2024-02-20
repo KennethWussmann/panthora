@@ -18,7 +18,7 @@ import type MeiliSearch from "meilisearch";
 import { type SearchRequest } from "./searchRequest";
 import { type SearchResults } from "./searchResponse";
 import { parseQuery } from "./queryParser";
-import { type TeamService } from "../user/teamService";
+import { type TeamService } from "../team/teamService";
 import { type AssetWithFields } from "../assets/asset";
 
 export class SearchService {

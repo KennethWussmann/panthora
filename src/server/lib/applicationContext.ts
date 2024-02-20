@@ -11,13 +11,13 @@ import { TagSearchService } from "./search/tagSearchService";
 import { AssetTypeSearchService } from "./search/assetTypeSearchService";
 import { StatsService } from "./statsService";
 import { LabelTemplateService } from "./label-templates/labelTemplateService";
-import { TeamService } from "./user/teamService";
-import { TeamDeletionService } from "./user/TeamDeletionService";
+import { TeamService } from "./team/teamService";
+import { TeamDeletionService } from "./team/TeamDeletionService";
 import { parseDatabaseUrl } from "./utils/parseDatabaseUrl";
 import { env } from "~/env.mjs";
-import { RateLimitService } from "./user/rateLimitService";
+import { RateLimitService } from "./rate-limit/rateLimitService";
 import { Pool } from "pg";
-import { TeamCreationService } from "./user/TeamCreationService";
+import { TeamCreationService } from "./team/TeamCreationService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();

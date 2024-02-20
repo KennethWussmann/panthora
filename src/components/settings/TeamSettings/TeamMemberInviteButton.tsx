@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 import { FiUserPlus } from "react-icons/fi";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
-import { type TeamAddMemberRequest } from "~/server/lib/user/teamAddMemberRequest";
+import { type TeamAddMemberRequest } from "~/server/lib/team/teamAddMemberRequest";
 import { api } from "~/utils/api";
 
 export const TeamMemberInviteButton = ({

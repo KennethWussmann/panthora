@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { FormFieldRequiredErrorMessage } from "~/components/common/FormFieldRequiredErrorMessage";
 import { useTeam } from "~/lib/SelectedTeamProvider";
-import { type TeamCreateEditRequest } from "~/server/lib/user/teamCreateEditRequest";
+import { type TeamCreateEditRequest } from "~/server/lib/team/teamCreateEditRequest";
 import { api } from "~/utils/api";
 
 export const TeamCreateButton = () => {

@@ -21,7 +21,7 @@ import { useState } from "react";
 import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { useTeam } from "~/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "~/lib/useErrorHandling";
-import { type Member } from "~/server/lib/user/member";
+import { type Member } from "~/server/lib/team/member";
 import { api } from "~/utils/api";
 
 type TeamMemberRowProps = {

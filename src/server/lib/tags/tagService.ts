@@ -5,7 +5,7 @@ import { type Tag } from "./tag";
 import { type TagDeleteRequest } from "./tagDeleteRequest";
 import { type Logger } from "winston";
 import { type TagSearchService } from "../search/tagSearchService";
-import { type TeamService } from "../user/teamService";
+import { type TeamService } from "../team/teamService";
 
 export class TagService {
   constructor(
