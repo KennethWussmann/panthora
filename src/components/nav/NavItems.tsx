@@ -1,4 +1,4 @@
-import { Divider, type As } from "@chakra-ui/react";
+import { Divider } from "@chakra-ui/react";
 import {
   FiBarChart2,
   FiBox,
@@ -7,24 +7,17 @@ import {
   FiSettings,
   FiShield,
   FiTag,
+  FiUsers,
 } from "react-icons/fi";
 import { NavButton } from "./NavButton";
 import { useUser } from "~/lib/UserProvider";
-import { UserRole } from "@prisma/client";
+import { canSeeNavigationItem, type NavigationItem } from "./NavigationItem";
+import {
+  NavCollapsableButton,
+  type NavCollapsableButtonProps,
+} from "./NavCollapsableButton";
 
-type NavigationItem = {
-  icon: As;
-  label: string;
-  onClick?: VoidFunction;
-  href?: string;
-  secondaryAction?: {
-    icon: As;
-    href: string;
-  };
-  administrative?: boolean;
-} | null;
-
-export const navigationItems: NavigationItem[] = [
+export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
   {
     icon: FiBarChart2,
     label: "Dashboard",
@@ -54,45 +47,48 @@ export const navigationItems: NavigationItem[] = [
   {
     icon: FiSettings,
     label: "Settings",
-    href: "/settings",
-  },
-  {
-    icon: FiShield,
-    label: "Administration",
-    href: "/administration",
-    administrative: true,
+    items: [
+      {
+        icon: FiUsers,
+        label: "Team",
+        href: "/settings/team",
+      },
+      {
+        icon: FiShield,
+        label: "Administration",
+        href: "/settings/administration",
+        administrative: true,
+      },
+    ],
   },
 ];
 
 export const NavItems = () => {
   const { user } = useUser();
 
-  const canSee = (item: NavigationItem) => {
-    if (!item?.administrative) {
-      return true;
-    }
-    return user?.role === UserRole.ADMIN;
-  };
-
   return (
     <>
-      {navigationItems.map((item, index) =>
-        item ? (
-          canSee(item) ? (
-            <NavButton
-              key={index}
-              icon={item.icon}
-              label={item.label}
-              onClick={item.onClick}
-              href={item.href}
-              isActive={window.location.pathname.startsWith(item.href ?? "/")}
-              secondaryAction={item.secondaryAction}
-            />
-          ) : null
-        ) : (
-          <Divider key={index} />
-        )
-      )}
+      {navigationItems.map((item, index) => {
+        if (!item) {
+          return <Divider key={index} />;
+        }
+        if (!canSeeNavigationItem(user?.role, item)) {
+          return null;
+        }
+        if ("items" in item) {
+          return <NavCollapsableButton key={index} {...item} />;
+        }
+        return (
+          <NavButton
+            key={index}
+            icon={item.icon}
+            label={item.label}
+            onClick={item.onClick}
+            href={item.href}
+            secondaryAction={item.secondaryAction}
+          />
+        );
+      })}
     </>
   );
 };
