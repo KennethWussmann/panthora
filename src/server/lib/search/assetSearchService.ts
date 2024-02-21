@@ -107,6 +107,15 @@ export class AssetSearchService extends AbstractSearchService<
     );
   };
 
+  private convertDataTypeOfValue = (
+    value: string | number | boolean | string[] | Date | null
+  ) => {
+    if (value instanceof Date) {
+      return value.getTime();
+    }
+    return value;
+  };
+
   protected mapToSearchDocument = (asset: AssetWithFields) => ({
     id: asset.id,
     createdAt: asset.createdAt.getTime(),
@@ -117,7 +126,7 @@ export class AssetSearchService extends AbstractSearchService<
     ...Object.fromEntries(
       asset.fieldValues.map((field) => [
         field.customField.slug,
-        getFieldValueModel(field, "name"),
+        this.convertDataTypeOfValue(getFieldValueModel(field, "name")),
       ])
     ),
   });
