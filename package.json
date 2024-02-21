@@ -10,7 +10,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest --passWithNoTests"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

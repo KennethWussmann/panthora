@@ -518,7 +518,7 @@ export class AssetTypeService {
   public getSearchableCustomFields = async (
     teamIds: TeamId[]
   ): Promise<CustomField[]> =>
-    this.prisma.customField.findMany({
+    await this.prisma.customField.findMany({
       where: {
         teamId: {
           in: teamIds,
