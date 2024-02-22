@@ -3,10 +3,11 @@ import { type Logger } from "winston";
 import { type TeamService } from "../team/teamService";
 import { type UserRegisterRequest } from "./userRegisterRequest";
 import { sanitizeEmail, validateEmail } from "../utils/emailUtils";
-import { hashPassword } from "../utils/passwordUtils";
+import { hashPassword, verifyPassword } from "../utils/passwordUtils";
 import { type RateLimitService } from "../rate-limit/rateLimitService";
-import { type User } from "./user";
+import { type UserMe, type User } from "./user";
 import { type UserListRequest } from "./userListRequest";
+import { type UserChangePasswordRequest } from "./userChangePasswordRequest";
 
 export class UserService {
   constructor(
@@ -35,6 +36,52 @@ export class UserService {
       orderBy: { createdAt: "desc" },
       take: listRequest.limit,
       skip: listRequest.offset,
+    });
+  };
+
+  public changePassword = async (
+    userId: string,
+    input: UserChangePasswordRequest
+  ) => {
+    const { oldPassword, newPassword } = input;
+    if (newPassword.length < 8) {
+      throw new Error("Password must be at least 8 characters long");
+    }
+    if (newPassword.length > 255) {
+      throw new Error("Password must be at most 255 characters long");
+    }
+    const user = await this.prisma.user.findUnique({
+      select: {
+        id: true,
+        password: true,
+      },
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.password) {
+      if (!oldPassword || oldPassword.length === 0) {
+        throw new Error("Old password is required");
+      }
+      if (!(await verifyPassword(user.password, oldPassword))) {
+        throw new Error("Old password is incorrect");
+      }
+    } else if (oldPassword) {
+      throw new Error("Old password is not required");
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: await hashPassword(newPassword),
+      },
+    });
+
+    this.logger.info("Changed user password", {
+      id: user.id,
     });
   };
 
@@ -102,7 +149,7 @@ export class UserService {
     return user;
   };
 
-  public getMe = async (userId: string): Promise<User> => {
+  public getMe = async (userId: string): Promise<UserMe> => {
     const user = await this.prisma.user.findUnique({
       select: {
         id: true,
@@ -110,12 +157,23 @@ export class UserService {
         role: true,
         createdAt: true,
         updatedAt: true,
+        password: true,
+        accounts: {
+          select: {
+            provider: true,
+            type: true,
+          },
+        },
       },
       where: { id: userId },
     });
     if (!user) {
       throw new Error("User not found");
     }
-    return user;
+    const { password, ...userWithoutPassword } = user;
+    return {
+      ...userWithoutPassword,
+      hasPassword: !!password,
+    };
   };
 }
