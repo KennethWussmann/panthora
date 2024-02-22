@@ -16,6 +16,7 @@ import {
   NavCollapsableButton,
   type NavCollapsableButtonProps,
 } from "./NavCollapsableButton";
+import { useTeamMembershipRole } from "~/lib/useTeamMembershipRole";
 
 export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
   {
@@ -47,6 +48,7 @@ export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
   {
     icon: FiSettings,
     label: "Settings",
+    requiresTeamAdmin: true,
     items: [
       {
         icon: FiUsers,
@@ -57,7 +59,7 @@ export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
         icon: FiShield,
         label: "Administration",
         href: "/settings/administration",
-        administrative: true,
+        requiresInstanceAdmin: true,
       },
     ],
   },
@@ -65,6 +67,7 @@ export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
 
 export const NavItems = () => {
   const { user } = useUser();
+  const { role } = useTeamMembershipRole();
 
   return (
     <>
@@ -72,7 +75,7 @@ export const NavItems = () => {
         if (!item) {
           return <Divider key={index} />;
         }
-        if (!canSeeNavigationItem(user?.role, item)) {
+        if (!canSeeNavigationItem(user?.role, role, item)) {
           return null;
         }
         if ("items" in item) {

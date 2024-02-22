@@ -110,13 +110,13 @@ export class SearchService {
   };
 
   public rebuildIndexesByUser = async (userId: string, teamId: string) => {
-    await this.teamService.requireTeamMembership(userId, teamId);
+    await this.teamService.requireTeamMembershipAdmin(userId, teamId);
     await this.rebuildIndexes(teamId);
   };
 
   public getTasks = async (userId: string, teamId: string) => {
     await this.waitForInitialization();
-    await this.teamService.requireTeamMembership(userId, teamId);
+    await this.teamService.requireTeamMembershipAdmin(userId, teamId);
     const { results: tasks } = await this.meiliSearch.getTasks({
       limit: 20,
       indexUids: [

@@ -16,6 +16,7 @@ import {
 import { FiChevronDown } from "react-icons/fi";
 import { NavButton } from "./NavButton";
 import { useUser } from "~/lib/UserProvider";
+import { useTeamMembershipRole } from "~/lib/useTeamMembershipRole";
 
 export type NavCollapsableButtonProps = {
   icon: As;
@@ -38,6 +39,7 @@ export const NavCollapsableButton = ({
   items,
 }: NavCollapsableButtonProps) => {
   const { user } = useUser();
+  const { role } = useTeamMembershipRole();
   const { isOpen, onToggle } = useDisclosure();
   return (
     <Box>
@@ -56,7 +58,7 @@ export const NavCollapsableButton = ({
       <Collapse in={isOpen} animateOpacity>
         <Stack spacing="1" alignItems="stretch" ps="8" py="1">
           {items
-            .filter((item) => canSeeNavigationItem(user?.role, item))
+            .filter((item) => canSeeNavigationItem(user?.role, role, item))
             .map((item) => (
               <NavButton key={item.label} {...item} />
             ))}
