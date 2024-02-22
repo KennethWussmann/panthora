@@ -6,11 +6,11 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { type User } from "~/server/lib/user/user";
+import { type UserMe } from "~/server/lib/user/user";
 import { api } from "~/utils/api";
 
 type UserContextType = {
-  user: User | undefined;
+  user: UserMe | undefined;
   refetch: () => Promise<void>;
   isLoading: boolean;
 };
@@ -31,7 +31,7 @@ type UserProviderProps = {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const { push } = useRouter();
-  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
+  const [currentUser, setCurrentUser] = useState<UserMe | undefined>(undefined);
   const {
     data: user,
     refetch,

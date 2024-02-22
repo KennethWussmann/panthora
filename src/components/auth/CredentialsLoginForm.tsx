@@ -10,8 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FiLogIn } from "react-icons/fi";
+import { PasswordInput } from "../common/PasswordInput";
 
 type Credentials = {
   email: string;
@@ -25,6 +26,7 @@ export const CredentialsLoginForm = () => {
     formState: { errors, isDirty, isLoading },
     handleSubmit,
     setError,
+    control,
   } = useForm<Credentials>();
   const [loginError, setLoginError] = useBoolean();
 
@@ -61,10 +63,17 @@ export const CredentialsLoginForm = () => {
             />
           </FormControl>
           <FormControl isInvalid={!!errors.password}>
-            <Input
-              type="password"
-              placeholder="Password"
-              {...register("password", { required: true })}
+            <Controller
+              name={"password"}
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <PasswordInput
+                  placeholder="Password"
+                  value={value ?? undefined}
+                  onChange={onChange}
+                />
+              )}
             />
           </FormControl>
         </Stack>

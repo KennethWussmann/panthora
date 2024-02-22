@@ -8,9 +8,10 @@ import {
   Stack,
   useBoolean,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FiUserPlus } from "react-icons/fi";
 import { api } from "~/utils/api";
+import { PasswordInput } from "../common/PasswordInput";
 
 type RegisterForm = {
   email: string;
@@ -25,6 +26,7 @@ export const CredentialsRegisterForm = () => {
     handleSubmit,
     setError,
     reset,
+    control,
   } = useForm<RegisterForm>();
   const [registerError, setRegisterError] = useBoolean();
   const [registerSuccess, setRegisterSuccess] = useBoolean();
@@ -80,17 +82,31 @@ export const CredentialsRegisterForm = () => {
             />
           </FormControl>
           <FormControl isInvalid={!!errors.password}>
-            <Input
-              type="password"
-              placeholder="Password"
-              {...register("password", { required: true })}
+            <Controller
+              name={"password"}
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <PasswordInput
+                  placeholder="Password"
+                  value={value ?? undefined}
+                  onChange={onChange}
+                />
+              )}
             />
           </FormControl>
           <FormControl isInvalid={!!errors.password}>
-            <Input
-              type="password"
-              placeholder="Confirm Password"
-              {...register("passwordConfirm", { required: true })}
+            <Controller
+              name={"passwordConfirm"}
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <PasswordInput
+                  placeholder="Password"
+                  value={value ?? undefined}
+                  onChange={onChange}
+                />
+              )}
             />
           </FormControl>
         </Stack>

@@ -7,6 +7,7 @@ import {
   FiSettings,
   FiShield,
   FiTag,
+  FiUser,
   FiUsers,
 } from "react-icons/fi";
 import { NavButton } from "./NavButton";
@@ -48,12 +49,17 @@ export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
   {
     icon: FiSettings,
     label: "Settings",
-    requiresTeamAdmin: true,
     items: [
+      {
+        icon: FiUser,
+        label: "User",
+        href: "/settings/user",
+      },
       {
         icon: FiUsers,
         label: "Team",
         href: "/settings/team",
+        requiresTeamAdmin: true,
       },
       {
         icon: FiShield,
