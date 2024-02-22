@@ -13,6 +13,10 @@
     "test": "vitest --passWithNoTests",
     "dependency-update": "npm-check-updates -u --filterVersion \"/^[~^<>]| - |\\.x$/\" --deep && pnpm install"
   },
+  "engines": {
+    "node": "20",
+    "pnpm": "8"
+  },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },

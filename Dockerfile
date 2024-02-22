@@ -1,4 +1,4 @@
-FROM node:16-alpine AS builder
+FROM node:20-alpine AS builder
 ARG VERSION
 ENV VERSION ${VERSION}
 ENV NEXT_PUBLIC_VERSION ${VERSION}
@@ -22,7 +22,7 @@ RUN pnpm build
 
 ##### RUNNER
 
-FROM node:16-alpine AS runner
+FROM node:20-alpine AS runner
 ARG VERSION
 LABEL org.opencontainers.image.source https://github.com/KennethWussmann/tory
 
