@@ -1,12 +1,13 @@
 import { type As } from "@chakra-ui/react";
-import { UserRole } from "@prisma/client";
+import { UserRole, UserTeamMembershipRole } from "@prisma/client";
 
 export type SimpleNavigationItem = {
   icon: As;
   label: string;
   onClick?: VoidFunction;
   href?: string;
-  administrative?: boolean;
+  requiresTeamAdmin?: boolean;
+  requiresInstanceAdmin?: boolean;
 };
 
 export type NavigationItem =
@@ -19,11 +20,22 @@ export type NavigationItem =
   | null;
 
 export const canSeeNavigationItem = (
-  role: UserRole | undefined,
+  instanceRole: UserRole | undefined,
+  membershipRole: UserTeamMembershipRole | undefined,
   item: SimpleNavigationItem
 ) => {
-  if (!item?.administrative) {
+  if (!item?.requiresInstanceAdmin && !item?.requiresTeamAdmin) {
     return true;
   }
-  return role === UserRole.ADMIN;
+  if (
+    item?.requiresTeamAdmin &&
+    membershipRole !== UserTeamMembershipRole.ADMIN &&
+    membershipRole !== UserTeamMembershipRole.OWNER
+  ) {
+    return false;
+  }
+  if (item?.requiresInstanceAdmin && instanceRole !== UserRole.ADMIN) {
+    return false;
+  }
+  return true;
 };
