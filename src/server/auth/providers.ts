@@ -1,9 +1,18 @@
 import { type Provider } from "next-auth/providers";
 import { env } from "~/env.mjs";
+import AuthentikProvider from "next-auth/providers/authentik";
 import CognitoProvider from "next-auth/providers/cognito";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import Auth0Provider from "next-auth/providers/auth0";
+import AzureADProvider from "next-auth/providers/azure-ad";
+import GitLabProvider from "next-auth/providers/gitlab";
+import KeycloakProvider from "next-auth/providers/keycloak";
+import OktaProvider from "next-auth/providers/okta";
+import OneLoginProvider from "next-auth/providers/onelogin";
+import SlackProvider from "next-auth/providers/slack";
+import TwitchProvider from "next-auth/providers/twitch";
 import { CustomCredentialsProvider } from "./customCredentialsProvider";
 
 type EnvConfig = typeof env;
@@ -38,6 +47,7 @@ const initializeProvider = <T extends keyof EnvConfig>(
 };
 
 export const providers: Provider[] = [
+  env.PASSWORD_AUTH_ENABLED ? CustomCredentialsProvider() : null,
   initializeProvider(
     ["COGNITO_CLIENT_ID", "COGNITO_CLIENT_SECRET", "COGNITO_ISSUER"],
     (validatedEnv) =>
@@ -83,5 +93,86 @@ export const providers: Provider[] = [
         },
       })
   ),
-  env.PASSWORD_AUTH_ENABLED ? CustomCredentialsProvider() : null,
+  initializeProvider(
+    [
+      "AUTHENTIK_CLIENT_ID",
+      "AUTHENTIK_CLIENT_SECRET",
+      "AUTHENTIK_CLIENT_ISSUER",
+    ],
+    (validatedEnv) =>
+      AuthentikProvider({
+        clientId: validatedEnv.AUTHENTIK_CLIENT_ID,
+        clientSecret: validatedEnv.AUTHENTIK_CLIENT_SECRET,
+        issuer: validatedEnv.AUTHENTIK_CLIENT_ISSUER,
+      })
+  ),
+  initializeProvider(
+    ["AUTH0_CLIENT_ID", "AUTH0_CLIENT_SECRET", "AUTH0_CLIENT_ISSUER"],
+    (validatedEnv) =>
+      Auth0Provider({
+        clientId: validatedEnv.AUTH0_CLIENT_ID,
+        clientSecret: validatedEnv.AUTH0_CLIENT_SECRET,
+        issuer: validatedEnv.AUTH0_CLIENT_ISSUER,
+      })
+  ),
+  initializeProvider(
+    ["AZURE_AD_CLIENT_ID", "AZURE_AD_CLIENT_SECRET", "AZURE_AD_TENANT_ID"],
+    (validatedEnv) =>
+      AzureADProvider({
+        clientId: validatedEnv.AZURE_AD_CLIENT_ID,
+        clientSecret: validatedEnv.AZURE_AD_CLIENT_SECRET,
+        tenantId: validatedEnv.AZURE_AD_TENANT_ID,
+      })
+  ),
+  initializeProvider(
+    ["GITLAB_CLIENT_ID", "GITLAB_CLIENT_SECRET"],
+    (validatedEnv) =>
+      GitLabProvider({
+        clientId: validatedEnv.GITLAB_CLIENT_ID,
+        clientSecret: validatedEnv.GITLAB_CLIENT_SECRET,
+      })
+  ),
+  initializeProvider(
+    ["KEYCLOAK_CLIENT_ID", "KEYCLOAK_CLIENT_SECRET", "KEYCLOAK_ISSUER"],
+    (validatedEnv) =>
+      KeycloakProvider({
+        clientId: validatedEnv.KEYCLOAK_CLIENT_ID,
+        clientSecret: validatedEnv.KEYCLOAK_CLIENT_SECRET,
+        issuer: validatedEnv.KEYCLOAK_ISSUER,
+      })
+  ),
+  initializeProvider(
+    ["OKTA_CLIENT_ID", "OKTA_CLIENT_SECRET", "OKTA_ISSUER"],
+    (validatedEnv) =>
+      OktaProvider({
+        clientId: validatedEnv.OKTA_CLIENT_ID,
+        clientSecret: validatedEnv.OKTA_CLIENT_SECRET,
+        issuer: validatedEnv.OKTA_ISSUER,
+      })
+  ),
+  initializeProvider(
+    ["ONELOGIN_CLIENT_ID", "ONELOGIN_CLIENT_SECRET", "ONELOGIN_ISSUER"],
+    (validatedEnv) =>
+      OneLoginProvider({
+        clientId: validatedEnv.ONELOGIN_CLIENT_ID,
+        clientSecret: validatedEnv.ONELOGIN_CLIENT_SECRET,
+        issuer: validatedEnv.ONELOGIN_ISSUER,
+      })
+  ),
+  initializeProvider(
+    ["SLACK_CLIENT_ID", "SLACK_CLIENT_SECRET"],
+    (validatedEnv) =>
+      SlackProvider({
+        clientId: validatedEnv.SLACK_CLIENT_ID,
+        clientSecret: validatedEnv.SLACK_CLIENT_SECRET,
+      })
+  ),
+  initializeProvider(
+    ["TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET"],
+    (validatedEnv) =>
+      TwitchProvider({
+        clientId: validatedEnv.TWITCH_CLIENT_ID,
+        clientSecret: validatedEnv.TWITCH_CLIENT_SECRET,
+      })
+  ),
 ].filter((provider): provider is Provider => provider !== null);

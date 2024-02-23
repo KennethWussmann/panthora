@@ -73,6 +73,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <th>Required</th>
     <th>Description</th>
   </tr>
+  <tr><td col-span="5"><b>Password Auth</b></td><tr>
   <tr>
     <td><code>PASSWORD_AUTH_ENABLED</code></td>
     <td><code>false</code></td>
@@ -80,6 +81,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>No</td>
     <td>Allow users to register and login with password credentials.</td>
   </tr>
+  <tr><td colspan="5"><b>AWS Cognito</b></td></tr>
   <tr>
     <td><code>COGNITO_CLIENT_ID</code></td>
     <td></td>
@@ -101,6 +103,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>Yes, if you want to enable AWS Cognito auth</td>
     <td>AWS Cognito Issuer URL</td>
   </tr>
+  <tr><td colspan="5"><b>Discord</b></td></tr>
   <tr>
     <td><code>DISCORD_CLIENT_ID</code></td>
     <td></td>
@@ -115,6 +118,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>Yes, if you want to enable Discord auth</td>
     <td>Discord Client Secret</td>
   </tr>
+  <tr><td colspan="5"><b>GitHub</b></td></tr>
   <tr>
     <td><code>GITHUB_CLIENT_ID</code></td>
     <td></td>
@@ -129,6 +133,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>Yes, if you want to enable GitHub auth</td>
     <td>GitHub Client Secret</td>
   </tr>
+  <tr><td colspan="5"><b>Google</b></td></tr>
   <tr>
     <td><code>GOOGLE_CLIENT_ID</code></td>
     <td></td>
@@ -142,6 +147,183 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td></td>
     <td>Yes, if you want to enable Google auth</td>
     <td>Google Client Secret</td>
+  </tr>
+  <tr><td colspan="5"><b>Authentik</b></td></tr>
+  <tr>
+    <td><code>AUTHENTIK_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Authentik auth</td>
+    <td>Authentik Client ID</td>
+  </tr>
+  <tr>
+    <td><code>AUTHENTIK_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Authentik auth</td>
+    <td>Authentik Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>AUTHENTIK_CLIENT_ISSUER</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Authentik auth</td>
+    <td>Authentik Issuer URL</td>
+  </tr>
+  <tr><td colspan="5"><b>Auth0</b></td></tr>
+  <tr>
+    <td><code>AUTH0_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Auth0 auth</td>
+    <td>Auth0 Client ID</td>
+  </tr>
+  <tr>
+    <td><code>AUTH0_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Auth0 auth</td>
+    <td>Auth0 Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>AUTH0_CLIENT_ISSUER</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Auth0 auth</td>
+    <td>Auth0 Issuer URL</td>
+  </tr>
+  <tr><td colspan="5"><b>GitLab</b></td></tr>
+  <tr>
+    <td><code>GITLAB_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable GitLab auth</td>
+    <td>GitLab Client ID</td>
+  </tr>
+  <tr>
+    <td><code>GITLAB_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable GitLab auth</td>
+    <td>GitLab Client Secret</td>
+  </tr>
+  <tr><td colspan="5"><b>Azure AD</b></td></tr>
+  <tr>
+    <td><code>AZURE_AD_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Azure AD auth</td>
+    <td>Azure AD Client ID</td>
+  </tr>
+  <tr>
+    <td><code>AZURE_AD_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Azure AD auth</td>
+    <td>Azure AD Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>AZURE_AD_TENANT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Azure AD auth</td>
+    <td>Azure AD Tenant ID</td>
+  </tr>
+  <tr><td colspan="5"><b>Keycloak</b></td></tr>
+  <tr>
+    <td><code>KEYCLOAK_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Keycloak auth</td>
+    <td>Keycloak Client ID</td>
+  </tr>
+  <tr>
+    <td><code>KEYCLOAK_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Keycloak auth</td>
+    <td>Keycloak Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>KEYCLOAK_ISSUER</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Keycloak auth</td>
+    <td>Keycloak Issuer URL</td>
+  </tr>
+  <tr><td colspan="5"><b>Okta</b></td></tr>
+  <tr>
+    <td><code>OKTA_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Okta auth</td>
+    <td>Okta Client ID</td>
+  </tr>
+  <tr>
+    <td><code>OKTA_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Okta auth</td>
+    <td>Okta Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>OKTA_ISSUER</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Okta auth</td>
+    <td>Okta Issuer URL</td>
+  </tr>
+  <tr><td colspan="5"><b>OneLogin</b></td></tr>
+  <tr>
+    <td><code>ONELOGIN_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable OneLogin auth</td>
+    <td>OneLogin Client ID</td>
+  </tr>
+  <tr>
+    <td><code>ONELOGIN_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable OneLogin auth</td>
+    <td>OneLogin Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>ONELOGIN_ISSUER</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable OneLogin auth</td>
+    <td>OneLogin Issuer URL</td>
+  </tr>
+  <tr><td colspan="5"><b>Slack</b></td></tr>
+  <tr>
+    <td><code>SLACK_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Slack auth</td>
+    <td>Slack Client ID</td>
+  </tr>
+  <tr>
+    <td><code>SLACK_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Slack auth</td>
+    <td>Slack Client Secret</td>
+  </tr>
+  <tr><td colspan="5"><b>Twitch</b></td></tr>
+  <tr>
+    <td><code>TWITCH_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Twitch auth</td>
+    <td>Twitch Client ID</td>
+  </tr>
+  <tr>
+    <td><code>TWITCH_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable Twitch auth</td>
+    <td>Twitch Client Secret</td>
   </tr>
 </table>
 

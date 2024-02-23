@@ -50,6 +50,39 @@ export const env = createEnv({
 
     GITHUB_CLIENT_ID: z.string().optional(),
     GITHUB_CLIENT_SECRET: z.string().optional(),
+
+    AUTHENTIK_CLIENT_ID: z.string().optional(),
+    AUTHENTIK_CLIENT_SECRET: z.string().optional(),
+    AUTHENTIK_CLIENT_ISSUER: z.string().optional(),
+
+    AUTH0_CLIENT_ID: z.string().optional(),
+    AUTH0_CLIENT_SECRET: z.string().optional(),
+    AUTH0_CLIENT_ISSUER: z.string().optional(),
+
+    GITLAB_CLIENT_ID: z.string().optional(),
+    GITLAB_CLIENT_SECRET: z.string().optional(),
+
+    AZURE_AD_CLIENT_ID: z.string().optional(),
+    AZURE_AD_CLIENT_SECRET: z.string().optional(),
+    AZURE_AD_TENANT_ID: z.string().optional(),
+
+    KEYCLOAK_CLIENT_ID: z.string().optional(),
+    KEYCLOAK_CLIENT_SECRET: z.string().optional(),
+    KEYCLOAK_ISSUER: z.string().optional(),
+
+    OKTA_CLIENT_ID: z.string().optional(),
+    OKTA_CLIENT_SECRET: z.string().optional(),
+    OKTA_ISSUER: z.string().optional(),
+
+    ONELOGIN_CLIENT_ID: z.string().optional(),
+    ONELOGIN_CLIENT_SECRET: z.string().optional(),
+    ONELOGIN_ISSUER: z.string().optional(),
+
+    SLACK_CLIENT_ID: z.string().optional(),
+    SLACK_CLIENT_SECRET: z.string().optional(),
+
+    TWITCH_CLIENT_ID: z.string().optional(),
+    TWITCH_CLIENT_SECRET: z.string().optional(),
   },
 
   /**
@@ -88,6 +121,39 @@ export const env = createEnv({
 
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+
+    AUTHENTIK_CLIENT_ID: process.env.AUTHENTIK_CLIENT_ID,
+    AUTHENTIK_CLIENT_SECRET: process.env.AUTHENTIK_CLIENT_SECRET,
+    AUTHENTIK_CLIENT_ISSUER: process.env.AUTHENTIK_CLIENT_ISSUER,
+
+    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+    AUTH0_CLIENT_ISSUER: process.env.AUTH0_CLIENT_ISSUER,
+
+    GITLAB_CLIENT_ID: process.env.GITLAB_CLIENT_ID,
+    GITLAB_CLIENT_SECRET: process.env.GITLAB_CLIENT_SECRET,
+
+    AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID,
+    AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET,
+    AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID,
+
+    KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+    KEYCLOAK_CLIENT_SECRET: process.env.KEYCLOAK_CLIENT_SECRET,
+    KEYCLOAK_ISSUER: process.env.KEYCLOAK_ISSUER,
+
+    OKTA_CLIENT_ID: process.env.OKTA_CLIENT_ID,
+    OKTA_CLIENT_SECRET: process.env.OKTA_CLIENT_SECRET,
+    OKTA_ISSUER: process.env.OKTA_ISSUER,
+
+    ONELOGIN_CLIENT_ID: process.env.ONELOGIN_CLIENT_ID,
+    ONELOGIN_CLIENT_SECRET: process.env.ONELOGIN_CLIENT_SECRET,
+    ONELOGIN_ISSUER: process.env.ONELOGIN_ISSUER,
+
+    SLACK_CLIENT_ID: process.env.SLACK_CLIENT_ID,
+    SLACK_CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
+
+    TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
+    TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
 
     PASSWORD_AUTH_ENABLED: process.env.PASSWORD_AUTH_ENABLED,
   },
