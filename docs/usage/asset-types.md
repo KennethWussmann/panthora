@@ -1,31 +1,78 @@
 # Asset Types
 
-They give the assets structure. Tory can handle a wide variety of assets, but it doesn't know what about to be tracked. The Asset Types tell Tory exactly what kind of assets it should store and what fields they should have.
+Asset Types provide structure to assets. Given the diverse nature of assets Tory manages, defining Asset Types is crucial for specifying the kinds of assets to be stored and the fields they should possess.
 
-For example, the food item in the fridge may need different fields and information attached to them, then the electronics in the office.
+For instance, food items and office electronics may require different fields and information.
 
 ## Creating an Asset Type
 
+### Overview
+
 <img src="./assets/asset-type-edit-basic-explanation-upper.png"/>
 
-1. Specify the parent asset type of this asset type. This allows for inheritance as [outlined further here](#inheritance).
-2. Name of the asset type
+<table>
+  <tr>
+    <th>Number</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Specify the parent asset type for inheritance, as detailed in the <a href="#inheritance">Inheritance section</a>.</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Name of the asset type.</td>
+  </tr>
+</table>
 
 ### Custom Fields
 
-The so called Custom Fields are basically a form builder. Here is specified which fields are later available when creating assets.
+Custom Fields act as a form builder, dictating which fields will be available when creating assets.
 
 <img src="./assets/asset-type-edit-basic-explanation-lower.png"/>
 
-1. Add a new custom field
-2. Specify data type of this field. See [Data Types](#data-types).
-3. Name of the field. Assets are a blank canvas. If you want assets to have a name, you need to create a custom field "Name", like in this example.
-4. Marking a field as required, makes input to that field mandatory when creating asset types.
-5. Setting the field to "Show in table" will add a column to the asset table later on where the corresponding value can be seen. Otherwise the list of assets it rather empty. Having one field with a name that is shown in tables will make it easier to identify assets later on.
-6. The minimum length has a slightly different behaviour depending on the data type. On strings, like in this example, it will require that the user is entering a "Name" with at least 3 characters in length.
-7. The maximum length behaves the same. Giving now value here will allow infinite amount of characters.
-8. The custom fields will display in the same order as they have been added here when a new asset is created. This order can be tweaked via drag and drop.
-9. Fields can be removed using this button. Caution! This will also remove the data of assets that already have this field filled!
+<table>
+  <tr>
+    <th>Number</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Add a new custom field.</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Specify the data type of this field, referencing the <a href="#data-types">Data Types section</a>.</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Field name. To include a name for assets, create a custom field titled "Name".</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Marking a field as required makes it mandatory for asset type creation.</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>"Show in table" adds the field as a column in the asset table, aiding asset identification.</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>The minimum length requirement varies by data type, ensuring at least 3 characters for strings.</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>The maximum length limit, with no value allowing an infinite character count.</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Field order in asset creation can be adjusted via drag and drop.</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Fields can be removed, which also deletes data from assets containing these fields.</td>
+  </tr>
+</table>
 
 #### Data Types
 
@@ -36,34 +83,32 @@ The so called Custom Fields are basically a form builder. Here is specified whic
   </tr>
   <tr>
     <td>String</td>
-    <td>They will render as a single line input field and can hold any kind of manual input. Calculation of numbers is not possible on strings, for that rather use number.</td>
+    <td>Single line input for any text, not suitable for numerical calculations.</td>
   </tr>
   <tr>
     <td>Number</td>
-    <td>They allow for more controlled input. Values can only be numbers.</td>
+    <td>Accepts only numerical values, ensuring controlled input.</td>
   </tr>
   <tr>
     <td>Boolean</td>
-    <td>They render as a switch as it can be seen used for the "Required" flag for example. They have two states, on or off.</td>
+    <td>Renders as a toggle switch, useful for binary states such as "Required".</td>
   </tr>
   <tr>
     <td>Date</td>
-    <td>Dates have handy date picker where the user can simply select a date from.</td>
+    <td>Includes a date picker for easy date selection.</td>
   </tr>
   <tr>
     <td>Tag</td>
-    <td>They render as selector where the user has to select tags. Tags allow to categorize assets. For example, books have a tag with either "read" or "unread". This makes use of the hierarchical nature of tags. The user can pick child tags of the here selected "Parent Tag". See the [Tags](./tags.md) documention for more details.</td>
+    <td>Selection field for tags, facilitating asset categorization. Parent tag selection enables hierarchical tag usage. Further details in <a href="./tags.md">Tags documentation</a>.</td>
   </tr>
 </table>
 
 ## Inheritance
 
-Asset types can be hierarchical. This is what the "Parent Asset Type" dropdown is for. This is optional. 
+Asset Types can inherit fields from a parent, streamlining the creation of related asset types without duplicating custom fields.
 
-When a parent asset type is selected it will inherit all the custom fields of the selected parent. This allows for a level of abstraction and eases the creation of multiple asset types for different purposes without having to redefine all the custom fields.
-
-For example, food items and electronic devices may both have a name. One can now create a common asset type with custom fields that both have in common:
+### Example
 
 <img src="./assets/asset-type-list.png" />
 
-The "Root" asset type has 1 field (a "Name"). Which is then inherited to "Electronics" and "Food" automatically. Once an asset of type "Food" is created the "Name" field becomes available automatically, even though it has not been created inside the "Food" asset type explicitly.
+The "Root" asset type includes a "Name" field, inherited by both "Electronics" and "Food". This inheritance ensures that creating an asset under "Food" automatically includes the "Name" field, even if not explicitly defined within the "Food" asset type.

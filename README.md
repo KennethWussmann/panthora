@@ -52,6 +52,12 @@ With Teams, you can group assets, asset types, and tags, creating distinct inven
 
 More information: [Working with Teams](./docs/usage/teams.md)
 
+## Real-World Application
+
+To see Tory in action, explore the detailed guide on **Managing a Home Library**. This example illustrates how Tory's core principles can be applied to organize and share a personal book collection, demonstrating the system's flexibility and versatility in a familiar setting.
+
+[Explore the Home Library Example](./docs/usage/example-home-library.md)
+
 ## Contribute
 
 As Tory evolves, your input is invaluable. I encourage you to test Tory, share your feedback, and contribute ideas to enhance its development. Found a bug or have a feature in mind? Create an issue and let me know!

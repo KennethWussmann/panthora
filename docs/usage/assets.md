@@ -1,19 +1,33 @@
 # Assets
 
-This are the items that Tory will keep track of. From the flexible nature of Tory, assets can be anything.
+Assets represent the items managed within Tory, reflecting its capability to track virtually anything.
 
-Assets could be the items on a to-do list, the food in a fridge, the books in a collection, your personal finance tracker, you name it.
+Assets can range from to-do list items, food inventory in a fridge, book collections, to personal finance tracking.
 
 ## Creating an Asset
 
-> [!NOTE]  
-> Read the [Asset Type](./asset-types.md) docs first before creating an asset.
+> [!NOTE]
+> Consult the [Asset Types documentation](./asset-types.md) prior to creating an asset.
+
+### Asset Configuration
 
 <img src="./assets/asset-create.png"/>
 
-1. Select the asset type this asset belongs to.
-2. Once the asset type is selected the configuration will reveal all the fields that need to be filled for an asset of type "Food". The "Food" has 4 fields in this case.
+<table>
+  <tr>
+    <th>Number</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Select the appropriate asset type for the new asset.</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Upon selecting an asset type, relevant fields for the asset will be displayed. For example, an asset of type "Food" may require four specific fields to be completed.</td>
+  </tr>
+</table>
 
-Here use Tory as food tracker to help tracking what we still have at home while being out for shopping. Notice the use of tags to say where the eggs are located.
+Tory's flexibility allows it to function as a food tracker, assisting in inventory management. Utilizing tags can enhance organization, such as indicating the location of items like eggs.
 
 <img src="./assets/asset-create.png"/>

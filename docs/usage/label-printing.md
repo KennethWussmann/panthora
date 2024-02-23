@@ -1,22 +1,24 @@
 # Label Printing
 
-Tory allows to print custom labels that can be sticked on physical items. The QR code helps to quickly find the physical item in front of you in the digital inventory.
+Tory facilitates the creation of custom labels, equipped with QR codes, for physical items to seamlessly integrate them into the digital inventory.
 
 ## Label Templates
 
-Different assets require different sized labels. Label templates allow exactly that. There can be multiple templates depending on the needs of the asset. During printing the template that should be used can be specified or the default configured template is used.
+Label Templates cater to the need for various label sizes across different assets. Users can choose from multiple templates or rely on a pre-configured default during the printing process.
+
+### Template Configuration and Usage
 
 <img src="./assets/label-template-list.png"/>
 
-### Editing
+### Editing and Customization
 
-Currently, only printing on label rolls is supported. Tory will automatically generate labels based on the configured settings as a PDF that can be printed.
+Tory supports printing on label rolls, automatically generating a PDF of labels based on user-defined settings.
 
-It sometimes takes a bit to perfectly tweak the settings and sizes to print perfect labels, but the settings should allow a wide variety of labels:
+Adjustments may be necessary to achieve optimal label sizing, but the available settings accommodate a broad spectrum of label dimensions.
 
 <img src="./assets/label-template-edit.png"/>
 
-The visibility of the content of the label can be configured here as well.
+### Label Content Settings
 
 <table>
   <tr>
@@ -25,53 +27,53 @@ The visibility of the content of the label can be configured here as well.
   </tr>
   <tr>
     <td>Name</td>
-    <td>There can be many templates for different kind of configs. Giving it a descriptive name helps later on.</td>
+    <td>Descriptive naming for templates aids in later selection.</td>
   </tr>
   <tr>
     <td>Width in mm</td>
-    <td>The width of physical labels in milimeters.</td>
+    <td>Label width in millimeters.</td>
   </tr>
   <tr>
     <td>Height in mm</td>
-    <td>The height of physical labels in milimeters.</td>
+    <td>Label height in millimeters.</td>
   </tr>
   <tr>
     <td>Padding in mm</td>
-    <td>Not every printer can print at the very edge of the label. With the padding, equal space is added to the edge to ensure everything is visible when printed.</td>
+    <td>Padding compensates for printers' edge limitations, ensuring content visibility.</td>
   </tr>
   <tr>
     <td>Font size</td>
-    <td>Depending on the label size a smaller or bigger font may be necessary.</td>
+    <td>Font size adjustments ensure readability relative to label size.</td>
   </tr>
   <tr>
     <td>QR-Code Scale</td>
-    <td>This controls the size of the QR-Code, when enabled.</td>
+    <td>Determines the QR code size on the label.</td>
   </tr>
   <tr>
     <td>Default</td>
-    <td>There can only configure one Label Template as default. Whenever a quick print option is used in the UI, that Label Template will be used by default.</td>
+    <td>One template can be set as default for quick print actions.</td>
   </tr>
   <tr>
     <td>Show QR-Code</td>
-    <td>Show or hide the QR-Code on the label</td>
+    <td>Option to display or hide the QR code.</td>
   </tr>
   <tr>
     <td>Show Asset ID</td>
-    <td>Show or hide UUID of the asset. This allows to search for the first few characters in Tory to find it quickly.</td>
+    <td>Toggle to display or hide the asset's UUID, facilitating quick searches within Tory.</td>
   </tr>
   <tr>
     <td>Show Asset Text</td>
-    <td>This will show the data attached to assets. Important! All fields of the asset will be rendered, but only if "Show in table" has been checked on the corresponding field of the Asset Type.</td>
+    <td>Displays asset data fields marked as "Show in table" within the asset type configuration.</td>
   </tr>
 </table>
 
-### Printing
+### Printing Process
 
-On the "Assets" page are several options to print labels for assets.
+Options for printing labels are accessible from the "Assets" page.
 
 <img src="./assets/label-printing-explanation.png"/>
 
-1. Select all or any number of assets to print labels for.
-2. Once selected the "Print n labels" button will allow to print labels for all selected assets using the default Label Template.
-3. Using the dropdown next to it, the template that should be used can be changed.
-4. The inline print button allows to just print one label for the respective asset.
+1. Assets can be selected individually or in bulk for label printing.
+2. The "Print n labels" button activates upon selection, using the default Label Template.
+3. A dropdown allows for template selection, altering the print configuration.
+4. An inline print option facilitates single-label printing for specific assets.

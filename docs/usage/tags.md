@@ -1,17 +1,19 @@
 # Tags
 
-Tags are there for states, categories, locations, etc. They can be used for all sorts of things and give the assets even more structure.
+Tags provide additional structure to assets through states, categories, locations, and more, enhancing organizational capabilities.
 
 ## Creating Tags
 
-Creating tags is rather straight forward. They may have a parent tag and should have a descriptive name:
+The process for creating tags is straightforward. Each tag can optionally have a parent tag to establish hierarchy and should possess a descriptive name for easy identification.
 
-<img src="./assets/tag-create.png" />
+<img src="./assets/tag-create.png"/>
 
 ## Hierarchical Tags
 
-Just like [asset types](./asset-types.md), tags can be hierarchical. Nothing is inherited here, this is just to organize tags in a logical manner. For example, to say where an asset is located one may create a tag "Location" and all the different rooms assets could be in. The rooms are then assigned to the "Location" tag via the "Parent Tag" selector.
+Tags can be organized hierarchically, similar to [asset types](./asset-types.md), enhancing logical organization without inheriting properties. This structure is particularly useful for categorizing assets by location or other hierarchical categories.
 
-This also has another benefit. Asset types have a [field data type for "Tag"](./asset-types.md#data-types), that allows the user to select all the children of a specified parent tag. This way, the user gets a dropdown of the available rooms where the asset could be physically located.
+For instance, a "Location" tag can serve as a parent for various room tags, specifying where assets are located. The "Parent Tag" selector assigns child tags to their respective parent.
 
-<img src="./assets/tag-list.png" />
+Hierarchical tagging benefits asset types by utilizing the "Tag" [data field type](./asset-types.md#data-types), enabling dropdown selections of child tags under a specified parent tag for precise asset location categorization.
+
+<img src="./assets/tag-list.png"/>

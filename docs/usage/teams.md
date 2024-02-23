@@ -1,40 +1,37 @@
 # Teams
 
-Teams physically separate all the [asset types](./asset-types.md), [tags](./tags.md) and [assets](./assets.md).
-A user can have multiple teams to create separate inventories. While one can keep track of books, food and their to-do list all within one team, it may makes sense to split some to a different team.
+Teams function to segregate [asset types](./asset-types.md), [tags](./tags.md), and [assets](./assets.md), facilitating the creation of distinct inventories within Tory. Users can establish multiple teams to manage diverse inventories such as books, food, or to-do lists separately or within a single team.
 
 ## Collaboration
 
-It's called Teams and not Projects, because users can invite other's to collaborate on their inventory. This is useful to share the food tracker with your family so everyone know what is still in stock.
+Named "Teams" to emphasize collaborative efforts, this feature enables users to invite others to manage an inventory together. This is particularly useful for sharing a food tracker with family members to keep everyone informed about stock levels.
 
 ## Creating a Team
 
-On the first login, users are prompted to create their first team:
+Upon first login, users are prompted to create their initial team:
 
 <img src="./assets/onboarding-team-create.png"/>
 
-Creating additional teams, can be done in the Team Settings:
+To create additional teams, navigate to Team Settings:
 
 <img src="./assets/team-create.png" />
 
 ## Switching Teams
 
-If a user has access to multiple teams, they can only view the data of one team at a time. To look at Tory from the perspective of another team, they have to switch teams in the top-left corner
+Users with access to multiple teams can view data from only one team at a time. Switching between teams is facilitated through the team selector in the top-left corner:
 
 <img src="./assets/team-selector.png">
 
 ## Invite Users
 
-Users can invite other's to their team using their E-Mail address. This can be done in the team settings as well.
+Invitations to join a team are sent via email. This process is managed within the team settings:
 
-> [!Important]  
-> Tory is not sending E-Mails! If you invite a user by an E-Mail address that they have not been registered with, they will have create an account themselves. You can still invite them already, and once they created an account, the invitation can be accepted by them.
-
-If a user is invited to a team, they have 48 hours to accept the invitation. The invitation will be shown as a banner in the Tory UI. They may decline, accept or the invitation expires.
+> [!IMPORTANT]
+> Tory does not send emails directly. Invitations require the invitee to have an existing account or prompt them to create one. Invitations are valid for 48 hours and appear as a banner in the Tory UI, where they can be accepted or declined.
 
 ## Team Member Roles
 
-Team members have different roles that allow them different actions in the scope of the team. The roles may be different depending on the team the user is a member of. They could be `Owner` of one team, but only `Member` of another.
+Team members are assigned roles, determining their permissions within the team. Roles vary by team, allowing a user to be an `Owner` of one team while serving as a `Member` of another.
 
 <table>
   <tr>
@@ -43,14 +40,14 @@ Team members have different roles that allow them different actions in the scope
   </tr>
   <tr>
     <td>Member</td>
-    <td>They interact with the inventory. They can read and write all tags, asset types and assets.</td>
+    <td>Can read and write all tags, asset types, and assets, interacting directly with the inventory.</td>
   </tr>
   <tr>
     <td>Admin</td>
-    <td>They have all the permissions of the `Member`, but additionally can also administrate the team. They can invite other users to the team. They cannot delete a team.</td>
+    <td>Includes all Member permissions plus the ability to manage team settings, such as inviting users. Cannot delete the team.</td>
   </tr>
   <tr>
     <td>Owner</td>
-    <td>This is the original owner of that team. They cannot be removed, nor can there be multiple owners. They have unrestricted access to the entire team and may even delete the team including all data belonging to it. They can also invite other members. Owners cannot leave their own team.</td>
+    <td>The team's creator with full access to all team data and settings, including the ability to delete the team. There is only one Owner per team, who cannot leave or be removed from the team.</td>
   </tr>
 </table>
