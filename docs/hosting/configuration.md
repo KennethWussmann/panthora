@@ -1,6 +1,6 @@
 # Configuration
 
-Configuration is done via Environment Variables on the Docker Container. Here you can find a list of all available settings.
+Configuration is done via Environment Variables on the Docker Container.
 
 ## General
 
@@ -64,6 +64,8 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
 </table>
 
 ## Authentication
+
+A wide variety of authentication providers is available as well as password auth.
 
 <table>
   <tr>

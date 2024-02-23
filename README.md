@@ -1,46 +1,57 @@
 <div align="center">
   <h1><code>tory</code></h1>
   <p>
-    <strong>Simple and light-weight inventory system for literally anything</strong>
+    <strong>A versatile inventory system for everything and anything.</strong>
   </p>
 </div>
 
+<img src="./docs/assets/cover.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"/>
+
 ## Features
 
-- [x] Keep track of all your items
-- [x] Print customizable labels for your items
-- [x] Collaborate on your inventory
-- [x] Single sign-on
+- ✅ Track all your items with ease. [Learn how](./docs/usage/getting-started.md)
+- ✅ Print customizable labels for efficient organization. [Start printing](./docs/usage/label-printing.md)
+- ✅ Collaborate on inventories with teams. [Explore collaboration](./docs/usage/teams.md)
+- ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/configuration.md#authentication)
+- ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
 
 ## Getting Started
 
 > [!NOTE]  
-> Tory is still in a pre-release phase, use with caution.
+> Tory is currently in [pre-release](./docs/hosting/updating.md). Please proceed with caution.
 
-See the [hosting docs](./docs/hosting/hosting.md) to deploy your instance today.
+Deploying Tory is straightforward with Docker. Check out the [hosting documentation](./docs/hosting/hosting.md) to get your instance up and running today. For an in-depth look into Tory's capabilities, the [usage guide](./docs/usage/getting-started.md) is the perfect place to start.
 
-## Meet tory
+## How Tory Works
 
-Existing inventory systems either enforce heavy bureaucracy and overhead onto their users. Which may be great for professional use-cases, but if simple personal use-cases this more work, less flexible and way to overpowered.
+Tory is designed to make inventory management a breeze. From pantry staples and literary collections to collectible treasures, Tory seamlessly adapts to your unique needs. Dive into a few fundamental concepts to fully leverage Tory’s capabilities.
 
-The idea of tory is, to allow users to create their own workflow to create and manage their assets. This is accomplished by using only three concepts that can handle a lot of different requirements at once.
-
-### Tags
-
-Tags can be added to assets. They can be hierarchical to establish your very own structure.
-
-### Asset Types
-
-Asset types are the blueprint for everything you want to inventorize. They can be hierarchical as well and allow to group different kinds of asset types.
-
-They can have and inherit custom input fields that can be configured to the user's needs.
-
-This way a food item could have different set of fields than electronics.
+Discover more in the [Usage Guide](./docs/usage/getting-started.md).
 
 ### Assets
 
-Assets are the parts and items you want to store in your inventory. They use one Asset Type to determine all the fields that should be filled.
+Define "assets" as items you wish to track, whether they're groceries, books, or collectibles. Tory enables you to monitor any number of assets, ensuring you always stay organized.
 
-## Documentation
+Dive deeper: [Understanding Assets](./docs/usage/assets.md)
 
-Find the [Documentation here](./docs/)
+### Asset Types
+
+Asset Types introduce structure to your inventory. Customize the details you track for each item category, like author, genre, and page count for books, to make your inventory system truly yours.
+
+Learn more: [Setting Up Asset Types](./docs/usage/asset-types.md)
+
+### Tags
+
+Organize your assets with tags for effortless filtering. Whether marking books as `unread` or categorizing pantry items, tags simplify finding exactly what you need, when you need it.
+
+Explore further: [Using Tags](./docs/usage/tags.md)
+
+### Teams
+
+With Teams, you can group assets, asset types, and tags, creating distinct inventories for different purposes or groups. Share your collections with others by inviting them to your team, from family members sharing pantry items to colleagues collaborating on business inventories.
+
+More information: [Working with Teams](./docs/usage/teams.md)
+
+## Contribute
+
+As Tory evolves, your input is invaluable. I encourage you to test Tory, share your feedback, and contribute ideas to enhance its development. Found a bug or have a feature in mind? Create an issue and let ne know!

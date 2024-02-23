@@ -60,7 +60,7 @@ const assetText = (row: Row, asset: AssetWithFields) => {
     if (fieldType === FieldType.TAG) {
       textCell.text(value.tagsValue.map((tag) => tag.name).join(", "));
     } else {
-      textCell.text(String(value.stringValue));
+      textCell.text(String(value?.stringValue));
     }
   });
 };
