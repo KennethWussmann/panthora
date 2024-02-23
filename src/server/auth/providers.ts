@@ -14,6 +14,7 @@ import OneLoginProvider from "next-auth/providers/onelogin";
 import SlackProvider from "next-auth/providers/slack";
 import TwitchProvider from "next-auth/providers/twitch";
 import { CustomCredentialsProvider } from "./customCredentialsProvider";
+import { GenericOAuthProvider } from "./genericOAuthProvider";
 
 type EnvConfig = typeof env;
 type NonUndefinedEnv<T extends keyof EnvConfig> = {
@@ -48,6 +49,26 @@ const initializeProvider = <T extends keyof EnvConfig>(
 
 export const providers: Provider[] = [
   env.PASSWORD_AUTH_ENABLED ? CustomCredentialsProvider() : null,
+  initializeProvider(
+    ["OAUTH_CLIENT_ID", "OAUTH_CLIENT_SECRET"],
+    (validatedEnv) =>
+      GenericOAuthProvider({
+        clientId: validatedEnv.OAUTH_CLIENT_ID,
+        clientSecret: validatedEnv.OAUTH_CLIENT_SECRET,
+        issuer: env.OAUTH_ISSUER,
+        accessTokenUrl: env.OAUTH_ACCESS_TOKEN_URL,
+        profileUrl: env.OAUTH_PROFILE_URL,
+        authorization: env.OAUTH_AUTHORIZATION_URL
+          ? {
+              url: env.OAUTH_AUTHORIZATION_URL,
+              params: { response_type: "code" },
+            }
+          : undefined,
+        httpOptions: {
+          timeout: 30000,
+        },
+      })
+  ),
   initializeProvider(
     ["COGNITO_CLIENT_ID", "COGNITO_CLIENT_SECRET", "COGNITO_ISSUER"],
     (validatedEnv) =>
@@ -94,25 +115,21 @@ export const providers: Provider[] = [
       })
   ),
   initializeProvider(
-    [
-      "AUTHENTIK_CLIENT_ID",
-      "AUTHENTIK_CLIENT_SECRET",
-      "AUTHENTIK_CLIENT_ISSUER",
-    ],
+    ["AUTHENTIK_CLIENT_ID", "AUTHENTIK_CLIENT_SECRET", "AUTHENTIK_ISSUER"],
     (validatedEnv) =>
       AuthentikProvider({
         clientId: validatedEnv.AUTHENTIK_CLIENT_ID,
         clientSecret: validatedEnv.AUTHENTIK_CLIENT_SECRET,
-        issuer: validatedEnv.AUTHENTIK_CLIENT_ISSUER,
+        issuer: validatedEnv.AUTHENTIK_ISSUER,
       })
   ),
   initializeProvider(
-    ["AUTH0_CLIENT_ID", "AUTH0_CLIENT_SECRET", "AUTH0_CLIENT_ISSUER"],
+    ["AUTH0_CLIENT_ID", "AUTH0_CLIENT_SECRET", "AUTH0_ISSUER"],
     (validatedEnv) =>
       Auth0Provider({
         clientId: validatedEnv.AUTH0_CLIENT_ID,
         clientSecret: validatedEnv.AUTH0_CLIENT_SECRET,
-        issuer: validatedEnv.AUTH0_CLIENT_ISSUER,
+        issuer: validatedEnv.AUTH0_ISSUER,
       })
   ),
   initializeProvider(

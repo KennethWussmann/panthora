@@ -38,6 +38,13 @@ export const env = createEnv({
       .default("false")
       .transform((val) => val?.toLowerCase() === "true"),
 
+    OAUTH_CLIENT_ID: z.string().optional(),
+    OAUTH_CLIENT_SECRET: z.string().optional(),
+    OAUTH_ISSUER: z.string().optional(),
+    OAUTH_ACCESS_TOKEN_URL: z.string().optional(),
+    OAUTH_AUTHORIZATION_URL: z.string().optional(),
+    OAUTH_PROFILE_URL: z.string().optional(),
+
     COGNITO_CLIENT_ID: z.string().optional(),
     COGNITO_CLIENT_SECRET: z.string().optional(),
     COGNITO_ISSUER: z.string().optional(),
@@ -53,11 +60,11 @@ export const env = createEnv({
 
     AUTHENTIK_CLIENT_ID: z.string().optional(),
     AUTHENTIK_CLIENT_SECRET: z.string().optional(),
-    AUTHENTIK_CLIENT_ISSUER: z.string().optional(),
+    AUTHENTIK_ISSUER: z.string().optional(),
 
     AUTH0_CLIENT_ID: z.string().optional(),
     AUTH0_CLIENT_SECRET: z.string().optional(),
-    AUTH0_CLIENT_ISSUER: z.string().optional(),
+    AUTH0_ISSUER: z.string().optional(),
 
     GITLAB_CLIENT_ID: z.string().optional(),
     GITLAB_CLIENT_SECRET: z.string().optional(),
@@ -109,6 +116,13 @@ export const env = createEnv({
     MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
     DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT,
 
+    OAUTH_CLIENT_ID: process.env.OAUTH_CLIENT_ID,
+    OAUTH_CLIENT_SECRET: process.env.OAUTH_CLIENT_SECRET,
+    OAUTH_ISSUER: process.env.OAUTH_ISSUER,
+    OAUTH_ACCESS_TOKEN_URL: process.env.OAUTH_ACCESS_TOKEN_URL,
+    OAUTH_AUTHORIZATION_URL: process.env.OAUTH_AUTHORIZATION_URL,
+    OAUTH_PROFILE_URL: process.env.OAUTH_PROFILE_URL,
+
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
     COGNITO_ISSUER: process.env.COGNITO_ISSUER,
@@ -124,11 +138,11 @@ export const env = createEnv({
 
     AUTHENTIK_CLIENT_ID: process.env.AUTHENTIK_CLIENT_ID,
     AUTHENTIK_CLIENT_SECRET: process.env.AUTHENTIK_CLIENT_SECRET,
-    AUTHENTIK_CLIENT_ISSUER: process.env.AUTHENTIK_CLIENT_ISSUER,
+    AUTHENTIK_ISSUER: process.env.AUTHENTIK_ISSUER,
 
     AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
     AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
-    AUTH0_CLIENT_ISSUER: process.env.AUTH0_CLIENT_ISSUER,
+    AUTH0_ISSUER: process.env.AUTH0_ISSUER,
 
     GITLAB_CLIENT_ID: process.env.GITLAB_CLIENT_ID,
     GITLAB_CLIENT_SECRET: process.env.GITLAB_CLIENT_SECRET,

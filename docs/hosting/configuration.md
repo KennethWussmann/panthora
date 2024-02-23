@@ -81,6 +81,49 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>No</td>
     <td>Allow users to register and login with password credentials.</td>
   </tr>
+  <tr><td col-span="5"><b>Generic OAuth2</b></td><tr>
+  <tr>
+    <td><code>OAUTH_CLIENT_ID</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable generic OAuth</td>
+    <td>OAuth2 Client ID</td>
+  </tr>
+  <tr>
+    <td><code>OAUTH_CLIENT_SECRET</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable generic OAuth</td>
+    <td>OAuth2 Client Secret</td>
+  </tr>
+  <tr>
+    <td><code>OAUTH_ISSUER</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable generic OAuth and the provider supports OIDC</td>
+    <td>OAuth2 OIDC Issuer URL</td>
+  </tr>
+  <tr>
+    <td><code>OAUTH_ACCESS_TOKEN_URL</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is not specified</td>
+    <td>OAuth2 Access Token URL</td>
+  </tr>
+  <tr>
+    <td><code>OAUTH_PROFILE_URL</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is not specified</td>
+    <td>OAuth2 Profile/User Info URL</td>
+  </tr>
+  <tr>
+    <td><code>OAUTH_AUTHORIZATION_URL</code></td>
+    <td></td>
+    <td></td>
+    <td>Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is not specified</td>
+    <td>OAuth2 Authorization URL</td>
+  </tr>
   <tr><td colspan="5"><b>AWS Cognito</b></td></tr>
   <tr>
     <td><code>COGNITO_CLIENT_ID</code></td>
@@ -164,7 +207,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>Authentik Client Secret</td>
   </tr>
   <tr>
-    <td><code>AUTHENTIK_CLIENT_ISSUER</code></td>
+    <td><code>AUTHENTIK_ISSUER</code></td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Authentik auth</td>
@@ -186,7 +229,7 @@ Configuration is done via Environment Variables on the Docker Container. Here yo
     <td>Auth0 Client Secret</td>
   </tr>
   <tr>
-    <td><code>AUTH0_CLIENT_ISSUER</code></td>
+    <td><code>AUTH0_ISSUER</code></td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Auth0 auth</td>
