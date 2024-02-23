@@ -4,6 +4,11 @@ Assets represent the items managed within Tory, reflecting its capability to tra
 
 Assets can range from to-do list items, food inventory in a fridge, book collections, to personal finance tracking.
 
+> [!TIP]
+> Read the [example use-case](./example-home-library.md) to learn about the practical capabilities of Tory.
+
+<img src="./assets/asset-list.png"/>
+
 ## Creating an Asset
 
 > [!NOTE]
@@ -29,5 +34,3 @@ Assets can range from to-do list items, food inventory in a fridge, book collect
 </table>
 
 Tory's flexibility allows it to function as a food tracker, assisting in inventory management. Utilizing tags can enhance organization, such as indicating the location of items like eggs.
-
-<img src="./assets/asset-create.png"/>
