@@ -14,6 +14,7 @@
 - ✅ Collaborate on inventories with teams. [Explore collaboration](./docs/usage/teams.md)
 - ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/configuration.md#authentication)
 - ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
+- ✅ Fully responsive design, ensuring accessibility on any device, with support for light and dark modes for optimal viewing comfort.
 
 ## Getting Started
 
