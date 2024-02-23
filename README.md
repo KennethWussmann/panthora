@@ -3,9 +3,9 @@
   <p>
     <strong>A versatile inventory system for everything and anything.</strong>
   </p>
-</div>
 
-<img src="./docs/assets/cover.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"/>
+  <img src="./docs/assets/cover.png" style="width: 80%;"/>
+</div>
 
 ## Features
 
@@ -54,4 +54,4 @@ More information: [Working with Teams](./docs/usage/teams.md)
 
 ## Contribute
 
-As Tory evolves, your input is invaluable. I encourage you to test Tory, share your feedback, and contribute ideas to enhance its development. Found a bug or have a feature in mind? Create an issue and let ne know!
+As Tory evolves, your input is invaluable. I encourage you to test Tory, share your feedback, and contribute ideas to enhance its development. Found a bug or have a feature in mind? Create an issue and let me know!
