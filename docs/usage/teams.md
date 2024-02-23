@@ -27,7 +27,7 @@ Users with access to multiple teams can view data from only one team at a time. 
 Invitations to join a team are sent via email. This process is managed within the team settings:
 
 > [!IMPORTANT]
-> Tory does not send emails directly. Invitations require the invitee to have an existing account or prompt them to create one. Invitations are valid for 48 hours and appear as a banner in the Tory UI, where they can be accepted or declined.
+> Tory does not send emails. If the invitee does not have an account under that email address yet, they can still be invited, but you will have to tell them to register. Once registered they can accept the invitiation that was sent. Invitations are valid for 48 hours and appear as a banner in the Tory UI, where they can be accepted or declined.
 
 ## Team Member Roles
 
