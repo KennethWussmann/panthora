@@ -38,6 +38,13 @@ export const env = createEnv({
       .default("false")
       .transform((val) => val?.toLowerCase() === "true"),
 
+    OAUTH_CLIENT_ID: z.string().optional(),
+    OAUTH_CLIENT_SECRET: z.string().optional(),
+    OAUTH_ISSUER: z.string().optional(),
+    OAUTH_ACCESS_TOKEN_URL: z.string().optional(),
+    OAUTH_AUTHORIZATION_URL: z.string().optional(),
+    OAUTH_PROFILE_URL: z.string().optional(),
+
     COGNITO_CLIENT_ID: z.string().optional(),
     COGNITO_CLIENT_SECRET: z.string().optional(),
     COGNITO_ISSUER: z.string().optional(),
@@ -50,6 +57,39 @@ export const env = createEnv({
 
     GITHUB_CLIENT_ID: z.string().optional(),
     GITHUB_CLIENT_SECRET: z.string().optional(),
+
+    AUTHENTIK_CLIENT_ID: z.string().optional(),
+    AUTHENTIK_CLIENT_SECRET: z.string().optional(),
+    AUTHENTIK_ISSUER: z.string().optional(),
+
+    AUTH0_CLIENT_ID: z.string().optional(),
+    AUTH0_CLIENT_SECRET: z.string().optional(),
+    AUTH0_ISSUER: z.string().optional(),
+
+    GITLAB_CLIENT_ID: z.string().optional(),
+    GITLAB_CLIENT_SECRET: z.string().optional(),
+
+    AZURE_AD_CLIENT_ID: z.string().optional(),
+    AZURE_AD_CLIENT_SECRET: z.string().optional(),
+    AZURE_AD_TENANT_ID: z.string().optional(),
+
+    KEYCLOAK_CLIENT_ID: z.string().optional(),
+    KEYCLOAK_CLIENT_SECRET: z.string().optional(),
+    KEYCLOAK_ISSUER: z.string().optional(),
+
+    OKTA_CLIENT_ID: z.string().optional(),
+    OKTA_CLIENT_SECRET: z.string().optional(),
+    OKTA_ISSUER: z.string().optional(),
+
+    ONELOGIN_CLIENT_ID: z.string().optional(),
+    ONELOGIN_CLIENT_SECRET: z.string().optional(),
+    ONELOGIN_ISSUER: z.string().optional(),
+
+    SLACK_CLIENT_ID: z.string().optional(),
+    SLACK_CLIENT_SECRET: z.string().optional(),
+
+    TWITCH_CLIENT_ID: z.string().optional(),
+    TWITCH_CLIENT_SECRET: z.string().optional(),
   },
 
   /**
@@ -76,6 +116,13 @@ export const env = createEnv({
     MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
     DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT,
 
+    OAUTH_CLIENT_ID: process.env.OAUTH_CLIENT_ID,
+    OAUTH_CLIENT_SECRET: process.env.OAUTH_CLIENT_SECRET,
+    OAUTH_ISSUER: process.env.OAUTH_ISSUER,
+    OAUTH_ACCESS_TOKEN_URL: process.env.OAUTH_ACCESS_TOKEN_URL,
+    OAUTH_AUTHORIZATION_URL: process.env.OAUTH_AUTHORIZATION_URL,
+    OAUTH_PROFILE_URL: process.env.OAUTH_PROFILE_URL,
+
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
     COGNITO_ISSUER: process.env.COGNITO_ISSUER,
@@ -88,6 +135,39 @@ export const env = createEnv({
 
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+
+    AUTHENTIK_CLIENT_ID: process.env.AUTHENTIK_CLIENT_ID,
+    AUTHENTIK_CLIENT_SECRET: process.env.AUTHENTIK_CLIENT_SECRET,
+    AUTHENTIK_ISSUER: process.env.AUTHENTIK_ISSUER,
+
+    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+    AUTH0_ISSUER: process.env.AUTH0_ISSUER,
+
+    GITLAB_CLIENT_ID: process.env.GITLAB_CLIENT_ID,
+    GITLAB_CLIENT_SECRET: process.env.GITLAB_CLIENT_SECRET,
+
+    AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID,
+    AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET,
+    AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID,
+
+    KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+    KEYCLOAK_CLIENT_SECRET: process.env.KEYCLOAK_CLIENT_SECRET,
+    KEYCLOAK_ISSUER: process.env.KEYCLOAK_ISSUER,
+
+    OKTA_CLIENT_ID: process.env.OKTA_CLIENT_ID,
+    OKTA_CLIENT_SECRET: process.env.OKTA_CLIENT_SECRET,
+    OKTA_ISSUER: process.env.OKTA_ISSUER,
+
+    ONELOGIN_CLIENT_ID: process.env.ONELOGIN_CLIENT_ID,
+    ONELOGIN_CLIENT_SECRET: process.env.ONELOGIN_CLIENT_SECRET,
+    ONELOGIN_ISSUER: process.env.ONELOGIN_ISSUER,
+
+    SLACK_CLIENT_ID: process.env.SLACK_CLIENT_ID,
+    SLACK_CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
+
+    TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
+    TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
 
     PASSWORD_AUTH_ENABLED: process.env.PASSWORD_AUTH_ENABLED,
   },
