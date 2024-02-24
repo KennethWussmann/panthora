@@ -12,7 +12,7 @@ import {
   type AssetCreateEditCustomFieldValue,
   type AssetCreateEditRequest,
 } from "~/server/lib/assets/assetCreateEditRequest";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { AssetTypeSelector } from "~/components/asset-types/AssetTypeSelector";
 import { FiSave } from "react-icons/fi";
@@ -80,10 +80,6 @@ export const AssetCreateEditForm = ({
         }
       : undefined
   );
-  const { fields: customFieldValues } = useFieldArray({
-    control,
-    name: "customFieldValues",
-  });
   const { team } = useTeam();
   const {
     mutateAsync: updateAsset,
@@ -227,7 +223,6 @@ export const AssetCreateEditForm = ({
             <AssetCreateEditCustomFieldsForm
               assetType={assetType}
               control={control}
-              customFieldValues={customFieldValues}
             />
           )}
           <Flex justifyContent="flex-end">
