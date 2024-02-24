@@ -139,7 +139,26 @@ export class RateLimitService {
           remoteAddress,
           type,
         });
+      } else if (
+        e instanceof Error &&
+        "code" in e &&
+        e.code === "ECONNREFUSED"
+      ) {
+        this.logger.error(
+          "Failed to connect rate-limit service with database!",
+          {
+            error: e,
+            type,
+          }
+        );
+      } else {
+        this.logger.error(`Unexpected error during rate-limit check`, {
+          error: e,
+          remoteAddress,
+          type,
+        });
       }
+
       throw new Error(`Rate limit ${type} exceeded`);
     }
   };
