@@ -1,10 +1,9 @@
 <div align="center">
-  <h1><code>tory</code></h1>
+  <img src="./docs/assets/logo-dark-vertical.svg#gh-dark-mode-only" style="width: 30%;">
+  <img src="./docs/assets/logo-light-vertical.svg#gh-light-mode-only" style="width: 30%;">
   <p>
     <strong>A versatile inventory system for everything and anything.</strong>
   </p>
-
-  <img src="./docs/assets/cover.png" style="width: 80%;"/>
 </div>
 
 ## Features
@@ -15,6 +14,10 @@
 - ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/configuration.md#authentication)
 - ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
 - ✅ Fully responsive design, ensuring accessibility on any device, with support for light and dark modes for optimal viewing comfort.
+
+<div align="center">
+  <img src="./docs/assets/cover.png" style="width: 80%;"/>
+</div>
 
 ## Getting Started
 
