@@ -33,7 +33,7 @@ jobs:
       - uses: ./.github/actions/docker-publish
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          tags: ghcr.io/kennethwussmann/tory:${{ matrix.arch }}-${{ steps.git-commit.outputs.SHORT_SHA }}
+          tags: ghcr.io/kennethwussmann/panthora:${{ matrix.arch }}-${{ steps.git-commit.outputs.SHORT_SHA }}
           build-args: VERSION=${{ steps.git-commit.outputs.SHORT_SHA }}
 
   create-and-push-manifest:
@@ -51,7 +51,7 @@ jobs:
           registry: ghcr.io
       - name: Create and push Docker manifest
         run: |
-          docker manifest create ghcr.io/kennethwussmann/tory:develop \
-            --amend ghcr.io/kennethwussmann/tory:amd64-${{ needs.build.outputs.SHORT_SHA }} \
-            --amend ghcr.io/kennethwussmann/tory:arm64-${{ needs.build.outputs.SHORT_SHA }}
-          docker manifest push ghcr.io/kennethwussmann/tory:develop
+          docker manifest create ghcr.io/kennethwussmann/panthora:develop \
+            --amend ghcr.io/kennethwussmann/panthora:amd64-${{ needs.build.outputs.SHORT_SHA }} \
+            --amend ghcr.io/kennethwussmann/panthora:arm64-${{ needs.build.outputs.SHORT_SHA }}
+          docker manifest push ghcr.io/kennethwussmann/panthora:develop

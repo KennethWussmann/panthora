@@ -1,21 +1,21 @@
 # Hosting
 
 > [!WARNING]  
-> Tory is still in a pre-release phase and **not production-ready**.
+> Panthora is still in a pre-release phase and **not production-ready**.
 
-Hosting Tory is best done via Docker. There are Docker images for `amd64` and `arm64`.
+Hosting Panthora is best done via Docker. There are Docker images for `amd64` and `arm64`.
 
-**Image:** `ghcr.io/kennethwussmann/tory`
+**Image:** `ghcr.io/kennethwussmann/panthora`
 
 **Tags:**
 
 - `latest` - The latest stable release
-- `x.x.x` - Specific version (see [Releases](https://github.com/KennethWussmann/tory/releases))
+- `x.x.x` - Specific version (see [Releases](https://github.com/KennethWussmann/panthora/releases))
 - `develop` - Latest up-to-date development build with features still in progress (unstable)
 
 ## Dependencies
 
-Tory needs the following third-party services to work:
+Panthora needs the following third-party services to work:
 
 - Postgres v15.x
 - MeiliSearch v1.x
@@ -24,7 +24,7 @@ They can be hosted anywhere, but best would be to set them up with Docker Compos
 
 ## Docker Compose
 
-Once deployed tory is available at `http://localhost:3000`. For configuration of Tory refer to the [Configuration docs](./configuration.md).
+Once deployed Panthora is available at `http://localhost:3000`. For configuration of Panthora refer to the [Configuration docs](./configuration.md).
 
 ```YAML
 version: "3.9"
@@ -35,36 +35,36 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
     networks:
-      - tory
+      - panthora
     environment:
-      POSTGRES_PASSWORD: tory
-      POSTGRES_USER: tory
-      POSTGRES_DB: tory
+      POSTGRES_PASSWORD: panthora
+      POSTGRES_USER: panthora
+      POSTGRES_DB: panthora
   search:
     image: getmeili/meilisearch:v1.6.2
     restart: always
     volumes:
       - search:/meili_data
     networks:
-      - tory
+      - panthora
     environment:
       MEILI_ENV: production
       MEILI_NO_ANALYTICS: true
       MEILI_MASTER_KEY: <fill-me>
-  tory:
-    image: ghcr.io/kennethwussmann/tory:latest
+  panthora:
+    image: ghcr.io/kennethwussmann/panthora:latest
     restart: always
     depends_on:
       - database
       - search
     networks:
-      - tory
+      - panthora
     ports:
       - 3000:3000
     environment:
-      DATABASE_URL: postgresql://tory:tory@database:5432/tory
+      DATABASE_URL: postgresql://panthora:panthora@database:5432/panthora
       NEXTAUTH_SECRET: <fill-me>
-      NEXTAUTH_URL_INTERNAL: http://tory:3000
+      NEXTAUTH_URL_INTERNAL: http://panthora:3000
       NEXTAUTH_URL: https://example.com
       APP_BASE_URL: https://example.com
       MEILI_URL: http://search:7700
@@ -72,7 +72,7 @@ services:
       PASSWORD_AUTH_ENABLED: true
 
 networks:
-  tory:
+  panthora:
 volumes:
   database:
   search:

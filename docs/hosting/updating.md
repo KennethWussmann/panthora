@@ -1,18 +1,18 @@
-# Updating Tory
+# Updating Panthora
 
-Updating tory is a straight-forward process for the most part, but check the notes about MeiliSearch and Postgres as well.
+Updating Panthora is a straight-forward process for the most part, but check the notes about MeiliSearch and Postgres as well.
 
-## Tory
+## Panthora
 
-Tory follows [Semantic Versioning (SemVer)](https://semver.org/) principles with a slight modification during the pre-release phase (version 0.x.y).
+Panthora follows [Semantic Versioning (SemVer)](https://semver.org/) principles with a slight modification during the pre-release phase (version 0.x.y).
 
-- **Major versions (0.x.0)**: During the version 0 stage, an increment in the minor version number (the 'x' in 0.x.0) may introduce backward-incompatible changes. This is akin to a major version bump in standard SemVer practices. These updates are used to signal significant changes, improvements, or reworks that may require adjustments in how you use Tory.
+- **Major versions (0.x.0)**: During the version 0 stage, an increment in the minor version number (the 'x' in 0.x.0) may introduce backward-incompatible changes. This is akin to a major version bump in standard SemVer practices. These updates are used to signal significant changes, improvements, or reworks that may require adjustments in how you use Panthora.
 
 - **Minor versions (0.x.y):** Patch updates (the 'y' in 0.x.y) focus on backward-compatible bug fixes and minor enhancements that do not require major changes or data-loss on your end. These updates aim to improve the stability and performance without introducing breaking changes.
 
-This versioning approach allows me to iterate rapidly and incorporate feedback while signaling to users the potential impact of each release. Tory will transition to standard SemVer practices (1.x.y) once the project reaches a stable and mature phase, at which point version numbers will strictly adhere to major, minor, and patch updates as defined by SemVer.
+This versioning approach allows me to iterate rapidly and incorporate feedback while signaling to users the potential impact of each release. Panthora will transition to standard SemVer practices (1.x.y) once the project reaches a stable and mature phase, at which point version numbers will strictly adhere to major, minor, and patch updates as defined by SemVer.
 
-You can update the Docker version tag in your Docker Compose file or re-pull `latest`/`develop` to update Tory. Notice that `latest` and `develop` may introduce breaking changes because they update automatically to the latest major release.
+You can update the Docker version tag in your Docker Compose file or re-pull `latest`/`develop` to update Panthora. Notice that `latest` and `develop` may introduce breaking changes because they update automatically to the latest major release.
 
 ## MeiliSearch
 

@@ -1,6 +1,6 @@
 # Label Printing
 
-Tory facilitates the creation of custom labels, equipped with QR codes, for physical items to seamlessly integrate them into the digital inventory.
+Panthora facilitates the creation of custom labels, equipped with QR codes, for physical items to seamlessly integrate them into the digital inventory.
 
 ## Label Templates
 
@@ -12,7 +12,7 @@ Label Templates cater to the need for various label sizes across different asset
 
 ### Editing and Customization
 
-Tory supports printing on label rolls, automatically generating a PDF of labels based on user-defined settings.
+Panthora supports printing on label rolls, automatically generating a PDF of labels based on user-defined settings.
 
 Adjustments may be necessary to achieve optimal label sizing, but the available settings accommodate a broad spectrum of label dimensions.
 
@@ -59,7 +59,7 @@ Adjustments may be necessary to achieve optimal label sizing, but the available 
   </tr>
   <tr>
     <td>Show Asset ID</td>
-    <td>Toggle to display or hide the asset's UUID, facilitating quick searches within Tory.</td>
+    <td>Toggle to display or hide the asset's UUID, facilitating quick searches within Panthora.</td>
   </tr>
   <tr>
     <td>Show Asset Text</td>

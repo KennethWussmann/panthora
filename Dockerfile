@@ -24,7 +24,7 @@ RUN pnpm build
 
 FROM node:20-alpine AS runner
 ARG VERSION
-LABEL org.opencontainers.image.source https://github.com/KennethWussmann/tory
+LABEL org.opencontainers.image.source https://github.com/KennethWussmann/panthora
 
 WORKDIR /app
 

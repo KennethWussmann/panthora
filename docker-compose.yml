@@ -7,9 +7,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: tory
-      POSTGRES_USER: tory
-      POSTGRES_DB: tory
+      POSTGRES_PASSWORD: panthora
+      POSTGRES_USER: panthora
+      POSTGRES_DB: panthora
   search:
     image: getmeili/meilisearch:v1.4.2
     volumes:
@@ -31,7 +31,7 @@ services:
       - path: ./.env
         required: true
     environment:
-      DATABASE_URL: postgresql://tory:tory@database:5432/tory
+      DATABASE_URL: postgresql://panthora:panthora@database:5432/panthora
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_URL_INTERNAL: http://app:3000

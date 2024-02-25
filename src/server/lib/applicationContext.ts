@@ -34,7 +34,7 @@ export class ApplicationContext {
     this.logger.child({ name: "RateLimitService" }),
     new Pool(
       parseDatabaseUrl(
-        env.DATABASE_URL ?? "postgres://troy:tory@localhost:5432/tory"
+        env.DATABASE_URL ?? "postgres://troy:panthora@localhost:5432/panthora"
       )
     )
   );

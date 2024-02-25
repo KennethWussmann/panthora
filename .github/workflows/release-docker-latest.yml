@@ -33,7 +33,7 @@ jobs:
       - uses: ./.github/actions/docker-publish
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          tags: ghcr.io/kennethwussmann/tory:${{ matrix.arch }}-${{ steps.vars.outputs.tag }}
+          tags: ghcr.io/kennethwussmann/panthora:${{ matrix.arch }}-${{ steps.vars.outputs.tag }}
           build-args: VERSION=${{ steps.vars.outputs.tag }}
 
   create-and-push-manifest:
@@ -51,11 +51,11 @@ jobs:
           registry: ghcr.io
       - name: Create and push Docker manifest
         run: |
-          docker manifest create ghcr.io/kennethwussmann/tory:${{ needs.build.outputs.tag }} \
-            --amend ghcr.io/kennethwussmann/tory:amd64-${{ needs.build.outputs.tag }} \
-            --amend ghcr.io/kennethwussmann/tory:arm64-${{ needs.build.outputs.tag }}
-          docker manifest push ghcr.io/kennethwussmann/tory:${{ needs.build.outputs.tag }}
-          docker manifest create ghcr.io/kennethwussmann/tory:latest \
-            --amend ghcr.io/kennethwussmann/tory:amd64-${{ needs.build.outputs.tag }} \
-            --amend ghcr.io/kennethwussmann/tory:arm64-${{ needs.build.outputs.tag }}
-          docker manifest push ghcr.io/kennethwussmann/tory:latest
+          docker manifest create ghcr.io/kennethwussmann/panthora:${{ needs.build.outputs.tag }} \
+            --amend ghcr.io/kennethwussmann/panthora:amd64-${{ needs.build.outputs.tag }} \
+            --amend ghcr.io/kennethwussmann/panthora:arm64-${{ needs.build.outputs.tag }}
+          docker manifest push ghcr.io/kennethwussmann/panthora:${{ needs.build.outputs.tag }}
+          docker manifest create ghcr.io/kennethwussmann/panthora:latest \
+            --amend ghcr.io/kennethwussmann/panthora:amd64-${{ needs.build.outputs.tag }} \
+            --amend ghcr.io/kennethwussmann/panthora:arm64-${{ needs.build.outputs.tag }}
+          docker manifest push ghcr.io/kennethwussmann/panthora:latest

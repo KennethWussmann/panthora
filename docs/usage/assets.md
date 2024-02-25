@@ -1,11 +1,11 @@
 # Assets
 
-Assets represent the items managed within Tory, reflecting its capability to track virtually anything.
+Assets represent the items managed within Panthora, reflecting its capability to track virtually anything.
 
 Assets can range from to-do list items, food inventory in a fridge, book collections, to personal finance tracking.
 
 > [!TIP]
-> Read the [example use-case](./example-home-library.md) to learn about the practical capabilities of Tory.
+> Read the [example use-case](./example-home-library.md) to learn about the practical capabilities of Panthora.
 
 <img src="./assets/asset-list.png"/>
 
@@ -33,4 +33,4 @@ Assets can range from to-do list items, food inventory in a fridge, book collect
   </tr>
 </table>
 
-Tory's flexibility allows it to function as a food tracker, assisting in inventory management. Utilizing tags can enhance organization, such as indicating the location of items like eggs.
+Panthora's flexibility allows it to function as a food tracker, assisting in inventory management. Utilizing tags can enhance organization, such as indicating the location of items like eggs.

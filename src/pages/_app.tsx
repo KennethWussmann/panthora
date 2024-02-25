@@ -29,7 +29,16 @@ const App = ({
     <Providers session={session}>
       <Layout>
         <Head>
-          <title>Tory</title>
+          <title>Panthora</title>
+          <link rel="icon" href="/favicon.ico" sizes="256x256" />
+          <link
+            rel="icon"
+            href="/favicon.svg"
+            sizes="any"
+            type="image/svg+xml"
+          />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="manifest" href="/site.webmanifest" />
         </Head>
         <ServerHealthRedirect />
         <Component {...pageProps} />

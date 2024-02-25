@@ -1,6 +1,6 @@
 # Asset Types
 
-Asset Types provide structure to assets. Given the diverse nature of assets Tory manages, defining Asset Types is crucial for specifying the kinds of assets to be stored and the fields they should possess.
+Asset Types provide structure to assets. Given the diverse nature of assets Panthora manages, defining Asset Types is crucial for specifying the kinds of assets to be stored and the fields they should possess.
 
 For instance, food items and office electronics may require different fields and information.
 

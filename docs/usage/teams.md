@@ -1,6 +1,6 @@
 # Teams
 
-Teams function to segregate [asset types](./asset-types.md), [tags](./tags.md), and [assets](./assets.md), facilitating the creation of distinct inventories within Tory. Users can establish multiple teams to manage diverse inventories such as books, food, or to-do lists separately or within a single team.
+Teams function to segregate [asset types](./asset-types.md), [tags](./tags.md), and [assets](./assets.md), facilitating the creation of distinct inventories within Panthora. Users can establish multiple teams to manage diverse inventories such as books, food, or to-do lists separately or within a single team.
 
 ## Collaboration
 
@@ -27,7 +27,7 @@ Users with access to multiple teams can view data from only one team at a time. 
 Invitations to join a team are sent via email. This process is managed within the team settings:
 
 > [!IMPORTANT]
-> Tory does not send emails. If the invitee does not have an account under that email address yet, they can still be invited, but you will have to tell them to register. Once registered they can accept the invitiation that was sent. Invitations are valid for 48 hours and appear as a banner in the Tory UI, where they can be accepted or declined.
+> Panthora does not send emails. If the invitee does not have an account under that email address yet, they can still be invited, but you will have to tell them to register. Once registered they can accept the invitiation that was sent. Invitations are valid for 48 hours and appear as a banner in the Panthora UI, where they can be accepted or declined.
 
 ## Team Member Roles
 

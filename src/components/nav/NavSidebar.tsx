@@ -27,7 +27,7 @@ export const NavSidebar = () => {
         </Stack>
         <Box>
           <Text fontSize="sm" color="gray.500">
-            <Link href="https://github.com/KennethWussmann/tory">
+            <Link href="https://github.com/KennethWussmann/panthora">
               Version {process.env.NEXT_PUBLIC_VERSION ?? "unknown"}
             </Link>
           </Text>
