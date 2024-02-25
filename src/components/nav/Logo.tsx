@@ -12,7 +12,7 @@ export const Logo = (props: ButtonProps) => {
       onClick={() => void push("/dashboard")}
     >
       <HStack spacing="3">
-        <Text color="on-accent-subtle">Tory</Text>
+        <Text color="on-accent-subtle">Panthora</Text>
       </HStack>
     </Button>
   );

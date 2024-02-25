@@ -75,9 +75,9 @@ export const TeamCreateButton = () => {
                   <p>
                     Teams allow you to physically separate your assets, asset
                     types and tags. No data is shared between your teams. They
-                    are like entirely separate Tory instances! This way you can
-                    focus on different households, companies or locations and
-                    separate who has access to what.
+                    are like entirely separate Panthora instances! This way you
+                    can focus on different households, companies or locations
+                    and separate who has access to what.
                   </p>
 
                   <b>

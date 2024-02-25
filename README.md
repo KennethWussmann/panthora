@@ -1,10 +1,9 @@
 <div align="center">
-  <h1><code>tory</code></h1>
+  <img src="./docs/assets/logo-dark-vertical.svg#gh-dark-mode-only" style="width: 30%;">
+  <img src="./docs/assets/logo-light-vertical.svg#gh-light-mode-only" style="width: 30%;">
   <p>
     <strong>A versatile inventory system for everything and anything.</strong>
   </p>
-
-  <img src="./docs/assets/cover.png" style="width: 80%;"/>
 </div>
 
 ## Features
@@ -16,22 +15,26 @@
 - ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
 - ✅ Fully responsive design, ensuring accessibility on any device, with support for light and dark modes for optimal viewing comfort.
 
+<div align="center">
+  <img src="./docs/assets/cover.png" style="width: 80%;"/>
+</div>
+
 ## Getting Started
 
 > [!NOTE]  
-> Tory is currently in [pre-release](./docs/hosting/updating.md). Please proceed with caution.
+> Panthora is currently in [pre-release](./docs/hosting/updating.md). Please proceed with caution.
 
-Deploying Tory is straightforward with Docker. Check out the [hosting documentation](./docs/hosting/hosting.md) to get your instance up and running today. For an in-depth look into Tory's capabilities, the [usage guide](./docs/usage/getting-started.md) is the perfect place to start.
+Deploying Panthora is straightforward with Docker. Check out the [hosting documentation](./docs/hosting/hosting.md) to get your instance up and running today. For an in-depth look into Panthora's capabilities, the [usage guide](./docs/usage/getting-started.md) is the perfect place to start.
 
-## How Tory Works
+## How Panthora Works
 
-Tory is designed to make inventory management a breeze. From pantry staples and literary collections to collectible treasures, Tory seamlessly adapts to your unique needs. Dive into a few fundamental concepts to fully leverage Tory’s capabilities.
+Panthora is designed to make inventory management a breeze. From pantry staples and literary collections to collectible treasures, Panthora seamlessly adapts to your unique needs. Dive into a few fundamental concepts to fully leverage Panthora’s capabilities.
 
 Discover more in the [Usage Guide](./docs/usage/getting-started.md).
 
 ### Assets
 
-Define "assets" as items you wish to track, whether they're groceries, books, or collectibles. Tory enables you to monitor any number of assets, ensuring you always stay organized.
+Define "assets" as items you wish to track, whether they're groceries, books, or collectibles. Panthora enables you to monitor any number of assets, ensuring you always stay organized.
 
 Dive deeper: [Understanding Assets](./docs/usage/assets.md)
 
@@ -55,10 +58,10 @@ More information: [Working with Teams](./docs/usage/teams.md)
 
 ## Real-World Application
 
-To see Tory in action, explore the detailed guide on **Managing a Home Library**. This example illustrates how Tory's core principles can be applied to organize and share a personal book collection, demonstrating the system's flexibility and versatility in a familiar setting.
+To see Panthora in action, explore the detailed guide on **Managing a Home Library**. This example illustrates how Panthora's core principles can be applied to organize and share a personal book collection, demonstrating the system's flexibility and versatility in a familiar setting.
 
 [Explore the Home Library Example](./docs/usage/example-home-library.md)
 
 ## Contribute
 
-As Tory evolves, your input is invaluable. I encourage you to test Tory, share your feedback, and contribute ideas to enhance its development. Found a bug or have a feature in mind? Create an issue and let me know!
+As Panthora evolves, your input is invaluable. I encourage you to test Panthora, share your feedback, and contribute ideas to enhance its development. Found a bug or have a feature in mind? Create an issue and let me know!

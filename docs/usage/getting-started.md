@@ -1,6 +1,6 @@
 # Getting Started
 
-Maximizing the effectiveness of Tory involves grasping three foundational concepts:
+Maximizing the effectiveness of Panthora involves grasping three foundational concepts:
 
 ## Core Principles
 
@@ -12,7 +12,7 @@ Maximizing the effectiveness of Tory involves grasping three foundational concep
   </tr>
   <tr>
     <td>Asset Types</td>
-    <td>Defines the structure and types of assets managed within Tory.</td>
+    <td>Defines the structure and types of assets managed within Panthora.</td>
     <td><a href="./asset-types.md">Asset Types Guide</a></td>
   </tr>
   <tr>
@@ -22,14 +22,14 @@ Maximizing the effectiveness of Tory involves grasping three foundational concep
   </tr>
   <tr>
     <td>Assets</td>
-    <td>The individual items or entities tracked and managed by Tory.</td>
+    <td>The individual items or entities tracked and managed by Panthora.</td>
     <td><a href="./assets.md">Assets Guide</a></td>
   </tr>
 </table>
 
 ## Advanced Features
 
-### Collaborating on an Inventory
+### Collaborating on an inventory
 
 - Enhance teamwork and asset sharing by setting up and managing teams.
 - [Teams Guide](./teams.md): Detailed instructions on creating and managing collaborative environments.

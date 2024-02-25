@@ -15,7 +15,7 @@ Configuration is done via Environment Variables on the Docker Container.
   <tr>
     <td><code>DATABASE_URL</code></td>
     <td></td>
-    <td><code>postgresql://username:password@localhost:5432/tory</code></td>
+    <td><code>postgresql://username:password@localhost:5432/panthora</code></td>
     <td>Yes</td>
     <td>Credentials and location of the database server.</td>
   </tr>
@@ -29,23 +29,23 @@ Configuration is done via Environment Variables on the Docker Container.
   <tr>
     <td><code>NEXTAUTH_URL</code></td>
     <td></td>
-    <td><code>https://my-tory.com</code></td>
+    <td><code>https://my-panthora.com</code></td>
     <td>Yes</td>
-    <td>Public URL where your Tory instance is reachable.</td>
+    <td>Public URL where your Panthora instance is reachable.</td>
   </tr>
   <tr>
     <td><code>APP_BASE_URL</code></td>
     <td></td>
-    <td><code>https://my-tory.com</code></td>
+    <td><code>https://my-panthora.com</code></td>
     <td>Yes</td>
-    <td>Public URL where your Tory instance is reachable. Same as <code>NEXTAUTH_URL</code>.</td>
+    <td>Public URL where your Panthora instance is reachable. Same as <code>NEXTAUTH_URL</code>.</td>
   </tr>
   <tr>
     <td><code>NEXTAUTH_URL_INTERNAL</code></td>
     <td></td>
-    <td><code>http://tory:3000</code></td>
+    <td><code>http://panthora:3000</code></td>
     <td>Yes, if running behind reverse-proxy</td>
-    <td>Internal URL where your Tory instance is reachable when running behind a reverse-proxy. <code>tory</code> refers to the Docker Compose service name</td>
+    <td>Internal URL where your Panthora instance is reachable when running behind a reverse-proxy. <code>panthora</code> refers to the Docker Compose service name</td>
   </tr>
   <tr>
     <td><code>MEILI_URL</code></td>

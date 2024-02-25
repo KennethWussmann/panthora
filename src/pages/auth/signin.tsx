@@ -71,7 +71,7 @@ export default function SignIn({
         <Stack spacing="8">
           <Stack spacing="6">
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-              <Heading size={"lg"}>Tory</Heading>
+              <Heading size={"lg"}>Panthora</Heading>
               {credentialsForm === "login" && (
                 <Text color="fg.muted">Login with your credentials</Text>
               )}

@@ -35,12 +35,12 @@ const WelcomeStep = ({ next }: StepProps) => {
     <Stack gap={8}>
       <Stack gap={6}>
         <Box>
-          <Heading size={"md"}>What is Tory?</Heading>
+          <Heading size={"md"}>What is Panthora?</Heading>
           <p>
-            Tory simplifies inventory tracking. Whether it’s pantry items,
-            books, or collectibles, Tory adapts to your requirements.
-            Understanding a few core concepts will unlock Tory’s full potential
-            for you.
+            Panthora simplifies inventory tracking. Whether it’s pantry items,
+            books, or collectibles, Panthora adapts to your requirements.
+            Understanding a few core concepts will unlock Panthora’s full
+            potential for you.
           </p>
         </Box>
         <Box>
@@ -48,8 +48,8 @@ const WelcomeStep = ({ next }: StepProps) => {
           <p>
             Assets are all the items you want to keep track of. This could be
             the food in your pantry, the books on your shelf, or the movies in
-            your collection. You can add as many assets as you want. Tory will
-            help you keep track of them.
+            your collection. You can add as many assets as you want. Panthora
+            will help you keep track of them.
           </p>
         </Box>
         <Box>
@@ -73,8 +73,8 @@ const WelcomeStep = ({ next }: StepProps) => {
         <Box>
           <Heading size={"md"}>Ready to Begin?</Heading>
           <p>
-            Tory is designed to be as flexible as your needs demand. Let&apos;s
-            start by setting up your first team.
+            Panthora is designed to be as flexible as your needs demand.
+            Let&apos;s start by setting up your first team.
           </p>
         </Box>
       </Stack>
@@ -203,7 +203,7 @@ export const UserOnboarding = ({ user }: { user: User }) => {
   return (
     <Stack gap={4}>
       <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-        <Heading size={"lg"}>Tory</Heading>
+        <Heading size={"lg"}>Panthora</Heading>
       </Stack>
       <Stepper index={activeStep}>
         {steps.map((step, index) => (

@@ -90,8 +90,9 @@ export const TeamMemberInviteButton = ({
                   <AlertIcon />
                   <AlertDescription>
                     If you invite an e-mail address that has not yet logged in
-                    to tory, they will not receive an email. Please inform them
-                    to sign in with the e-mail address you invited them with.
+                    to Panthora, they will not receive an email. Please inform
+                    them to sign in with the e-mail address you invited them
+                    with.
                   </AlertDescription>
                 </Alert>
 
@@ -103,7 +104,9 @@ export const TeamMemberInviteButton = ({
                     {...register("email", { required: true })}
                   />
                   {errors?.email && <FormFieldRequiredErrorMessage />}
-                  <FormHelperText>E-Mail used to login to Tory</FormHelperText>
+                  <FormHelperText>
+                    E-Mail used to login to Panthora
+                  </FormHelperText>
                 </FormControl>
               </Stack>
             </ModalBody>

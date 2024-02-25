@@ -46,7 +46,7 @@ export const ServerHealthView = ({ user }: { user: User }) => {
       <Box p={8} borderWidth={1} rounded={4}>
         <Stack spacing="8">
           <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-            <Heading size={"lg"}>Tory</Heading>
+            <Heading size={"lg"}>Panthora</Heading>
           </Stack>
 
           {(isLoadingHealth || !health) && <Progress isIndeterminate />}
