@@ -26,6 +26,7 @@ import { CredentialsLoginForm } from "../../components/auth/CredentialsLoginForm
 import { CredentialsRegisterForm } from "../../components/auth/CredentialsRegisterForm";
 import { FiLogIn, FiUserPlus } from "react-icons/fi";
 import { LogoPanthora } from "~/components/common/LogoPanthora";
+import { DemoLoginHint } from "~/components/demo/DemoLoginHint";
 
 const providerIcons: Record<string, ReactElement> = {
   cognito: <FaAws />,
@@ -71,6 +72,7 @@ export default function SignIn({
       <Box p={8} borderWidth={1} rounded={4}>
         <Stack spacing="8">
           <Stack spacing="6">
+            <DemoLoginHint />
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
               <Flex justify={"center"}>
                 <LogoPanthora h={"128px"} w={"128px"} orientation="vertical" />
