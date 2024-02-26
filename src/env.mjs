@@ -38,6 +38,12 @@ export const env = createEnv({
       .default("false")
       .transform((val) => val?.toLowerCase() === "true"),
 
+    DEMO_MODE: z
+      .string()
+      .optional()
+      .default("false")
+      .transform((val) => val?.toLowerCase() === "true"),
+
     OAUTH_CLIENT_ID: z.string().optional(),
     OAUTH_CLIENT_SECRET: z.string().optional(),
     OAUTH_ISSUER: z.string().optional(),
@@ -115,6 +121,7 @@ export const env = createEnv({
     MEILI_URL: process.env.MEILI_URL,
     MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
     DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT,
+    DEMO_MODE: process.env.DEMO_MODE,
 
     OAUTH_CLIENT_ID: process.env.OAUTH_CLIENT_ID,
     OAUTH_CLIENT_SECRET: process.env.OAUTH_CLIENT_SECRET,

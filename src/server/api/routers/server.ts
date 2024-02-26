@@ -1,5 +1,10 @@
 import { UserRole } from "@prisma/client";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { env } from "~/env.mjs";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { db } from "~/server/db";
 
 const isDatabaseHealthy = async () => {
@@ -24,5 +29,12 @@ export const serverRouter = createTRPCRouter({
         ? { details: { meiliSearch, database } }
         : {}),
     };
+  }),
+  config: createTRPCRouter({
+    public: publicProcedure.query(() => {
+      return {
+        demoMode: env.DEMO_MODE,
+      };
+    }),
   }),
 });
