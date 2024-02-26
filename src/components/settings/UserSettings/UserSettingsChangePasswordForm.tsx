@@ -74,7 +74,7 @@ export const UserSettingsChangePasswordForm = ({
                   <Text>
                     Your account has been registered through a third-party login
                     provider. You can set a password to be able to login with a
-                    password in the future. Can can still login through the
+                    password in the future. You can still login through the
                     connected third-party providers after setting a password.
                   </Text>
                 )}
