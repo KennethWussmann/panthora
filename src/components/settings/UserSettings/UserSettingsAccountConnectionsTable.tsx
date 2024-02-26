@@ -8,7 +8,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { DeleteIconButton } from "~/components/common/DeleteIconButton";
 import { type UserMe } from "~/server/lib/user/user";
 
 export const UserSettingsAccountConnectionsTable = ({
@@ -24,23 +23,12 @@ export const UserSettingsAccountConnectionsTable = ({
           <Thead>
             <Tr>
               <Th>Provider</Th>
-              <Th textAlign={"right"}>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
             {user.accounts.map((account, index) => (
               <Tr key={index}>
                 <Td textTransform={"capitalize"}>{account.provider}</Td>
-                <Td textAlign={"right"}>
-                  <DeleteIconButton
-                    itemName={account.provider}
-                    onConfirm={() => {
-                      //
-                    }}
-                    isDisabled={true}
-                    tooltipText={"Not implemented yet"}
-                  />
-                </Td>
               </Tr>
             ))}
           </Tbody>
