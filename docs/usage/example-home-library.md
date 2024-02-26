@@ -64,3 +64,9 @@ This home library use case illustrates Panthora's ability to:
 - **Adapt and Scale:** Whether you’re cataloging a few dozen books or a vast collection spanning thousands, Panthora adjusts to your needs.
 
 By applying Panthora to manage your home library, you transform a simple book collection into a dynamic, accessible, and shared resource for your household, enhancing the reading experience for everyone.
+
+## Use this Template
+
+You can directly import this Home Library into your Panthora using [Templates](./templates.md). The template for this use-case can be found here: [Book Library](../templates/book-library.json).
+
+See the [Template Guide](./templates.md) to learn how to use it.

@@ -37,6 +37,7 @@ import {
   useActionShortcutSearch,
 } from "./useActionShortcutSearch";
 import { EmptyListIcon } from "~/components/common/EmptyListIcon";
+import { useImportModal } from "~/components/import/ImportModal";
 
 export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { push } = useRouter();
@@ -44,6 +45,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const { team } = useTeam();
   const [loadingRouter, setLoadingRouter] = useState(false);
+  const { onOpen: openImportModal } = useImportModal();
 
   useSearchShortcut(onToggle);
 
@@ -74,6 +76,7 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
   const hasTags = results.tags.length > 0;
   const hasActions = results.actions.length > 0;
   const hasResults = hasAssets || hasAssetTypes || hasTags || hasActions;
+
   const openResult = async (result: SearchResult | ActionShortcut) => {
     setLoadingRouter(true);
     switch (result.index) {
@@ -89,6 +92,9 @@ export const NavSearchBar = ({ hideShortcut }: { hideShortcut?: true }) => {
       case "actions":
         if (result.href) {
           await push(result.href);
+        }
+        if (result.openModal === "import") {
+          openImportModal();
         }
         await result.onClick?.();
         break;

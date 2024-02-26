@@ -18,6 +18,7 @@ import { env } from "~/env.mjs";
 import { RateLimitService } from "./rate-limit/rateLimitService";
 import { Pool } from "pg";
 import { TeamCreationService } from "./team/TeamCreationService";
+import { ImportService } from "./import/importService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();
@@ -99,15 +100,22 @@ export class ApplicationContext {
     this.teamService,
     this.searchService
   );
-  public readonly teamCreationService = new TeamCreationService(
-    this.logger.child({ name: "TeamCreationService" }),
-    this.prismaClient,
-    this.searchService
-  );
   public readonly statsService = new StatsService(
     this.logger.child({ name: "StatsService" }),
     this.prismaClient,
     this.teamService
+  );
+  public readonly importService = new ImportService(
+    this.logger.child({ name: "ImportService" }),
+    this.teamService,
+    this.assetTypeService,
+    this.tagService
+  );
+  public readonly teamCreationService = new TeamCreationService(
+    this.logger.child({ name: "TeamCreationService" }),
+    this.prismaClient,
+    this.searchService,
+    this.importService
   );
 }
 

@@ -30,13 +30,16 @@ import { api } from "~/utils/api";
 import { FormFieldRequiredErrorMessage } from "../common/FormFieldRequiredErrorMessage";
 import { useRouter } from "next/router";
 import { LogoPanthora } from "../common/LogoPanthora";
+import { DemoDataHint } from "../demo/DemoDataHint";
 
 const WelcomeStep = ({ next }: StepProps) => {
   return (
     <Stack gap={8}>
       <Stack gap={6}>
         <Box>
-          <Heading size={"md"}>What is Panthora?</Heading>
+          <Heading size={"md"} mb={2}>
+            What is Panthora?
+          </Heading>
           <p>
             Panthora simplifies inventory tracking. Whether it’s pantry items,
             books, or collectibles, Panthora adapts to your requirements.
@@ -45,7 +48,9 @@ const WelcomeStep = ({ next }: StepProps) => {
           </p>
         </Box>
         <Box>
-          <Heading size={"sm"}>Assets</Heading>
+          <Heading size={"sm"} mb={2}>
+            Assets
+          </Heading>
           <p>
             Assets are all the items you want to keep track of. This could be
             the food in your pantry, the books on your shelf, or the movies in
@@ -54,7 +59,9 @@ const WelcomeStep = ({ next }: StepProps) => {
           </p>
         </Box>
         <Box>
-          <Heading size={"sm"}>Asset Types</Heading>
+          <Heading size={"sm"} mb={2}>
+            Asset Types
+          </Heading>
           <p>
             They give your assets structure. You can define what information you
             want to keep track of for each asset type. For example, you could
@@ -63,7 +70,9 @@ const WelcomeStep = ({ next }: StepProps) => {
           </p>
         </Box>
         <Box>
-          <Heading size={"sm"}>Tags</Heading>
+          <Heading size={"sm"} mb={2}>
+            Tags
+          </Heading>
           <p>
             Tags help you organize your assets. You can assign tags to your
             assets and then filter your assets by tags. For example, you could
@@ -72,7 +81,9 @@ const WelcomeStep = ({ next }: StepProps) => {
           </p>
         </Box>
         <Box>
-          <Heading size={"md"}>Ready to Begin?</Heading>
+          <Heading size={"md"} mb={2}>
+            Ready to Begin?
+          </Heading>
           <p>
             Panthora is designed to be as flexible as your needs demand.
             Let&apos;s start by setting up your first team.
@@ -127,7 +138,9 @@ const CreateTeamStep = ({ previous }: StepProps) => {
       <Stack gap={8}>
         <Stack gap={6}>
           <Box>
-            <Heading size={"md"}>Create your team</Heading>
+            <Heading size={"md"} mb={2}>
+              Create your team
+            </Heading>
             <p>
               Teams group all your assets, asset types, and tags. You can create
               as many teams as you want. For example, you could create a team
@@ -136,8 +149,7 @@ const CreateTeamStep = ({ previous }: StepProps) => {
             </p>
             <p>
               You can also invite other people to your team. This way, you can
-              share your assets with others. For example, you could create a
-              team for your family and share your pantry items with them.
+              share your assets with others.
             </p>
           </Box>
           <Stack gap={4}>
@@ -153,6 +165,7 @@ const CreateTeamStep = ({ previous }: StepProps) => {
             </FormControl>
           </Stack>
         </Stack>
+        <DemoDataHint />
         <Flex justify="space-between">
           <Button onClick={previous} variant="ghost" leftIcon={<FiArrowLeft />}>
             Back

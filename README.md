@@ -13,6 +13,7 @@
 - ✅ Collaborate on inventories with teams. [Explore collaboration](./docs/usage/teams.md)
 - ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/configuration.md#authentication)
 - ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
+- ✅ Share your Panthora structure using Templates or use AI 🤖 to generate your inventory structure. [Learn how](./docs/usage/templates.md)
 - ✅ Fully responsive design, ensuring accessibility on any device, with support for light and dark modes for optimal viewing comfort.
 
 <div align="center">
