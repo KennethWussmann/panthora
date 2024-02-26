@@ -51,7 +51,7 @@ const tagCustomFieldCreateRequest = z.object({
   ...baseCustomFieldCreateEditRequest,
 });
 
-const customFieldCreateEditRequest = z.discriminatedUnion("type", [
+export const customFieldCreateEditRequest = z.discriminatedUnion("type", [
   numberCustomFieldCreateRequest,
   stringCustomFieldCreateRequest,
   booleanCustomFieldCreateRequest,
