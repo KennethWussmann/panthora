@@ -5,6 +5,7 @@ import {
   instanceAdminProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { importRequest } from "~/server/lib/import/importRequest";
 import { teamAddMemberRequest } from "~/server/lib/team/teamAddMemberRequest";
 import { teamCreateEditRequest } from "~/server/lib/team/teamCreateEditRequest";
 import { teamListRequest } from "~/server/lib/team/teamListRequest";
@@ -138,6 +139,14 @@ export const teamRouter = createTRPCRouter({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       await ctx.applicationContext.teamService.leaveTeam(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  import: protectedProcedure
+    .input(importRequest)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.applicationContext.importService.importJSON(
         ctx.session.user.id,
         input
       );

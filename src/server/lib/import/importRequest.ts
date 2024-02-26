@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const importRequest = z.object({
+export const importRequest = z.object({
   teamId: z.string(),
   data: z.string(),
 });
