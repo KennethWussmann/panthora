@@ -1,0 +1,42 @@
+# Templates
+
+Templates are specialized JSON formats that define the structure of asset types and tags. These templates enable the sharing of Panthora use-case structures in a standardized manner, facilitating collaboration and reuse.
+
+## Writing a Template
+
+Templates are crafted in JSON format. To begin, create a new JSON file, such as `book-library.json`, with the following structure:
+
+```JSON
+{
+  "$schema": "../../schemas/import-0.2.0.schema.json",
+  "name": "Book Library",
+  "version": "1.0",
+  "description": "A concise description of the template's purpose.",
+  "author": "Your Name",
+  "tags": [],
+  "assetTypes": []
+}
+```
+
+Utilizing an editor like [VSCode](https://code.visualstudio.com/) enhances the experience by offering code completion guided by the `$schema`, aiding in the accurate development of the template.
+
+To populate the template, add tags and asset types as needed. Refer to the [example templates for inspiration](../templates/) and guidance on potential configurations.
+
+## Leveraging AI for Panthora Structure Generation
+
+For those seeking a more streamlined approach, the AI-powered generator simplifies the template creation process. By providing a brief description of the intended Panthora use-case, the AI generates a bespoke template that can be directly imported into Panthora, eliminating the need for manual JSON composition.
+
+Access the AI generator here: [Panthora AI](https://chat.openai.com/g/g-3bQ9bDq9a-panthora)
+
+## Importing Template
+
+To integrate a template into Panthora, follow these steps:
+
+1. Open Panthora.
+2. Press <kbd>Command</kbd> + <kbd>K</kbd> (or <kbd>Ctrl</kbd> + <kbd>K</kbd> on Windows) to open the command palette.
+3. Type `import` and select `Import Template`.
+4. Insert the JSON of your template and select `Import` to complete the process.
+
+## Contribute
+
+Please open Pull Requests that add more examples to showcase what you do with Panthora!
