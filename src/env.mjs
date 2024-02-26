@@ -43,6 +43,7 @@ export const env = createEnv({
       .optional()
       .default("false")
       .transform((val) => val?.toLowerCase() === "true"),
+    DEMO_TEAM_BOOTSTRAP_FILE: z.string().optional(),
 
     OAUTH_CLIENT_ID: z.string().optional(),
     OAUTH_CLIENT_SECRET: z.string().optional(),
@@ -122,6 +123,7 @@ export const env = createEnv({
     MEILI_MASTER_KEY: process.env.MEILI_MASTER_KEY,
     DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT,
     DEMO_MODE: process.env.DEMO_MODE,
+    DEMO_TEAM_BOOTSTRAP_FILE: process.env.DEMO_TEAM_BOOTSTRAP_FILE,
 
     OAUTH_CLIENT_ID: process.env.OAUTH_CLIENT_ID,
     OAUTH_CLIENT_SECRET: process.env.OAUTH_CLIENT_SECRET,

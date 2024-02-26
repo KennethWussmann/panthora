@@ -100,11 +100,6 @@ export class ApplicationContext {
     this.teamService,
     this.searchService
   );
-  public readonly teamCreationService = new TeamCreationService(
-    this.logger.child({ name: "TeamCreationService" }),
-    this.prismaClient,
-    this.searchService
-  );
   public readonly statsService = new StatsService(
     this.logger.child({ name: "StatsService" }),
     this.prismaClient,
@@ -115,6 +110,12 @@ export class ApplicationContext {
     this.teamService,
     this.assetTypeService,
     this.tagService
+  );
+  public readonly teamCreationService = new TeamCreationService(
+    this.logger.child({ name: "TeamCreationService" }),
+    this.prismaClient,
+    this.searchService,
+    this.importService
   );
 }
 
