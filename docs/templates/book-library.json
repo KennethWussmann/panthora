@@ -39,11 +39,19 @@
         { "id": "Unread", "name": "Unread", "children": [] },
         { "id": "Reading", "name": "Reading", "children": [] }
       ]
+    },
+    {
+      "id": "Loan Status",
+      "name": "Loan Status",
+      "children": [
+        { "id": "Available", "name": "Available", "children": [] },
+        { "id": "Borrowed", "name": "Borrowed", "children": [] }
+      ]
     }
   ],
   "assetTypes": [
     {
-      "name": "Books",
+      "name": "Book",
       "fields": [
         {
           "type": "STRING",
@@ -59,27 +67,49 @@
         },
         {
           "type": "STRING",
-          "name": "Genre",
-          "inputRequired": true,
-          "showInTable": true
-        },
-        {
-          "type": "NUMBER",
           "name": "ISBN",
           "inputRequired": false,
+          "showInTable": false
+        },
+        {
+          "type": "TAG",
+          "name": "Genre",
+          "parentTagId": "Genre",
+          "inputMin": 1,
+          "inputRequired": true,
           "showInTable": true
         },
         {
-          "type": "STRING",
-          "name": "Loan Status",
+          "type": "TAG",
+          "name": "Location",
+          "parentTagId": "Location",
+          "inputMax": 1,
+          "inputRequired": false,
+          "showInTable": false
+        },
+        {
+          "type": "TAG",
+          "name": "Reading Status",
+          "parentTagId": "Reading Status",
+          "inputMax": 1,
+          "inputMin": 1,
           "inputRequired": true,
           "showInTable": true
+        },
+        {
+          "type": "TAG",
+          "name": "Loan Status",
+          "parentTagId": "Loan Status",
+          "inputMax": 1,
+          "inputMin": 1,
+          "inputRequired": true,
+          "showInTable": false
         },
         {
           "type": "STRING",
           "name": "Borrower",
           "inputRequired": false,
-          "showInTable": true
+          "showInTable": false
         }
       ]
     }
