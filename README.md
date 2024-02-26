@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="./docs/assets/logo-dark-vertical.svg#gh-dark-mode-only" style="width: 30%;">
-  <img src="./docs/assets/logo-light-vertical.svg#gh-light-mode-only" style="width: 30%;">
+  <img src="./docs/assets/logo-dark-vertical.png#gh-dark-mode-only" style="width: 30%;">
+  <img src="./docs/assets/logo-light-vertical.png#gh-light-mode-only" style="width: 30%;">
   <p>
     <strong>A versatile inventory system for everything and anything.</strong>
   </p>

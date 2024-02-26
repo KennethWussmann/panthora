@@ -29,6 +29,7 @@ import { type User } from "~/server/lib/user/user";
 import { api } from "~/utils/api";
 import { FormFieldRequiredErrorMessage } from "../common/FormFieldRequiredErrorMessage";
 import { useRouter } from "next/router";
+import { LogoPanthora } from "../common/LogoPanthora";
 
 const WelcomeStep = ({ next }: StepProps) => {
   return (
@@ -201,10 +202,10 @@ export const UserOnboarding = ({ user }: { user: User }) => {
   });
   const stepProps = { user, next: goToNext, previous: goToPrevious };
   return (
-    <Stack gap={4}>
-      <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-        <Heading size={"lg"}>Panthora</Heading>
-      </Stack>
+    <Stack gap={8}>
+      <Flex justifyContent={"center"}>
+        <LogoPanthora h={"192px"} w={"192px"} orientation="vertical" />
+      </Flex>
       <Stepper index={activeStep}>
         {steps.map((step, index) => (
           <Step key={index}>

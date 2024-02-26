@@ -1,4 +1,4 @@
-import { HStack, Select, Text, type SelectProps } from "@chakra-ui/react";
+import { Select, Flex, type SelectProps } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useTeam } from "~/lib/SelectedTeamProvider";
 
@@ -19,13 +19,10 @@ export const NavTeamSelector = ({ w = "180px" }: Pick<SelectProps, "w">) => {
   }
 
   return (
-    <HStack justifyContent={"space-between"} w={"full"}>
-      <Text color={"gray.400"} fontWeight={"bold"}>
-        /
-      </Text>
+    <Flex justifyContent={"space-between"} alignItems={"center"} w={w}>
       <Select
         variant={"outline"}
-        w={w}
+        w={"full"}
         onChange={(e) => setTeam(teams.find((t) => t.id === e.target.value))}
       >
         {teams.map((t) => (
@@ -34,6 +31,6 @@ export const NavTeamSelector = ({ w = "180px" }: Pick<SelectProps, "w">) => {
           </option>
         ))}
       </Select>
-    </HStack>
+    </Flex>
   );
 };
