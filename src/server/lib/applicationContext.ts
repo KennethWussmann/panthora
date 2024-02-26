@@ -18,7 +18,7 @@ import { env } from "~/env.mjs";
 import { RateLimitService } from "./rate-limit/rateLimitService";
 import { Pool } from "pg";
 import { TeamCreationService } from "./team/TeamCreationService";
-import { ImportService } from "./import/ImportService";
+import { ImportService } from "./import/importService";
 
 export class ApplicationContext {
   public readonly prismaClient = new PrismaClient();

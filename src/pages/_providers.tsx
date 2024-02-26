@@ -4,6 +4,7 @@ import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { ImportModal } from "~/components/import/ImportModal";
 import { SelectedAssetProvider } from "~/lib/SelectedAssetsProvider";
 import { SelectedTeamProvider } from "~/lib/SelectedTeamProvider";
 import { UserProvider } from "~/lib/UserProvider";
@@ -30,7 +31,9 @@ function Providers({
         <SessionProvider session={session}>
           <UserProvider>
             <SelectedTeamProvider>
-              <SelectedAssetProvider>{children}</SelectedAssetProvider>
+              <SelectedAssetProvider>
+                <ImportModal>{children}</ImportModal>
+              </SelectedAssetProvider>
             </SelectedTeamProvider>
           </UserProvider>
         </SessionProvider>

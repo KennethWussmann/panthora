@@ -3,12 +3,15 @@ import { signOut } from "next-auth/react";
 import { useUser } from "~/lib/UserProvider";
 import { useTeamMembershipRole } from "~/lib/useTeamMembershipRole";
 
+type Modal = "import";
+
 export type ActionShortcut = {
   index: "actions";
   name: string;
   searchTerms: string[];
   href?: string;
   onClick?: VoidFunction | (() => Promise<void>);
+  openModal?: Modal;
   requiresInstanceAdmin?: boolean;
   requiresTeamAdmin?: boolean;
 };
@@ -92,6 +95,13 @@ const actions: ActionShortcut[] = [
     searchTerms: ["settings", "admin", "administrative", "user", "users"],
     href: "/settings/administration",
     requiresInstanceAdmin: true,
+  },
+  {
+    index: "actions",
+    name: "Import Template",
+    searchTerms: ["import", "template", "json"],
+    openModal: "import",
+    requiresTeamAdmin: true,
   },
 ];
 

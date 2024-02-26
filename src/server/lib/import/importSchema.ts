@@ -2,7 +2,6 @@ import { z } from "zod";
 import { FieldType } from "@prisma/client";
 
 const baseCustomFieldCreateEditRequest = {
-  id: z.string(),
   name: z.string(),
   inputRequired: z.boolean(),
   showInTable: z.boolean(),
@@ -78,13 +77,14 @@ const assetTypeBase = z.object({
   fields: z.array(field),
 });
 type AssetType = z.infer<typeof assetTypeBase> & {
-  children: AssetType[];
+  children?: AssetType[];
 };
 const assetType: z.ZodType<AssetType> = assetTypeBase.extend({
-  children: z.lazy(() => z.array(assetType)),
+  children: z.lazy(() => z.array(assetType).optional()),
 });
 
 export const importSchema = z.object({
+  $schema: z.string().optional(),
   name: z.string().min(1).max(250),
   version: z.string().min(1).max(10),
   description: z.string().min(0).max(1000).optional(),

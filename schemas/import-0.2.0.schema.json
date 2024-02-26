@@ -1,6 +1,9 @@
 {
   "type": "object",
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "name": {
       "type": "string",
       "minLength": 1,
@@ -75,9 +78,6 @@
                     "inputMax": {
                       "type": "number"
                     },
-                    "id": {
-                      "type": "string"
-                    },
                     "name": {
                       "type": "string"
                     },
@@ -90,7 +90,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -110,9 +109,6 @@
                     "inputMax": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/inputMax"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -125,7 +121,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -139,9 +134,6 @@
                       "type": "string",
                       "const": "BOOLEAN"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -154,7 +146,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -168,9 +159,6 @@
                       "type": "string",
                       "const": "DATE"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -183,7 +171,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -197,9 +184,6 @@
                       "type": "string",
                       "const": "TIME"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -212,7 +196,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -226,9 +209,6 @@
                       "type": "string",
                       "const": "DATETIME"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -241,7 +221,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -264,9 +243,6 @@
                     "inputMax": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/inputMax"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -279,7 +255,6 @@
                   },
                   "required": [
                     "type",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -302,9 +277,6 @@
                     "inputMax": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/inputMax"
                     },
-                    "id": {
-                      "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/id"
-                    },
                     "name": {
                       "$ref": "#/properties/assetTypes/items/properties/fields/items/anyOf/0/properties/name"
                     },
@@ -318,7 +290,6 @@
                   "required": [
                     "type",
                     "parentTagId",
-                    "id",
                     "name",
                     "inputRequired",
                     "showInTable"
@@ -337,8 +308,7 @@
         },
         "required": [
           "name",
-          "fields",
-          "children"
+          "fields"
         ],
         "additionalProperties": false
       }

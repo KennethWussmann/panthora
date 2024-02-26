@@ -1,0 +1,87 @@
+{
+  "$schema": "../../schemas/import-0.2.0.schema.json",
+  "name": "Book Library Asset",
+  "version": "1.0",
+  "description": "Use Panthora as your book library.",
+  "author": "Panthora",
+  "tags": [
+    {
+      "id": "Genre",
+      "name": "Genre",
+      "children": [
+        { "id": "Fiction", "name": "Fiction", "children": [] },
+        { "id": "Non-Fiction", "name": "Non-Fiction", "children": [] },
+        { "id": "Mystery", "name": "Mystery", "children": [] },
+        {
+          "id": "Science Fiction",
+          "name": "Science Fiction",
+          "children": [
+            { "id": "Dystopian", "name": "Dystopian", "children": [] },
+            { "id": "Space Opera", "name": "Space Opera", "children": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Location",
+      "name": "Location",
+      "children": [
+        { "id": "Living Room", "name": "Living Room", "children": [] },
+        { "id": "Bedroom", "name": "Bedroom", "children": [] },
+        { "id": "Study", "name": "Study", "children": [] }
+      ]
+    },
+    {
+      "id": "Reading Status",
+      "name": "Reading Status",
+      "children": [
+        { "id": "Read", "name": "Read", "children": [] },
+        { "id": "Unread", "name": "Unread", "children": [] },
+        { "id": "Reading", "name": "Reading", "children": [] }
+      ]
+    }
+  ],
+  "assetTypes": [
+    {
+      "name": "Books",
+      "fields": [
+        {
+          "type": "STRING",
+          "name": "Title",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Author",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Genre",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "NUMBER",
+          "name": "ISBN",
+          "inputRequired": false,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Loan Status",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Borrower",
+          "inputRequired": false,
+          "showInTable": true
+        }
+      ]
+    }
+  ]
+}
