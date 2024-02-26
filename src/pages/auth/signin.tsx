@@ -6,8 +6,8 @@ import {
   Button,
   Container,
   Divider,
+  Flex,
   HStack,
-  Heading,
   Stack,
   Text,
   useBoolean,
@@ -25,6 +25,7 @@ import BlankLayout from "~/components/layout/BlankLayout";
 import { CredentialsLoginForm } from "../../components/auth/CredentialsLoginForm";
 import { CredentialsRegisterForm } from "../../components/auth/CredentialsRegisterForm";
 import { FiLogIn, FiUserPlus } from "react-icons/fi";
+import { LogoPanthora } from "~/components/common/LogoPanthora";
 
 const providerIcons: Record<string, ReactElement> = {
   cognito: <FaAws />,
@@ -71,7 +72,9 @@ export default function SignIn({
         <Stack spacing="8">
           <Stack spacing="6">
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-              <Heading size={"lg"}>Panthora</Heading>
+              <Flex justify={"center"}>
+                <LogoPanthora h={"128px"} w={"128px"} orientation="vertical" />
+              </Flex>
               {credentialsForm === "login" && (
                 <Text color="fg.muted">Login with your credentials</Text>
               )}
@@ -172,7 +175,7 @@ export default function SignIn({
                     }}
                     variant={"outline"}
                     w={"full"}
-                    leftIcon={providerIcons[provider.id]}
+                    leftIcon={providerIcons[provider.id] ?? <FiLogIn />}
                     loadingText={provider.name}
                     isLoading={autoSignIn || isLoading}
                   >
