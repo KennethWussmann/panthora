@@ -16,7 +16,8 @@
 - ✅ Fully responsive design, ensuring accessibility on any device, with support for light and dark modes for optimal viewing comfort.
 
 <div align="center">
-  <img src="./docs/assets/cover.png" style="width: 80%;"/>
+  <img src="./docs/assets/cover-dark.png#gh-dark-mode-only" style="width: 80%;"/>
+  <img src="./docs/assets/cover-light.png#gh-light-mode-only" style="width: 80%;"/>
 </div>
 
 ## Getting Started
