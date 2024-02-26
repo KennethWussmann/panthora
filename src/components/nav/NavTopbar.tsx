@@ -1,7 +1,6 @@
 import {
   Box,
   Container,
-  HStack,
   Spacer,
   VStack,
   useBreakpointValue,
@@ -9,14 +8,14 @@ import {
   Divider,
   useOutsideClick,
   useColorModeValue,
+  Flex,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import { Logo } from "./Logo";
 import { NavItems } from "./NavItems";
 import { NavSearchBar } from "./search/NavSearchBar";
 import { NavLogout } from "./NavLogout";
-import { NavTeamSelector } from "./NavTeamSelector";
+import { NavLogoTeamSelector } from "./logo-team-selector";
 
 export const NavTopbar = () => {
   const navRef = useRef<HTMLDivElement>(null);
@@ -40,9 +39,8 @@ export const NavTopbar = () => {
       bg={useColorModeValue("gray.100", "gray.900")}
     >
       <Container maxW="container.xl">
-        <HStack justifyContent={"space-between"}>
-          <Logo />
-          <NavTeamSelector w={"full"} />
+        <Flex justifyContent={"space-between"} alignItems={"center"} gap={1}>
+          <NavLogoTeamSelector />
           <Spacer />
           <NavSearchBar hideShortcut />
           <Spacer />
@@ -52,7 +50,7 @@ export const NavTopbar = () => {
             aria-label="Open or close menu"
             onClick={() => setMenuOpen(!menuOpen)}
           />
-        </HStack>
+        </Flex>
         {!isDesktop && menuOpen && (
           <VStack gap={2} align={"stretch"}>
             <Spacer />

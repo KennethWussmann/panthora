@@ -1,25 +1,16 @@
 import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { NavItems } from "./NavItems";
-import { Logo } from "./Logo";
 import { NavSearchBar } from "./search/NavSearchBar";
 import { NavLogout } from "./NavLogout";
-import { NavTeamSelector } from "./NavTeamSelector";
 import Link from "next/link";
+import { NavLogoTeamSelector } from "./logo-team-selector/NavLogoTeamSelector";
 
 export const NavSidebar = () => {
   return (
-    <Flex
-      maxW="auto"
-      py={{ base: "6", sm: "8" }}
-      px={{ base: "4", sm: "6" }}
-      bg={useColorModeValue("gray.100", "gray.900")}
-    >
+    <Flex maxW="auto" p={4} bg={useColorModeValue("gray.100", "gray.900")}>
       <Stack justify="space-between">
-        <Stack spacing={{ base: "5", sm: "6" }} shouldWrapChildren>
-          <Flex justify={"space-between"}>
-            <Logo />
-            <NavTeamSelector />
-          </Flex>
+        <Stack spacing={6} shouldWrapChildren>
+          <NavLogoTeamSelector />
           <NavSearchBar />
           <Stack>
             <NavItems />
