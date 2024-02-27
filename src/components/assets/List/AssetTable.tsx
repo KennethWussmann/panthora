@@ -21,6 +21,7 @@ import {
   MenuItem,
   Tag,
   Divider,
+  TableContainer,
 } from "@chakra-ui/react";
 import { FiChevronDown, FiPlus, FiPrinter } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
@@ -170,52 +171,54 @@ export const AssetTable: React.FC = () => {
         </Alert>
       )}
       {assets && assets.length > 0 && (
-        <Table variant="simple" size={"sm"}>
-          <Thead>
-            <Tr>
-              <Th>
-                <Checkbox
-                  isChecked={selectedAssets.length === assets?.length}
-                  onChange={() => {
-                    if (selectedAssets.length === assets?.length) {
-                      setSelectedAssets([]);
+        <TableContainer>
+          <Table variant="simple" size={"sm"}>
+            <Thead>
+              <Tr>
+                <Th>
+                  <Checkbox
+                    isChecked={selectedAssets.length === assets?.length}
+                    onChange={() => {
+                      if (selectedAssets.length === assets?.length) {
+                        setSelectedAssets([]);
+                      } else {
+                        setSelectedAssets(assets ?? []);
+                      }
+                    }}
+                  />
+                </Th>
+                <Th>Created at</Th>
+                {uniqueFieldsToShow.map((field) => (
+                  <Th key={field.id}>{field.name}</Th>
+                ))}
+                <Th textAlign="right">Action</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {assets?.map((asset) => (
+                <AssetRow
+                  key={asset.id}
+                  asset={asset}
+                  uniqueFieldsToShow={uniqueFieldsToShow}
+                  refetchAssets={refetchAssets}
+                  selected={selectedAssets.includes(asset)}
+                  setSelected={(selected) => {
+                    if (selected) {
+                      setSelectedAssets((selected: AssetWithFields[]) => [
+                        ...selected,
+                        asset,
+                      ]);
                     } else {
-                      setSelectedAssets(assets ?? []);
+                      setSelectedAssets((selected) =>
+                        selected.filter((a) => a.id !== asset.id)
+                      );
                     }
                   }}
                 />
-              </Th>
-              <Th>Created at</Th>
-              {uniqueFieldsToShow.map((field) => (
-                <Th key={field.id}>{field.name}</Th>
               ))}
-              <Th textAlign="right">Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {assets?.map((asset) => (
-              <AssetRow
-                key={asset.id}
-                asset={asset}
-                uniqueFieldsToShow={uniqueFieldsToShow}
-                refetchAssets={refetchAssets}
-                selected={selectedAssets.includes(asset)}
-                setSelected={(selected) => {
-                  if (selected) {
-                    setSelectedAssets((selected: AssetWithFields[]) => [
-                      ...selected,
-                      asset,
-                    ]);
-                  } else {
-                    setSelectedAssets((selected) =>
-                      selected.filter((a) => a.id !== asset.id)
-                    );
-                  }
-                }}
-              />
-            ))}
-          </Tbody>
-        </Table>
+            </Tbody>
+          </Table>
+        </TableContainer>
       )}
     </Stack>
   );

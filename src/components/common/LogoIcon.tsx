@@ -1,10 +1,8 @@
-import { Box, useToken } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
-export const LogoIcon = ({ size = "128px" }: { size?: string | number }) => {
-  const [resolvedSize] = useToken("sizes", size.toString(), size.toString());
-
+export const LogoIcon = ({ size = "128px" }: { size?: string }) => {
   return (
-    <Box width={resolvedSize} height={resolvedSize}>
+    <Box width={size} height={size}>
       <svg
         fill="none"
         height="100%"
