@@ -9,3 +9,4 @@
    - [Tags](./usage/tags.md)
    - [Assets](./usage/assets.md)
    - [Teams](./usage/teams.md)
+   - [Templates](./usage/templates.md)
