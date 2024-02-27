@@ -5,11 +5,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { db } from "~/server/db";
+import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
 const isDatabaseHealthy = async () => {
   try {
-    await db.$queryRaw`SELECT 1`;
+    await defaultApplicationContext.prismaClient.$queryRaw`SELECT 1`;
     return true;
   } catch (e) {
     return false;

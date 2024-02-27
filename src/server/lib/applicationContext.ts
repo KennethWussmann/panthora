@@ -21,7 +21,12 @@ import { TeamCreationService } from "./team/TeamCreationService";
 import { ImportService } from "./import/importService";
 
 export class ApplicationContext {
-  public readonly prismaClient = new PrismaClient();
+  public readonly prismaClient = new PrismaClient({
+    log:
+      process.env.LOG_LEVEL === "debug"
+        ? ["query", "error", "warn"]
+        : ["error"],
+  });
   public readonly logger = createLogger({});
   private readonly meiliSearch = new MeiliSearch({
     host: process.env.MEILI_URL ?? "http://127.0.0.1:7700",

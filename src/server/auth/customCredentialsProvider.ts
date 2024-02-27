@@ -1,5 +1,4 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { db } from "../db";
 import { verifyPassword } from "../lib/utils/passwordUtils";
 import { defaultApplicationContext } from "../lib/applicationContext";
 import { sanitizeEmail } from "../lib/utils/emailUtils";
@@ -13,7 +12,7 @@ export const CustomCredentialsProvider = () =>
       password: { label: "Password", type: "password" },
     },
     async authorize(credentials, req): Promise<User | null> {
-      const { rateLimitService } = defaultApplicationContext;
+      const { rateLimitService, userService } = defaultApplicationContext;
 
       if (!credentials) {
         return null;
@@ -39,11 +38,12 @@ export const CustomCredentialsProvider = () =>
       }
 
       try {
-        const user = await db.user.findFirst({
-          where: {
-            email,
-          },
-        });
+        const user = await userService.findUserByEmail(email);
+
+        if (!user) {
+          await rateLimitService.consume("login_failed_by_ip", ip);
+          return null;
+        }
 
         const isLoggedIn =
           user?.password &&
