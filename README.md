@@ -13,13 +13,18 @@
 - ✅ Collaborate on inventories with teams. [Explore collaboration](./docs/usage/teams.md)
 - ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/configuration.md#authentication)
 - ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
-- ✅ Share your Panthora structure using Templates or use AI 🤖 to generate your inventory structure. [Learn how](./docs/usage/templates.md)
+- ✅ Share your Panthora structure using templates. [Learn how](./docs/usage/templates.md)
+- ✅ Leverage AI 🤖 to generate your inventory structure. [Learn how](./docs/usage/templates.md#leveraging-ai-for-panthora-structure-generation)
 - ✅ Fully responsive design, ensuring accessibility on any device, with support for light and dark modes for optimal viewing comfort.
 
 <div align="center">
   <img src="./docs/assets/cover-dark.png#gh-dark-mode-only" style="width: 80%;"/>
   <img src="./docs/assets/cover-light.png#gh-light-mode-only" style="width: 80%;"/>
 </div>
+
+## Demo
+
+Here is a demo instance of Panthora to play around with: [https://demo.panthora.app](https://demo.panthora.app)
 
 ## Getting Started
 
