@@ -8,6 +8,7 @@ import { type RateLimitService } from "../rate-limit/rateLimitService";
 import { type UserMe, type User } from "./user";
 import { type UserListRequest } from "./userListRequest";
 import { type UserChangePasswordRequest } from "./userChangePasswordRequest";
+import { env } from "~/env.mjs";
 
 export class UserService {
   constructor(
@@ -89,6 +90,7 @@ export class UserService {
     remoteAddress: string,
     request: UserRegisterRequest
   ): Promise<User> => {
+    const isDemoMode = env.DEMO_MODE;
     const { email, password } = request;
     const sanitizedEmail = sanitizeEmail(email);
     const exists = await this.prisma.user.count({
@@ -138,7 +140,8 @@ export class UserService {
       data: {
         email: sanitizedEmail,
         password: await hashPassword(password),
-        role: totalUserCount === 0 ? UserRole.ADMIN : UserRole.USER,
+        role:
+          totalUserCount === 0 && !isDemoMode ? UserRole.ADMIN : UserRole.USER,
       },
     });
     this.logger.info("New user registered", {
