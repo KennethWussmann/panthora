@@ -9,46 +9,13 @@
 
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { ApplicationContext } from "~/server/lib/applicationContext";
+import { defaultApplicationContext } from "~/server/lib/applicationContext";
 
 import { getServerAuthSession } from "~/server/auth/auth";
-import { db } from "~/server/db";
 import { type RateLimitType } from "../lib/rate-limit/rateLimitService";
 import { UserRole } from "@prisma/client";
-
-/**
- * 1. CONTEXT
- *
- * This section defines the "contexts" that are available in the backend API.
- *
- * These allow you to access things when processing a request, like the database, the session, etc.
- */
-
-interface CreateContextOptions {
-  session: Session | null;
-  remoteAddress: string;
-  applicationContext: ApplicationContext;
-}
-
-/**
- * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
- * it from here.
- *
- * Examples of things you may need it for:
- * - testing, so we don't have to mock Next.js' req/res
- * - tRPC's `createSSGHelpers`, where we don't have req/res
- *
- * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
- */
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
-  return {
-    ...opts,
-    db,
-  };
-};
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -77,11 +44,11 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     });
   }
 
-  return createInnerTRPCContext({
+  return {
     session,
     remoteAddress,
-    applicationContext: new ApplicationContext(),
-  });
+    applicationContext: defaultApplicationContext,
+  };
 };
 
 /**

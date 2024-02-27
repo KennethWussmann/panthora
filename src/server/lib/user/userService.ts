@@ -40,6 +40,13 @@ export class UserService {
     });
   };
 
+  public findUserByEmail = async (email: string) => {
+    const user = await this.prisma.user.findUnique({
+      where: { email: sanitizeEmail(email) },
+    });
+    return user;
+  };
+
   public changePassword = async (
     userId: string,
     input: UserChangePasswordRequest
