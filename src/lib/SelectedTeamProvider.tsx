@@ -64,10 +64,6 @@ export const SelectedTeamProvider: React.FC<SelectedTeamProviderProps> = ({
     if (teams && (!team || !teams.map((t) => t.id).includes(team.id))) {
       setTeam(teams[0]);
     }
-    if (teams && teams.length === 0 && asPath !== "/onboarding") {
-      console.log("Redirecting to onboarding");
-      void push("/onboarding");
-    }
   }, [teamData, team, setTeam, teams, push, asPath]);
 
   useEffect(() => {

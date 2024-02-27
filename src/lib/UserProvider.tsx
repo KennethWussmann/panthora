@@ -32,10 +32,10 @@ type UserProviderProps = {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const { push } = useRouter();
   const [currentUser, setCurrentUser] = useState<UserMe | undefined>(undefined);
+  const [isLoading, setLoading] = useState(true);
   const {
     data: user,
     refetch,
-    isLoading,
     isError,
     isRefetchError,
   } = api.user.me.useQuery();
@@ -46,6 +46,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     } else if (user) {
       setCurrentUser(user);
     }
+    setLoading(false);
   }, [user, isError, isRefetchError, push]);
 
   return (
