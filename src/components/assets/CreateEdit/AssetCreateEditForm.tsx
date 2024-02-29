@@ -97,6 +97,7 @@ export const AssetCreateEditForm = ({
   const { data: assetType, isLoading: isLoadingAssetType } =
     api.assetType.getWithFields.useQuery(selectedAssetTypeId, {
       enabled: !!selectedAssetTypeId,
+      refetchOnWindowFocus: false,
     });
 
   const hasNoFields = assetType?.fields?.length === 0;
