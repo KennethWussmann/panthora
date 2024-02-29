@@ -54,7 +54,7 @@ const rateLimitBlockDurations: Record<
     blockDuration: 60 * 60 * 24, // Block for 1 day, if 100 wrong attempts per day
   },
   request: {
-    points: 100,
+    points: 500,
     duration: 60,
   },
 };
