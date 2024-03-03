@@ -78,6 +78,7 @@ volumes:
   search:
 ```
 
-## Configuration
+## Further reading
 
-For details about configurating authentication and features, see the [Configuration Guide](./configuration.md)
+1. [Authentication Guide](./authentication.md)
+2. [Configuration Guide](./configuration.md)

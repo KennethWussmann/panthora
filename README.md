@@ -11,7 +11,7 @@
 - ✅ Track all your items with ease. [Learn how](./docs/usage/getting-started.md)
 - ✅ Print customizable labels for efficient organization. [Start printing](./docs/usage/label-printing.md)
 - ✅ Collaborate on inventories with teams. [Explore collaboration](./docs/usage/teams.md)
-- ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/configuration.md#authentication)
+- ✅ Secure access with Single Sign-On (SSO). [Set up SSO](./docs/hosting/authentication.md#sso)
 - ✅ Leverage advanced search capabilities through [MeiliSearch](https://www.meilisearch.com/)
 - ✅ Share your Panthora structure using templates. [Learn how](./docs/usage/templates.md)
 - ✅ Leverage AI 🤖 to generate your inventory structure. [Learn how](./docs/usage/templates.md#leveraging-ai-for-panthora-structure-generation)
