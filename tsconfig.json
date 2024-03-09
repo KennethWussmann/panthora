@@ -23,7 +23,7 @@
     "plugins": [{ "name": "next" }]
   },
   "include": [
-    ".eslintrc.cjs",
+    "packages/app/.eslintrc.cjs",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
