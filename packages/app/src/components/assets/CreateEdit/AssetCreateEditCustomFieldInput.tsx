@@ -88,7 +88,7 @@ export const AssetCreateEditCustomFieldInput = ({
   const { data: tags } = api.tag.list.useQuery(
     {
       teamId: team!.id,
-      parentId: customField.tagId,
+      parentId: customField.tagId ?? "",
     },
     {
       enabled: team && customField.fieldType === FieldType.TAG,

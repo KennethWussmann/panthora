@@ -38,7 +38,7 @@ export const AssetTypeCreateEditForm = ({
     formState: { errors, isDirty },
   } = useForm<AssetTypeCreateRequestWithTemporaryFields>({
     defaultValues: assetType
-      ? {
+      ? ({
           id: assetType.id,
           name: assetType.name,
           parentId: assetType.parentId,
@@ -51,7 +51,7 @@ export const AssetTypeCreateEditForm = ({
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             })
           ),
-        }
+        } as unknown as AssetTypeCreateRequestWithTemporaryFields)
       : {
           fields: [],
         },

@@ -82,7 +82,7 @@ export const LabelPDF = ({
   labelTemplate?: LabelTemplate;
 }) => {
   const { data: defaultLabelTemplate } = api.labelTemplate.default.useQuery({
-    teamId: assets[0].teamId!,
+    teamId: assets[0]!.teamId!,
   });
   const template = labelTemplate ?? defaultLabelTemplate;
   const iframeRef = useRef<HTMLIFrameElement>(null);

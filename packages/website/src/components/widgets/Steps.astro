@@ -1,0 +1,82 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Timeline from '~/components/ui/Timeline.astro';
+import Headline from '~/components/ui/Headline.astro';
+import Image from '~/components/common/Image.astro';
+import type { Steps } from '~/types';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  items = [],
+  imageLight = await Astro.slots.render('image'),
+  imageDark = await Astro.slots.render('image'),
+  isReversed = false,
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props as Steps;
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-5xl ${classes?.container ?? ''}`} bg={bg}>
+  <div
+    class:list={['flex flex-col gap-8 md:gap-12', { 'md:flex-row-reverse': isReversed }, { 'md:flex-row': imageLight }]}
+  >
+    <div class:list={['md:py-4 md:self-center', { 'md:basis-1/2': imageLight }, { 'w-full': !imageLight }]}>
+      <Headline
+        title={title}
+        subtitle={subtitle}
+        tagline={tagline}
+        classes={{
+          container: 'text-left rtl:text-right',
+          title: 'text-3xl lg:text-4xl',
+          ...((classes?.headline as {}) ?? {}),
+        }}
+      />
+      <Timeline items={items} classes={classes?.items as {}} />
+    </div>
+    {
+      imageLight && (
+        <div class="relative md:basis-1/2 dark:hidden">
+          {typeof imageLight === 'string' ? (
+            <Fragment set:html={imageLight} />
+          ) : (
+            <Image
+              class="inset-0 object-cover object-top w-full rounded-md md:absolute md:h-full"
+              widths={[400, 768]}
+              sizes="(max-width: 768px) 100vw, 432px"
+              width={432}
+              height={768}
+              layout="cover"
+              src={imageLight?.src}
+              alt={imageLight?.alt || ''}
+            />
+          )}
+        </div>
+      )
+    }
+    {
+      imageDark && (
+        <div class="relative md:basis-1/2 hidden dark:block">
+          {typeof imageDark === 'string' ? (
+            <Fragment set:html={imageDark} />
+          ) : (
+            <Image
+              class="inset-0 object-cover object-top w-full rounded-md md:absolute md:h-full"
+              widths={[400, 768]}
+              sizes="(max-width: 768px) 100vw, 432px"
+              width={432}
+              height={768}
+              layout="cover"
+              src={imageDark?.src}
+              alt={imageDark?.alt || ''}
+            />
+          )}
+        </div>
+      )
+    }
+  </div>
+</WidgetWrapper>

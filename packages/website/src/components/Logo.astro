@@ -1,0 +1,8 @@
+---
+import logoDark from '~/assets/images/logo-dark-horizontal.png';
+import logoLight from '~/assets/images/logo-light-horizontal.png';
+import Image from '~/components/common/Image.astro';
+---
+
+<Image class="hidden dark:block" loading="eager" width={200} alt="Panthora logo" src={logoDark.src} />
+<Image class="dark:hidden" loading="eager" width={200} alt="Panthora logo" src={logoLight.src} />

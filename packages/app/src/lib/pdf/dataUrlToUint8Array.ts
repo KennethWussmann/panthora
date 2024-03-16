@@ -1,5 +1,8 @@
 export const dataURLtoUint8Array = (dataURL: string) => {
   const base64String = dataURL.split(",")[1];
+  if (!base64String) {
+    throw new Error("Invalid data URL");
+  }
   const binaryString = atob(base64String);
   const len = binaryString.length;
   const bytes = new Uint8Array(len);
