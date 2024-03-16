@@ -3,6 +3,10 @@ description: Install Node, pnpm and dependencies
 runs:
   using: "composite"
   steps:
+    - name: Setup Turbo Cache
+      uses: dtinth/setup-github-actions-caching-for-turbo@v1
+      with:
+        cache-prefix: panthora_
     - name: Install Node
       uses: actions/setup-node@v2
       with:
