@@ -1,0 +1,213 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Features from '~/components/widgets/Features.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Content from '~/components/widgets/Content.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import { getPermalink } from '~/utils/permalinks';
+
+const metadata = {
+  title: 'Panthora',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+
+  <Hero
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Get started',
+        href: getPermalink('/docs'),
+      },
+      { text: 'Demo', href: 'https://demo.panthora.app', target: '_blank' },
+    ]}
+    imageLight={{ src: '~/assets/images/cover-light.png', alt: 'Panthora Screenshot' }}
+    imageDark={{ src: '~/assets/images/cover-dark.png', alt: 'Panthora Screenshot' }}
+  >
+    <Fragment slot="title">Panthora keeps track of everything</Fragment>
+
+    <Fragment slot="subtitle">
+      Untangle the mess. <span class="font-semibold">Free and open-source.</span>
+      Streamline your inventory process and management of anything and everything.
+    </Fragment>
+  </Hero>
+
+  <!-- Features Widget *************** -->
+
+  <Features
+    id="features"
+    tagline="Features"
+    title="Versatile and flexible from the ground up"
+    subtitle="Panthora is designed to adapt to your needs. "
+    items={[
+      {
+        title: 'Your Needs Front and Center',
+        description:
+          'The structure of your inventory is defined by you. Create custom asset types and add custom fields to capture the information that is important to you.',
+        icon: 'tabler:user-scan',
+      },
+      {
+        title: 'Powerful Search',
+        description:
+          'The heart of a good inventory management system is the ability to quickly find what you are looking for. Panthora has a powerful search engine powered by MeiliSearch that allows you to find what you are looking for quickly and easily.',
+        icon: 'tabler:search',
+      },
+      {
+        title: 'Collaboration',
+        description:
+          'Panthora is not only designed for individuals, but also for teams. You can easily collaborate with your team or family members and manage your inventory together.',
+        icon: 'tabler:users',
+      },
+      {
+        title: 'Print Labels',
+        description:
+          'Your inventory is only as good as the data you have. Panthora allows you to print labels for your assets, so you can easily identify them and keep track of them.',
+        icon: 'tabler:tags',
+      },
+      {
+        title: 'Responsive Design',
+        description:
+          'Designed to work on any device, Panthora is a responsive web application that can be used on your desktop, tablet or phone. Wherever you are, Panthora is there for you.',
+        icon: 'tabler:device-mobile-star',
+      },
+      {
+        title: 'Single Sign-On',
+        description:
+          'Panthora supports Single Sign-On (SSO) with OpenID Connect. You can easily integrate Panthora with your existing identity provider and manage access to Panthora with your existing accounts.',
+        icon: 'tabler:login-2',
+      },
+    ]}
+  />
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    isReversed
+    id="use-cases"
+    tagline="Use Cases"
+    title="Adapting to your needs"
+    items={[
+      {
+        title: 'Your Digital Book Collection',
+        description: 'Keep track of all the books you own. Track whom you lent them to and when they are due back.',
+      },
+      {
+        title: 'Your Household Inventory',
+        description:
+          'Keep track of all the things you own. From your furniture to your electronics, Panthora can help you keep track of everything.',
+      },
+      {
+        title: 'Your Digital Fridge and Pantry',
+        description:
+          'Keep track of all the food you have. Know what you have and when it expires. Never let food go to waste again.',
+      },
+    ]}
+    image={{
+      src: '~/assets/images/graphic-use-cases.png',
+      alt: 'Logo of Panthora on top of icons',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Designed to be flexible</h3>
+      You decide how to use Panthora. It is designed to be flexible and can be used for a wide range of applications. Whether
+      you are managing your personal collection, your company's inventory, or anything in between, Panthora can be adapted
+      to your needs.
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Steps Widget ****************** -->
+
+  <Steps
+    title="What are you waiting for?"
+    items={[
+      {
+        title: 'Step 1: <span class="font-medium">Deploy</span>',
+        description:
+          "Use the provided Docker image to deploy Panthora on your server. It's easy and quick, and you'll be up and running in no time.",
+        icon: 'tabler:brand-docker',
+      },
+      {
+        title: 'Step 2: <span class="font-medium">Plan Your Inventory</em>',
+        description:
+          "Create Asset Types that define the structure of your inventory. Add custom fields to capture the information that's important to you.",
+        icon: 'tabler:category-plus',
+      },
+      {
+        title: 'Step 3: <span class="font-medium">Add Assets</span>',
+        description:
+          'Add assets to your inventory. Panthora makes it easy to add and manage your assets, and you can add as many as you need.',
+        icon: 'tabler:cube-plus',
+      },
+      {
+        title: 'Mess Untangled!',
+        icon: 'tabler:check',
+      },
+    ]}
+    imageLight={{
+      src: '~/assets/images/graphic-deploy-light.png',
+      alt: 'Illustration of a cloud and storage boxes',
+    }}
+    imageDark={{
+      src: '~/assets/images/graphic-deploy-dark.png',
+      alt: 'Illustration of a cloud and storage boxes',
+    }}
+  />
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    id="faq"
+    title="Frequently Asked Questions"
+    tagline="FAQs"
+    classes={{ container: 'max-w-6xl' }}
+    items={[
+      {
+        title: 'How can I get started?',
+        description:
+          'Read our documentation to get started. We have a step-by-step guide that will help you deploy Panthora on your server and get started with managing your inventory.',
+      },
+      {
+        title: 'Can I use it for ...?',
+        description:
+          'Yes! Panthora is designed to be flexible and can be used for a wide range of applications. Whether you are managing your personal collection, your company’s inventory, or anything in between, Panthora can be adapted to your needs.',
+      },
+      {
+        title: 'Where can I see it in action?',
+        description:
+          'There is a <a class="hover:text-link dark:hover:text-white text-link font-bold" href="https://demo.panthora.app" target="_blank">demo instance of Panthora</a> that you can use to see it in action. Play around with it and see if it\'s a good fit for your needs.',
+      },
+      {
+        title: "I don't have a server, what do I do?",
+        description:
+          "Panthora can run on a Raspberry Pi, a cheap VPS or even your local machine. If you don't want to host it yourself, stay tuned for a managed Panthora service that will be available soon.",
+      },
+    ]}
+  />
+
+  <!-- CallToAction Widget *********** -->
+
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Get started',
+        href: 'https://github.com/KennethWussmann/panthora',
+        target: '_blank',
+      },
+    ]}
+  >
+    <Fragment slot="title">Panthora is free and open-source</Fragment>
+
+    <Fragment slot="subtitle"> So what are you waiting for? </Fragment>
+  </CallToAction>
+</Layout>

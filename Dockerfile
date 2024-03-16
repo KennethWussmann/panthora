@@ -8,17 +8,11 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
-# Install Prisma Client - remove if not using Prisma
-COPY prisma ./
-
-# Install dependencies based on the preferred package manager
-COPY package.json pnpm-lock.yaml* ./
-
 COPY . .
 
 RUN npm i -g pnpm@8
 RUN pnpm install --frozen-lockfile
-RUN pnpm build
+RUN pnpm build --filter @panthora/app
 
 ##### RUNNER
 
@@ -34,14 +28,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/packages/app/next.config.mjs ./
+COPY --from=builder /app/packages/app/public ./public
+COPY --from=builder /app/packages/app/package.json ./package.json
 COPY --from=builder /app/docker-start.sh ./docker-start.sh
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/packages/app/prisma ./prisma
 
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/static ./.next/static
 
 USER nextjs
 EXPOSE 3000
