@@ -2,5 +2,13 @@
   "index": "Overview",
   "hosting": "Hosting",
   "usage": "Usage",
-  "templates": "Templates"
+  "templates": "Templates",
+  "theme": {
+    "layout": "full"
+  },
+  "home": {
+    "title": "Back to panthora.app",
+    "type": "page",
+    "href": "https://panthora.app"
+  }
 }
