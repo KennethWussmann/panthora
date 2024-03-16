@@ -2,11 +2,15 @@
 
 Templates are specialized JSON formats that define the structure of asset types and tags. These templates enable the sharing of Panthora use-case structures in a standardized manner, facilitating collaboration and reuse.
 
+## Examples
+
+1. [Home Library](./example-home-library) - Managing a Home Library with Panthora
+
 ## Writing a Template
 
-Templates are crafted in JSON format. To begin, create a new JSON file, such as `book-library.json`, with the following structure:
+Templates are crafted in JSON format. To begin, create a new JSON file, with the following structure:
 
-```JSON
+```json filename="book-library.json"
 {
   "$schema": "../../schemas/import-0.2.0.schema.json",
   "name": "Book Library",
@@ -20,7 +24,7 @@ Templates are crafted in JSON format. To begin, create a new JSON file, such as 
 
 Utilizing an editor like [VSCode](https://code.visualstudio.com/) enhances the experience by offering code completion guided by the `$schema`, aiding in the accurate development of the template.
 
-To populate the template, add tags and asset types as needed. Refer to the [example templates for inspiration](../templates/) and guidance on potential configurations.
+To populate the template, add tags and asset types as needed. Refer to the [example templates for inspiration](#examples) and guidance on potential configurations.
 
 ## Leveraging AI for Panthora Structure Generation
 

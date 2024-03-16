@@ -13,49 +13,86 @@ Configuration is done via Environment Variables on the Docker Container.
     <th>Description</th>
   </tr>
   <tr>
-    <td><code>DATABASE_URL</code></td>
+    <td>
+      <code>DATABASE_URL</code>
+    </td>
     <td></td>
-    <td><code>postgresql://username:password@localhost:5432/panthora</code></td>
+    <td>
+      <code>postgresql://username:password@localhost:5432/panthora</code>
+    </td>
     <td>Yes</td>
     <td>Credentials and location of the database server.</td>
   </tr>
   <tr>
-    <td><code>NEXTAUTH_SECRET</code></td>
+    <td>
+      <code>NEXTAUTH_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes</td>
-    <td>Used to encrypt JWTs. Use <code>openssl rand -base64 32</code> to generate one.</td>
+    <td>
+      Used to encrypt JWTs. Use <code>openssl rand -base64 32</code> to generate
+      one.
+    </td>
   </tr>
   <tr>
-    <td><code>NEXTAUTH_URL</code></td>
+    <td>
+      <code>NEXTAUTH_URL</code>
+    </td>
     <td></td>
-    <td><code>https://my-panthora.com</code></td>
+    <td>
+      <code>https://my-panthora.com</code>
+    </td>
     <td>Yes</td>
     <td>Public URL where your Panthora instance is reachable.</td>
   </tr>
   <tr>
-    <td><code>APP_BASE_URL</code></td>
+    <td>
+      <code>APP_BASE_URL</code>
+    </td>
     <td></td>
-    <td><code>https://my-panthora.com</code></td>
+    <td>
+      <code>https://my-panthora.com</code>
+    </td>
     <td>Yes</td>
-    <td>Public URL where your Panthora instance is reachable. Same as <code>NEXTAUTH_URL</code>.</td>
+    <td>
+      Public URL where your Panthora instance is reachable. Same as{" "}
+      <code>NEXTAUTH_URL</code>.
+    </td>
   </tr>
   <tr>
-    <td><code>NEXTAUTH_URL_INTERNAL</code></td>
+    <td>
+      <code>NEXTAUTH_URL_INTERNAL</code>
+    </td>
     <td></td>
-    <td><code>http://panthora:3000</code></td>
+    <td>
+      <code>http://panthora:3000</code>
+    </td>
     <td>Yes, if running behind reverse-proxy</td>
-    <td>Internal URL where your Panthora instance is reachable when running behind a reverse-proxy. <code>panthora</code> refers to the Docker Compose service name</td>
+    <td>
+      Internal URL where your Panthora instance is reachable when running behind
+      a reverse-proxy. <code>panthora</code> refers to the Docker Compose
+      service name
+    </td>
   </tr>
   <tr>
-    <td><code>MEILI_URL</code></td>
+    <td>
+      <code>MEILI_URL</code>
+    </td>
     <td></td>
-    <td><code>http://search:7700</code></td>
+    <td>
+      <code>http://search:7700</code>
+    </td>
     <td>Yes</td>
-    <td>URL where your MeiliSearch instance is reachable. <code>search</code> refers to the Docker Compose service name</td>
+    <td>
+      URL where your MeiliSearch instance is reachable. <code>search</code>{" "}
+      refers to the Docker Compose service name
+    </td>
   </tr>
   <tr>
-    <td><code>MEILI_MASTER_KEY</code></td>
+    <td>
+      <code>MEILI_MASTER_KEY</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes</td>
@@ -75,296 +112,455 @@ A wide variety of authentication providers is available as well as password auth
     <th>Required</th>
     <th>Description</th>
   </tr>
-  <tr><td col-span="5"><b>Password Auth</b></td><tr>
   <tr>
-    <td><code>PASSWORD_AUTH_ENABLED</code></td>
-    <td><code>false</code></td>
-    <td><code>true</code></td>
+    <td col-span="5">
+      <b>Password Auth</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>PASSWORD_AUTH_ENABLED</code>
+    </td>
+    <td>
+      <code>false</code>
+    </td>
+    <td>
+      <code>true</code>
+    </td>
     <td>No</td>
     <td>Allow users to register and login with password credentials.</td>
   </tr>
-  <tr><td col-span="5"><b>Generic OAuth2</b></td><tr>
   <tr>
-    <td><code>OAUTH_CLIENT_ID</code></td>
+    <td col-span="5">
+      <b>Generic OAuth2</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>OAUTH_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable generic OAuth</td>
     <td>OAuth2 Client ID</td>
   </tr>
   <tr>
-    <td><code>OAUTH_CLIENT_SECRET</code></td>
+    <td>
+      <code>OAUTH_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable generic OAuth</td>
     <td>OAuth2 Client Secret</td>
   </tr>
   <tr>
-    <td><code>OAUTH_ISSUER</code></td>
+    <td>
+      <code>OAUTH_ISSUER</code>
+    </td>
     <td></td>
     <td></td>
-    <td>Yes, if you want to enable generic OAuth and the provider supports OIDC</td>
+    <td>
+      Yes, if you want to enable generic OAuth and the provider supports OIDC
+    </td>
     <td>OAuth2 OIDC Issuer URL</td>
   </tr>
   <tr>
-    <td><code>OAUTH_ACCESS_TOKEN_URL</code></td>
+    <td>
+      <code>OAUTH_ACCESS_TOKEN_URL</code>
+    </td>
     <td></td>
     <td></td>
-    <td>Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is not specified</td>
+    <td>
+      Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is
+      not specified
+    </td>
     <td>OAuth2 Access Token URL</td>
   </tr>
   <tr>
-    <td><code>OAUTH_PROFILE_URL</code></td>
+    <td>
+      <code>OAUTH_PROFILE_URL</code>
+    </td>
     <td></td>
     <td></td>
-    <td>Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is not specified</td>
+    <td>
+      Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is
+      not specified
+    </td>
     <td>OAuth2 Profile/User Info URL</td>
   </tr>
   <tr>
-    <td><code>OAUTH_AUTHORIZATION_URL</code></td>
+    <td>
+      <code>OAUTH_AUTHORIZATION_URL</code>
+    </td>
     <td></td>
     <td></td>
-    <td>Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is not specified</td>
+    <td>
+      Yes, if you want to enable generic OAuth and <code>OAUTH_ISSUER</code> is
+      not specified
+    </td>
     <td>OAuth2 Authorization URL</td>
   </tr>
-  <tr><td colspan="5"><b>AWS Cognito</b></td></tr>
   <tr>
-    <td><code>COGNITO_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>AWS Cognito</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>COGNITO_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable AWS Cognito auth</td>
     <td>AWS Cognito Client ID</td>
   </tr>
   <tr>
-    <td><code>COGNITO_CLIENT_SECRET</code></td>
+    <td>
+      <code>COGNITO_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable AWS Cognito auth</td>
     <td>AWS Cognito Client Secret</td>
   </tr>
   <tr>
-    <td><code>COGNITO_ISSUER</code></td>
+    <td>
+      <code>COGNITO_ISSUER</code>
+    </td>
     <td></td>
-    <td><code>https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_xxxxxxx</code></td>
+    <td>
+      <code>
+        https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_xxxxxxx
+      </code>
+    </td>
     <td>Yes, if you want to enable AWS Cognito auth</td>
     <td>AWS Cognito Issuer URL</td>
   </tr>
-  <tr><td colspan="5"><b>Discord</b></td></tr>
   <tr>
-    <td><code>DISCORD_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Discord</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>DISCORD_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Discord auth</td>
     <td>Discord Client ID</td>
   </tr>
   <tr>
-    <td><code>DISCORD_CLIENT_SECRET</code></td>
+    <td>
+      <code>DISCORD_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Discord auth</td>
     <td>Discord Client Secret</td>
   </tr>
-  <tr><td colspan="5"><b>GitHub</b></td></tr>
   <tr>
-    <td><code>GITHUB_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>GitHub</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>GITHUB_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable GitHub auth</td>
     <td>GitHub Client ID</td>
   </tr>
   <tr>
-    <td><code>GITHUB_CLIENT_SECRET</code></td>
+    <td>
+      <code>GITHUB_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable GitHub auth</td>
     <td>GitHub Client Secret</td>
   </tr>
-  <tr><td colspan="5"><b>Google</b></td></tr>
   <tr>
-    <td><code>GOOGLE_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Google</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>GOOGLE_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Google auth</td>
     <td>Google Client Id</td>
   </tr>
   <tr>
-    <td><code>GOOGLE_CLIENT_SECRET</code></td>
+    <td>
+      <code>GOOGLE_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Google auth</td>
     <td>Google Client Secret</td>
   </tr>
-  <tr><td colspan="5"><b>Authentik</b></td></tr>
   <tr>
-    <td><code>AUTHENTIK_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Authentik</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>AUTHENTIK_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Authentik auth</td>
     <td>Authentik Client ID</td>
   </tr>
   <tr>
-    <td><code>AUTHENTIK_CLIENT_SECRET</code></td>
+    <td>
+      <code>AUTHENTIK_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Authentik auth</td>
     <td>Authentik Client Secret</td>
   </tr>
   <tr>
-    <td><code>AUTHENTIK_ISSUER</code></td>
+    <td>
+      <code>AUTHENTIK_ISSUER</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Authentik auth</td>
     <td>Authentik Issuer URL</td>
   </tr>
-  <tr><td colspan="5"><b>Auth0</b></td></tr>
   <tr>
-    <td><code>AUTH0_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Auth0</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>AUTH0_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Auth0 auth</td>
     <td>Auth0 Client ID</td>
   </tr>
   <tr>
-    <td><code>AUTH0_CLIENT_SECRET</code></td>
+    <td>
+      <code>AUTH0_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Auth0 auth</td>
     <td>Auth0 Client Secret</td>
   </tr>
   <tr>
-    <td><code>AUTH0_ISSUER</code></td>
+    <td>
+      <code>AUTH0_ISSUER</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Auth0 auth</td>
     <td>Auth0 Issuer URL</td>
   </tr>
-  <tr><td colspan="5"><b>GitLab</b></td></tr>
   <tr>
-    <td><code>GITLAB_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>GitLab</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>GITLAB_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable GitLab auth</td>
     <td>GitLab Client ID</td>
   </tr>
   <tr>
-    <td><code>GITLAB_CLIENT_SECRET</code></td>
+    <td>
+      <code>GITLAB_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable GitLab auth</td>
     <td>GitLab Client Secret</td>
   </tr>
-  <tr><td colspan="5"><b>Azure AD</b></td></tr>
   <tr>
-    <td><code>AZURE_AD_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Azure AD</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>AZURE_AD_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Azure AD auth</td>
     <td>Azure AD Client ID</td>
   </tr>
   <tr>
-    <td><code>AZURE_AD_CLIENT_SECRET</code></td>
+    <td>
+      <code>AZURE_AD_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Azure AD auth</td>
     <td>Azure AD Client Secret</td>
   </tr>
   <tr>
-    <td><code>AZURE_AD_TENANT_ID</code></td>
+    <td>
+      <code>AZURE_AD_TENANT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Azure AD auth</td>
     <td>Azure AD Tenant ID</td>
   </tr>
-  <tr><td colspan="5"><b>Keycloak</b></td></tr>
   <tr>
-    <td><code>KEYCLOAK_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Keycloak</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>KEYCLOAK_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Keycloak auth</td>
     <td>Keycloak Client ID</td>
   </tr>
   <tr>
-    <td><code>KEYCLOAK_CLIENT_SECRET</code></td>
+    <td>
+      <code>KEYCLOAK_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Keycloak auth</td>
     <td>Keycloak Client Secret</td>
   </tr>
   <tr>
-    <td><code>KEYCLOAK_ISSUER</code></td>
+    <td>
+      <code>KEYCLOAK_ISSUER</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Keycloak auth</td>
     <td>Keycloak Issuer URL</td>
   </tr>
-  <tr><td colspan="5"><b>Okta</b></td></tr>
   <tr>
-    <td><code>OKTA_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Okta</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>OKTA_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Okta auth</td>
     <td>Okta Client ID</td>
   </tr>
   <tr>
-    <td><code>OKTA_CLIENT_SECRET</code></td>
+    <td>
+      <code>OKTA_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Okta auth</td>
     <td>Okta Client Secret</td>
   </tr>
   <tr>
-    <td><code>OKTA_ISSUER</code></td>
+    <td>
+      <code>OKTA_ISSUER</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Okta auth</td>
     <td>Okta Issuer URL</td>
   </tr>
-  <tr><td colspan="5"><b>OneLogin</b></td></tr>
   <tr>
-    <td><code>ONELOGIN_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>OneLogin</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>ONELOGIN_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable OneLogin auth</td>
     <td>OneLogin Client ID</td>
   </tr>
   <tr>
-    <td><code>ONELOGIN_CLIENT_SECRET</code></td>
+    <td>
+      <code>ONELOGIN_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable OneLogin auth</td>
     <td>OneLogin Client Secret</td>
   </tr>
   <tr>
-    <td><code>ONELOGIN_ISSUER</code></td>
+    <td>
+      <code>ONELOGIN_ISSUER</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable OneLogin auth</td>
     <td>OneLogin Issuer URL</td>
   </tr>
-  <tr><td colspan="5"><b>Slack</b></td></tr>
   <tr>
-    <td><code>SLACK_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Slack</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>SLACK_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Slack auth</td>
     <td>Slack Client ID</td>
   </tr>
   <tr>
-    <td><code>SLACK_CLIENT_SECRET</code></td>
+    <td>
+      <code>SLACK_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Slack auth</td>
     <td>Slack Client Secret</td>
   </tr>
-  <tr><td colspan="5"><b>Twitch</b></td></tr>
   <tr>
-    <td><code>TWITCH_CLIENT_ID</code></td>
+    <td colspan="5">
+      <b>Twitch</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>TWITCH_CLIENT_ID</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Twitch auth</td>
     <td>Twitch Client ID</td>
   </tr>
   <tr>
-    <td><code>TWITCH_CLIENT_SECRET</code></td>
+    <td>
+      <code>TWITCH_CLIENT_SECRET</code>
+    </td>
     <td></td>
     <td></td>
     <td>Yes, if you want to enable Twitch auth</td>
@@ -383,16 +579,30 @@ A wide variety of authentication providers is available as well as password auth
     <th>Description</th>
   </tr>
   <tr>
-    <td><code>DISABLE_RATE_LIMIT</code></td>
-    <td><code>false</code></td>
-    <td><code>true</code></td>
+    <td>
+      <code>DISABLE_RATE_LIMIT</code>
+    </td>
+    <td>
+      <code>false</code>
+    </td>
+    <td>
+      <code>true</code>
+    </td>
     <td>No</td>
-    <td>Disable <a href="./rate-limit.md">Rate-Limiting</a>. Use with caution!</td>
+    <td>
+      Disable <a href="./rate-limit.md">Rate-Limiting</a>. Use with caution!
+    </td>
   </tr>
   <tr>
-    <td><code>LOG_LEVEL</code></td>
-    <td><code>info</code></td>
-    <td><code>debug</code></td>
+    <td>
+      <code>LOG_LEVEL</code>
+    </td>
+    <td>
+      <code>info</code>
+    </td>
+    <td>
+      <code>debug</code>
+    </td>
     <td>No</td>
     <td>Enable debug logs, helpful for debugging problems.</td>
   </tr>

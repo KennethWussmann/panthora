@@ -1,7 +1,11 @@
-# Hosting
+import { Callout, Card, Cards } from "nextra/components";
+import { FiSettings, FiKey } from "react-icons/fi";
 
-> [!WARNING]  
-> Panthora is still in a pre-release phase and **not production-ready**.
+# Deploy with Docker
+
+<Callout type="warning">
+  Panthora is still in a pre-release phase and **not production-ready**.
+</Callout>
 
 Hosting Panthora is best done via Docker. There are Docker images for `amd64` and `arm64`.
 
@@ -24,9 +28,9 @@ They can be hosted anywhere, but best would be to set them up with Docker Compos
 
 ## Docker Compose
 
-Once deployed Panthora is available at `http://localhost:3000`. For configuration of Panthora refer to the [Configuration docs](./configuration.md).
+Once deployed Panthora is available at `http://localhost:3000`. For configuration of Panthora refer to the [Configuration docs](./configuration).
 
-```YAML
+```yaml filename="docker-compose.yaml"
 version: "3.9"
 services:
   database:
@@ -78,7 +82,17 @@ volumes:
   search:
 ```
 
-## Further reading
+Next, check out the next section to learn about configuring your Panthora instance:
 
-1. [Authentication Guide](./authentication.md)
-2. [Configuration Guide](./configuration.md)
+<Cards>
+  <Card
+    icon={<FiSettings />}
+    title="Configuration"
+    href="/hosting/configuration"
+  />
+  <Card
+    icon={<FiKey />}
+    title="Authentication"
+    href="/hosting/authentication"
+  />
+</Cards>

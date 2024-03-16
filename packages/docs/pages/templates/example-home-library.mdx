@@ -67,6 +67,126 @@ By applying Panthora to manage your home library, you transform a simple book co
 
 ## Use this Template
 
-You can directly import this Home Library into your Panthora using [Templates](./templates.md). The template for this use-case can be found here: [Book Library](../templates/book-library.json).
+You can directly import this Home Library into your Panthora using [Templates](./using-templates).
 
 See the [Template Guide](./templates.md) to learn how to use it.
+
+```json filename="book-library.json"
+{
+  "$schema": "../../schemas/import-0.2.0.schema.json",
+  "name": "Book Library",
+  "version": "1.0",
+  "description": "Use Panthora as your book library.",
+  "author": "Panthora",
+  "tags": [
+    {
+      "id": "Genre",
+      "name": "Genre",
+      "children": [
+        { "id": "Fiction", "name": "Fiction", "children": [] },
+        { "id": "Non-Fiction", "name": "Non-Fiction", "children": [] },
+        { "id": "Mystery", "name": "Mystery", "children": [] },
+        {
+          "id": "Science Fiction",
+          "name": "Science Fiction",
+          "children": [
+            { "id": "Dystopian", "name": "Dystopian", "children": [] },
+            { "id": "Space Opera", "name": "Space Opera", "children": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Location",
+      "name": "Location",
+      "children": [
+        { "id": "Living Room", "name": "Living Room", "children": [] },
+        { "id": "Bedroom", "name": "Bedroom", "children": [] },
+        { "id": "Study", "name": "Study", "children": [] }
+      ]
+    },
+    {
+      "id": "Reading Status",
+      "name": "Reading Status",
+      "children": [
+        { "id": "Read", "name": "Read", "children": [] },
+        { "id": "Unread", "name": "Unread", "children": [] },
+        { "id": "Reading", "name": "Reading", "children": [] }
+      ]
+    },
+    {
+      "id": "Loan Status",
+      "name": "Loan Status",
+      "children": [
+        { "id": "Available", "name": "Available", "children": [] },
+        { "id": "Borrowed", "name": "Borrowed", "children": [] }
+      ]
+    }
+  ],
+  "assetTypes": [
+    {
+      "name": "Book",
+      "fields": [
+        {
+          "type": "STRING",
+          "name": "Title",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Author",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "ISBN",
+          "inputRequired": false,
+          "showInTable": false
+        },
+        {
+          "type": "TAG",
+          "name": "Genre",
+          "parentTagId": "Genre",
+          "inputMin": 1,
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "TAG",
+          "name": "Location",
+          "parentTagId": "Location",
+          "inputMax": 1,
+          "inputRequired": false,
+          "showInTable": false
+        },
+        {
+          "type": "TAG",
+          "name": "Reading Status",
+          "parentTagId": "Reading Status",
+          "inputMax": 1,
+          "inputMin": 1,
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "TAG",
+          "name": "Loan Status",
+          "parentTagId": "Loan Status",
+          "inputMax": 1,
+          "inputMin": 1,
+          "inputRequired": true,
+          "showInTable": false
+        },
+        {
+          "type": "STRING",
+          "name": "Borrower",
+          "inputRequired": false,
+          "showInTable": false
+        }
+      ]
+    }
+  ]
+}
+```
