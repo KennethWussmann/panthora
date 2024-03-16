@@ -4,6 +4,7 @@
     "build": {
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "test": {},
     "start": {
       "cache": false,
       "persistent": true

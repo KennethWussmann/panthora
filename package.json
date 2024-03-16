@@ -7,6 +7,7 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
+    "test": "turbo test",
     "dependency-update": "npm-check-updates -u --filterVersion \"/^[~^<>]| - |\\.x$/\" --deep && pnpm install"
   },
   "engines": {
