@@ -4,14 +4,14 @@ site:
   base: '/'
   trailingSlash: false
 
-  googleSiteVerificationId: null
+  googleSiteVerificationId: 'R2zcrAyBTn9iIvK6YulDduVHvjPH-7qdc-TeGsiMyoU'
 
 # Default SEO metadata
 metadata:
   title:
     default: Panthora
     template: '%s — Panthora'
-  description: "Inventory System for everyone"
+  description: 'Panthora keeps track of everything. Untangle the mess. Free and open-source. Streamline your inventory process and management of anything and everything.'
   robots:
     index: true
     follow: true
