@@ -20,7 +20,7 @@ export const headerData = {
     },
     {
       text: 'Documentation',
-      href: getPermalink('/docs'),
+      href: 'https://docs.panthora.app',
     },
     {
       text: 'Demo',
@@ -32,7 +32,7 @@ export const headerData = {
       href: 'https://github.com/KennethWussmann/panthora',
     },
   ],
-  actions: [{ text: 'Get started', href: getPermalink('/docs') }],
+  actions: [{ text: 'Get started', href: 'https://docs.panthora.app' }],
 };
 
 export const footerData = {
@@ -42,7 +42,7 @@ export const footerData = {
       links: [
         {
           text: 'Documentation',
-          href: getPermalink('/docs'),
+          href: 'https://docs.panthora.app',
         },
         {
           text: 'Demo',
