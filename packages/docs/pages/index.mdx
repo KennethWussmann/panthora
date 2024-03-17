@@ -1,1 +1,84 @@
+import { Steps, Cards, Card } from "nextra/components";
+import {
+  FiSettings,
+  FiKey,
+  FiTag,
+  FiUsers,
+  FiBook,
+  FiBookOpen,
+  FiGithub,
+  FiGlobe,
+  FiLayout,
+} from "react-icons/fi";
+
 # Welcome to Panthora
+
+<Cards>
+  <Card icon={<FiGlobe />} title="Website" href="https://panthora.app" />
+  <Card
+    icon={<FiGithub />}
+    title="GitHub"
+    href="https://github.com/KennethWussmann/panthora"
+  />
+  <Card icon={<FiLayout />} title="Demo" href="https://demo.panthora.app" />
+</Cards>
+
+Panthora is a web-based application that allows you to create and manage your own personal inventory. It is designed to be simple and easy to use, while still providing powerful features to help you organize and manage your assets.
+
+## Demo Instance
+
+You can try out Panthora by visiting our demo instance at [https://demo.panthora.app](https://demo.panthora.app). The demo instance resets every 24 hours, and allows you to explore the software and see how it works.
+
+## Getting Started
+
+<Steps>
+### Deploy Your Instance
+
+Check the [Docker deploment guide](./hosting/deploy-with-docker) to get started with Panthora.
+
+### Create your Asset Types
+
+Asset Types are the categories of assets you want to manage. For example, you might have asset types for books, electronics, or tools. They give your assets structure and help you organize and manage them.
+
+See the [Asset Types guide](./usage/asset-types) to learn how to create your own asset types.
+
+### Create your Assets
+
+It's time to start adding your assets. You can add as many assets as you want, and you can customize them to fit your needs.
+
+See the [Assets guide](./usage/assets) to learn how to create your own assets.
+
+### Learn More
+
+Panthora can do a lot more than just manage your assets.
+
+<Cards>
+  <Card
+    icon={<FiBookOpen />}
+    title="Usage: Getting Started"
+    href="/usage/getting-started"
+  />
+  <Card
+    icon={<FiBook />}
+    title="Example: Home Library"
+    href="/templates/example-home-library"
+  />
+  <Card
+    icon={<FiSettings />}
+    title="Configuration"
+    href="/hosting/configuration"
+  />
+  <Card
+    icon={<FiKey />}
+    title="Authentication"
+    href="/hosting/authentication"
+  />
+  <Card icon={<FiTag />} title="Tags" href="/usage/tags" />
+  <Card icon={<FiUsers />} title="Teams" href="/usage/collaboration" />
+</Cards>
+
+</Steps>
+
+## Pre-release
+
+Panthora is currently in pre-release. This means that the software is not yet feature complete and may contain bugs. We are actively working on the software and will release updates regularly. We are also looking for feedback from the community to help us improve the software. If you encounter any issues, please let us know by creating an issue on GitHub.
