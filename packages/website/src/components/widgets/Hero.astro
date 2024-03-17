@@ -26,76 +26,96 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative md:-mt-[76px] not-prose" {...id ? { id } : {}}>
-  <div class="absolute inset-0 pointer-events-none" aria-hidden="true"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
-    <div class="py-12 md:py-20">
-      <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
-        {
-          tagline && (
-            <p
-              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase"
-              set:html={tagline}
-            />
-          )
-        }
-        {
-          title && (
-            <h1
-              class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200"
-              set:html={title}
-            />
-          )
-        }
-        <div class="max-w-3xl mx-auto">
-          {subtitle && <p class="text-xl text-muted mb-6 dark:text-slate-300" set:html={subtitle} />}
+<div
+  class="w-full dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center"
+>
+  <div
+    class="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"
+  >
+  </div>
+  <section class="relative md:-mt-[76px] not-prose">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
+      <div class="py-12 md:py-20">
+        <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
           {
-            actions && (
-              <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4">
-                {Array.isArray(actions) ? (
-                  actions.map((action) => (
-                    <div class="flex w-full sm:w-auto">
-                      <Button {...(action || {})} class="w-full sm:mb-0" />
-                    </div>
-                  ))
-                ) : (
-                  <Fragment set:html={actions} />
-                )}
-              </div>
+            tagline && (
+              <p
+                class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase"
+                set:html={tagline}
+              />
             )
           }
+          {
+            title && (
+              <h1
+                class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200"
+                set:html={title}
+              />
+            )
+          }
+          <div class="max-w-3xl mx-auto">
+            {subtitle && <p class="text-xl text-muted mb-6 dark:text-slate-300" set:html={subtitle} />}
+            {
+              actions && (
+                <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4">
+                  {Array.isArray(actions) ? (
+                    actions.map((action) => (
+                      <div class="flex w-full sm:w-auto">
+                        <Button {...(action || {})} class="w-full sm:mb-0" />
+                      </div>
+                    ))
+                  ) : (
+                    <Fragment set:html={actions} />
+                  )}
+                </div>
+              )
+            }
+          </div>
+          {content && <Fragment set:html={content} />}
         </div>
-        {content && <Fragment set:html={content} />}
-      </div>
-      <div>
-        {
-          imageLight && (
-            <Image
-              class="mx-auto rounded-md w-full dark:hidden"
-              widths={[400, 768, 1024, 2040]}
-              sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-              loading="eager"
-              width={2143}
-              height={1487}
-              {...imageLight}
-            />
-          )
-        }
-        {
-          imageDark && (
-            <Image
-              class="mx-auto rounded-md w-full hidden dark:block"
-              widths={[400, 768, 1024, 2040]}
-              sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-              loading="eager"
-              width={2143}
-              height={1487}
-              {...imageDark}
-            />
-          )
-        }
+        <div class="mx-auto max-w-7xl px-4 sm:px-6">
+          <div class="rounded-md overflow-hidden shadow-glow">
+            {
+              imageLight && (
+                <Image
+                  class="mx-auto rounded-md w-full dark:hidden"
+                  widths={[400, 768, 1024, 2040]}
+                  sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                  loading="eager"
+                  width={2143}
+                  height={1487}
+                  {...imageLight}
+                />
+              )
+            }
+            {
+              imageDark && (
+                <Image
+                  class="mx-auto rounded-md w-full hidden dark:block"
+                  widths={[400, 768, 1024, 2040]}
+                  sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                  loading="eager"
+                  width={2143}
+                  height={1487}
+                  {...imageDark}
+                />
+              )
+            }
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
+
+<style>
+  .shadow-glow {
+    box-shadow: 
+      0 0 100px rgba(255, 255, 255, 0.1),
+      0 0 300px rgba(255, 255, 255, 0.1),
+      0 0 450px rgba(255, 255, 255, 0.1),
+      0 0 600px rgba(255, 255, 255, 0.1);
+  }
+</style>
