@@ -1,5 +1,5 @@
 {
-  "$schema": "../../schemas/import-0.2.0.schema.json",
+  "$schema": "https://panthora.app/import-0.2.0.schema.json",
   "name": "Book Library",
   "version": "1.0",
   "description": "Use Panthora as your book library.",
