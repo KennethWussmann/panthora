@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "rm ./public/*.schema.json && cp ../app/schemas/*.schema.json ./public && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "format": "prettier -w .",
