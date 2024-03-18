@@ -19,8 +19,8 @@ metadata:
     site_name: Panthora
     images:
       - url: '~/assets/images/default.png'
-        width: 1200
-        height: 628
+        width: 3000
+        height: 1926
     type: website
 
 i18n:
