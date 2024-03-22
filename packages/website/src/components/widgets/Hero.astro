@@ -113,8 +113,16 @@ const {
   </section>
 </div>
 
-<style>
+
+<style is:global>
   .shadow-glow {
+    box-shadow:
+      0 0 100px rgba(0, 0, 0, 0.1),
+      0 0 300px rgba(0, 0, 0, 0.1),
+      0 0 450px rgba(0, 0, 0, 0.1),
+      0 0 600px rgba(0, 0, 0, 0.1);
+  } 
+  .dark .shadow-glow {
     box-shadow:
       0 0 100px rgba(255, 255, 255, 0.1),
       0 0 300px rgba(255, 255, 255, 0.1),
