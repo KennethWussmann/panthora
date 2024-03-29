@@ -5,6 +5,8 @@ import {
   cloneElement,
   Children,
   type RefObject,
+  useEffect,
+  useRef,
 } from "react";
 import { useMultipleSelection, useCombobox } from "downshift";
 import {
@@ -12,7 +14,6 @@ import {
   Input,
   List,
   ListItem,
-  ListIcon,
   Tag,
   useColorModeValue,
   Flex,
@@ -22,13 +23,13 @@ import {
   InputLeftElement,
   Icon,
   Text,
-  Alert,
-  AlertIcon,
-  AlertTitle,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
+  Checkbox,
+  useOutsideClick,
 } from "@chakra-ui/react";
-import { FiCheck, FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 
 type ComboBoxProps<T> = {
   values?: T[];
@@ -68,10 +69,16 @@ export const ComboBox = <T extends number | string>({
       if (selectedItems) {
         onChange?.(selectedItems);
       }
+      setInputValue("");
     },
   });
   const maximumReached = max && selectedItems.length >= max;
   const minimumReached = min ? selectedItems.length >= min : true;
+  const comboBoxRef = useRef<HTMLDivElement>(null);
+  useOutsideClick({
+    ref: comboBoxRef,
+    handler: () => setOpen(false),
+  });
 
   const items = Children.toArray(children).map((child) =>
     cloneElement(child as React.ReactElement<ComboBoxItemProps<T>>, {
@@ -82,56 +89,64 @@ export const ComboBox = <T extends number | string>({
   );
 
   const [inputValue, setInputValue] = useState("");
-  const filteredItems = items.filter((item) =>
-    item.props.children
-      ?.toString()
-      ?.toLowerCase()
-      ?.includes(inputValue.toLowerCase())
-  );
-  const {
-    isOpen,
-    openMenu,
-    getMenuProps,
-    getInputProps,
-    highlightedIndex,
-    getItemProps,
-  } = useCombobox({
-    items: filteredItems,
-    inputValue,
-    onInputValueChange: ({ inputValue }) => {
-      console.log("Set Input Value", inputValue);
-      setInputValue(inputValue || "");
-    },
-    onSelectedItemChange: ({ selectedItem }) => {
-      const value = selectedItem.props.value;
-      if (selectedItems.includes(value)) {
-        removeSelectedItem(value);
-      } else if (!maximumReached) {
-        addSelectedItem(value);
-      }
-      setInputValue("");
-    },
-    itemToString: (item) => (item ? item.props.children?.toString() ?? "" : ""),
+  const filteredItems = items.filter((item) => {
+    return (
+      item.props.children
+        ?.toString()
+        ?.toLowerCase()
+        ?.includes(inputValue.toLowerCase()) &&
+      (!maximumReached || item.props._selected)
+    );
   });
+  const [isOpen, setOpen] = useState(false);
+  const { getMenuProps, getInputProps, highlightedIndex, getItemProps } =
+    useCombobox({
+      items: filteredItems,
+      isOpen,
+      inputValue,
+      onInputValueChange: ({ inputValue }) => {
+        setInputValue(inputValue || "");
+      },
+      onSelectedItemChange: ({ selectedItem }) => {
+        const value = selectedItem.props.value;
+        if (selectedItems.includes(value)) {
+          removeSelectedItem(value);
+        } else if (!maximumReached) {
+          addSelectedItem(value);
+        }
+        setInputValue("");
+        comboBoxRef.current?.focus();
+      },
+      itemToString: (item) =>
+        item ? item.props.children?.toString() ?? "" : "",
+    });
   const inputProps = getInputProps(
     getDropdownProps({ preventKeyAction: isOpen })
   );
   const focusInput = () => {
-    openMenu();
+    setOpen(true);
     (inputProps.ref as RefObject<HTMLInputElement>).current?.focus();
   };
   const itemHoverBackgroundColor = useColorModeValue("gray.100", "gray.600");
   const menuBackgroundColor = useColorModeValue("white", "gray.700");
 
+  useEffect(() => {
+    setInputValue("");
+  }, [isOpen]);
+
   return (
     <FormControl isInvalid={!minimumReached}>
-      <Box position="relative" onClick={focusInput}>
+      <Box position="relative">
         <Box
           borderWidth={1}
           rounded={"md"}
           p={2}
           overflow="hidden"
           borderColor={!minimumReached ? "red.500" : undefined}
+          tabIndex={0}
+          onFocus={focusInput}
+          onClick={focusInput}
+          ref={comboBoxRef}
         >
           <Flex gap={2} alignItems={"flex-start"} flexWrap="wrap">
             {selectedItems.map((value) => (
@@ -162,13 +177,8 @@ export const ComboBox = <T extends number | string>({
           position="absolute"
           width="full"
           zIndex="dropdown"
+          boxShadow={"lg"}
         >
-          {maximumReached && (
-            <Alert status="warning" mb={2}>
-              <AlertIcon />
-              <AlertTitle>Maximum number of items reached</AlertTitle>
-            </Alert>
-          )}
           <InputGroup>
             <InputLeftElement pointerEvents="none">
               <Icon as={FiSearch} color="gray.500" />
@@ -189,8 +199,14 @@ export const ComboBox = <T extends number | string>({
                 p={2}
                 px={4}
               >
-                {item.props._selected && <ListIcon as={FiCheck} />}
-                {item.props.children}
+                <Checkbox
+                  isChecked={selectedItems.includes(item.props.value)}
+                  onChange={(e) => e.preventDefault()}
+                  onClick={(e) => e.preventDefault()}
+                  pointerEvents={"none"}
+                >
+                  {item.props.children}
+                </Checkbox>
               </ListItem>
             ))}
           </List>
@@ -200,6 +216,11 @@ export const ComboBox = <T extends number | string>({
         <FormErrorMessage>
           Select at least {String(min)} {min === 1 ? "item" : "items"}
         </FormErrorMessage>
+      )}
+      {maximumReached && (
+        <FormHelperText>
+          Maximum number of selected items reached
+        </FormHelperText>
       )}
     </FormControl>
   );
