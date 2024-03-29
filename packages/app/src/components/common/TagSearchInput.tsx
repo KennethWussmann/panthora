@@ -42,7 +42,9 @@ export const TagSearchInput: React.FC<TagSearchInputProps> = ({
 
   const filteredSuggestions = inputValue
     ? suggestions.filter(
-        (sug) => sug.name.startsWith(inputValue) && !value.includes(sug.id)
+        (sug) =>
+          sug.name.toLowerCase().startsWith(inputValue.toLowerCase()) &&
+          !value.includes(sug.id)
       )
     : suggestions.filter((sug) => !value.includes(sug.id));
 

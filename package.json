@@ -5,6 +5,9 @@
   "scripts": {
     "start": "turbo start",
     "dev": "turbo dev",
+    "dev:app": "turbo dev --filter=@panthora/app",
+    "dev:docs": "turbo dev --filter=@panthora/docs",
+    "dev:website": "turbo dev --filter=@panthora/website",
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",
