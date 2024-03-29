@@ -49,7 +49,7 @@ export const ComboBoxItem: FC<ComboBoxItemProps<unknown>> = ({ children }) => (
   <>{children}</>
 );
 
-export const ComboBox = <T extends number>({
+export const ComboBox = <T extends number | string>({
   children,
   values = [],
   onChange,
@@ -71,7 +71,7 @@ export const ComboBox = <T extends number>({
     },
   });
   const maximumReached = max && selectedItems.length >= max;
-  const minimumReached = min && selectedItems.length >= min;
+  const minimumReached = min ? selectedItems.length >= min : true;
 
   const items = Children.toArray(children).map((child) =>
     cloneElement(child as React.ReactElement<ComboBoxItemProps<T>>, {
@@ -159,6 +159,9 @@ export const ComboBox = <T extends number>({
           mt={1}
           bg={menuBackgroundColor}
           hidden={!isOpen}
+          position="absolute"
+          width="full"
+          zIndex="dropdown"
         >
           {maximumReached && (
             <Alert status="warning" mb={2}>
@@ -194,7 +197,9 @@ export const ComboBox = <T extends number>({
         </Box>
       </Box>
       {!minimumReached && (
-        <FormErrorMessage>Select at least {min} items</FormErrorMessage>
+        <FormErrorMessage>
+          Select at least {String(min)} {min === 1 ? "item" : "items"}
+        </FormErrorMessage>
       )}
     </FormControl>
   );
