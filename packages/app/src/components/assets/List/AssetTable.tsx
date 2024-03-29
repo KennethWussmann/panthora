@@ -22,8 +22,9 @@ import {
   Tag,
   Divider,
   TableContainer,
+  Td,
 } from "@chakra-ui/react";
-import { FiChevronDown, FiPlus, FiPrinter } from "react-icons/fi";
+import { FiBox, FiChevronDown, FiPlus, FiPrinter } from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
 import { AssetRow } from "./AssetRow";
@@ -33,6 +34,7 @@ import { uniqBy } from "lodash";
 import { useSelectedAssets } from "@/lib/SelectedAssetsProvider";
 import { type AssetWithFields } from "@/server/lib/assets/asset";
 import { useTeam } from "@/lib/SelectedTeamProvider";
+import { EmptyListIcon } from "~/components/common/EmptyListIcon";
 
 export const AssetTable: React.FC = () => {
   const { selectedAssets, setSelectedAssets, setSelectedLabelTemplate } =
@@ -56,8 +58,6 @@ export const AssetTable: React.FC = () => {
     );
 
   const showAssetTypeMissingNotice = assetTypes?.length === 0;
-  const showCreateFirstAssetNotice =
-    !showAssetTypeMissingNotice && assets && assets.length === 0;
 
   const uniqueFieldsToShow = assets
     ? uniqBy(
@@ -159,25 +159,18 @@ export const AssetTable: React.FC = () => {
           Create
         </Button>
       </Flex>
-      {showCreateFirstAssetNotice && (
-        <Alert status="info">
-          <AlertIcon />
-          <AlertDescription>
-            You don&apos;t have any assets.{" "}
-            <Link href="/assets/create" textDecor={"underline"}>
-              Create your first asset.
-            </Link>
-          </AlertDescription>
-        </Alert>
-      )}
-      {assets && assets.length > 0 && (
+      {assets && !showAssetTypeMissingNotice && (
         <TableContainer>
           <Table variant="simple" size={"sm"}>
             <Thead>
               <Tr>
                 <Th>
                   <Checkbox
-                    isChecked={selectedAssets.length === assets?.length}
+                    isChecked={
+                      assets?.length > 0
+                        ? selectedAssets.length === assets?.length
+                        : false
+                    }
                     onChange={() => {
                       if (selectedAssets.length === assets?.length) {
                         setSelectedAssets([]);
@@ -195,6 +188,7 @@ export const AssetTable: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
+              {assets.length === 0 && <EmptyAssetRow />}
               {assets?.map((asset) => (
                 <AssetRow
                   key={asset.id}
@@ -221,5 +215,19 @@ export const AssetTable: React.FC = () => {
         </TableContainer>
       )}
     </Stack>
+  );
+};
+
+const EmptyAssetRow = () => {
+  return (
+    <Tr>
+      <Td colSpan={3}>
+        <EmptyListIcon
+          icon={FiBox}
+          label={"No assets found"}
+          createHref="/assets/create"
+        />
+      </Td>
+    </Tr>
   );
 };
