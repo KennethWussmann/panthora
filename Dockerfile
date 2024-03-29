@@ -11,8 +11,9 @@ WORKDIR /app
 COPY . .
 
 RUN npm i -g pnpm@8
-RUN pnpm install --frozen-lockfile
-RUN pnpm build --filter @panthora/app
+RUN pnpm install --frozen-lockfile --filter @panthora/app
+RUN pnpm deploy --filter @panthora/app ./build
+RUN cd build && pnpm prisma generate && pnpm build --no-lint
 
 ##### RUNNER
 
@@ -28,14 +29,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/packages/app/next.config.mjs ./
-COPY --from=builder /app/packages/app/public ./public
-COPY --from=builder /app/packages/app/package.json ./package.json
-COPY --from=builder /app/docker-start.sh ./docker-start.sh
-COPY --from=builder /app/packages/app/prisma ./prisma
+COPY --from=builder /app/build/next.config.mjs ./
+COPY --from=builder /app/build/public ./public
+COPY --from=builder /app/build/package.json ./package.json
+COPY --from=builder /app/build/docker-start.sh ./docker-start.sh
+COPY --from=builder /app/build/prisma ./prisma
 
-COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/build/.next/standalone/build ./
+COPY --from=builder --chown=nextjs:nodejs /app/build/.next/static ./.next/static
 
 USER nextjs
 EXPOSE 3000
