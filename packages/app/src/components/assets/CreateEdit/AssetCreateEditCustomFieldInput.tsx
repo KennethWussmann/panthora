@@ -20,9 +20,9 @@ import { FormFieldRequiredErrorMessage } from "@/components/common/FormFieldRequ
 import { numberOrNull } from "@/lib/reactHookFormUtils";
 import { type AssetCreateEditRequest } from "@/server/lib/assets/assetCreateEditRequest";
 import { DateTimePicker } from "@/components/common/DateTimePicker";
-import { TagSearchInput } from "@/components/common/TagSearchInput";
 import { api } from "@/utils/api";
 import { useTeam } from "@/lib/SelectedTeamProvider";
+import { ComboBox, ComboBoxItem } from "~/components/common/ComboBox";
 
 const getRegisterOptions = (customField: CustomField) => {
   const registerOptions: RegisterOptions<
@@ -164,16 +164,21 @@ export const AssetCreateEditCustomFieldInput = ({
             name={`customFieldValues.${index}.tagsValue`}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <TagSearchInput
-                suggestions={tags ?? []}
-                onTagsChange={(tagIds) => {
+              <ComboBox
+                values={value ?? []}
+                onChange={(tagIds) => {
                   onChange(tagIds);
                 }}
-                value={value ?? []}
-                setValue={onChange}
                 max={customField.inputMax ?? undefined}
                 min={customField.inputMin ?? undefined}
-              />
+                placeholder="Select Tag"
+              >
+                {tags?.map((tag) => (
+                  <ComboBoxItem key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </ComboBoxItem>
+                ))}
+              </ComboBox>
             )}
           />
         )}

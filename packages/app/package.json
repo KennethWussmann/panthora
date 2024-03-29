@@ -32,6 +32,7 @@
     "@trpc/react-query": "^10.45.1",
     "@trpc/server": "^10.45.1",
     "date-fns": "^3.3.1",
+    "downshift": "^9.0.1",
     "framer-motion": "^11.0.5",
     "lodash": "^4.17.21",
     "meilisearch": "^0.37.0",
