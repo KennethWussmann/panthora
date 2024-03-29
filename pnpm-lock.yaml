@@ -65,6 +65,9 @@ importers:
       date-fns:
         specifier: ^3.3.1
         version: 3.3.1
+      downshift:
+        specifier: ^9.0.1
+        version: 9.0.1(react@18.2.0)
       framer-motion:
         specifier: ^11.0.5
         version: 11.0.5(react-dom@18.2.0)(react@18.2.0)
@@ -6118,6 +6121,19 @@ packages:
       is-obj: 2.0.0
     dev: true
 
+  /downshift@9.0.1(react@18.2.0):
+    resolution: {integrity: sha512-9VrPqAw8zHITSOds4JttSjwycnPzJtLF0ufHmy5iRdkod5ekQTupck2fQXd8ktF3smXporTjcykyJTxT82t5bg==}
+    peerDependencies:
+      react: '>=16.12.0'
+    dependencies:
+      '@babel/runtime': 7.24.0
+      compute-scroll-into-view: 3.0.3
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-is: 18.2.0
+      tslib: 2.6.2
+    dev: false
+
   /dset@3.1.3:
     resolution: {integrity: sha512-20TuZZHCEZ2O71q9/+8BwKwZ0QtD9D8ObhrihJPr+vLLYlSuAU3/zL4cSlgbfeoGHTjCSJBa7NGcrF9/Bx/WJQ==}
     engines: {node: '>=4'}
@@ -11504,7 +11520,6 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
-    dev: true
 
   /react-onclickoutside@6.13.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ty8So6tcUpIb+ZE+1HAhbLROvAIJYyJe/1vRrrcmW+jLsaM+/powDRqxzo6hSh9CuRZGSL1Q8mvcF5WRD93a0A==}
