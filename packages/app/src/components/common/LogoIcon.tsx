@@ -19,8 +19,8 @@ export const LogoIcon = ({ size = "128px" }: { size?: string }) => {
           y1="108.875"
           y2="17.3125"
         >
-          <stop offset="0" stop-color="#2e6d9e" />
-          <stop offset="1" stop-color="#b6fdfb" />
+          <stop offset="0" stopColor="#2e6d9e" />
+          <stop offset="1" stopColor="#b6fdfb" />
         </linearGradient>
         <linearGradient
           id="b"
@@ -30,8 +30,8 @@ export const LogoIcon = ({ size = "128px" }: { size?: string }) => {
           y1="113"
           y2="64.375"
         >
-          <stop offset="0" stop-color="#5493bf" />
-          <stop offset="1" stop-color="#f1ffff" />
+          <stop offset="0" stopColor="#5493bf" />
+          <stop offset="1" stopColor="#f1ffff" />
         </linearGradient>
         <linearGradient
           id="c"
@@ -41,8 +41,8 @@ export const LogoIcon = ({ size = "128px" }: { size?: string }) => {
           y1="117.625"
           y2="15.25"
         >
-          <stop offset=".154073" stop-color="#5493bf" stop-opacity="0" />
-          <stop offset=".619161" stop-color="#f1ffff" />
+          <stop offset=".154073" stopColor="#5493bf" stop-opacity="0" />
+          <stop offset=".619161" stopColor="#f1ffff" />
         </linearGradient>
         <linearGradient
           id="d"
@@ -52,8 +52,8 @@ export const LogoIcon = ({ size = "128px" }: { size?: string }) => {
           y1="44.5097"
           y2="86.4213"
         >
-          <stop offset="0" stop-color="#f2ffff" />
-          <stop offset="1" stop-color="#3271a1" />
+          <stop offset="0" stopColor="#f2ffff" />
+          <stop offset="1" stopColor="#3271a1" />
         </linearGradient>
         <clipPath id="e">
           <path d="m0 0h128v128h-128z" />

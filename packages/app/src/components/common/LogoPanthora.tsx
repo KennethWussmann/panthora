@@ -30,8 +30,8 @@ export const LogoPanthora = ({
             y1="180.25"
             y2="62.4179"
           >
-            <stop offset="0" stop-color="#2e6d9e" />
-            <stop offset="1" stop-color="#b6fdfb" />
+            <stop offset="0" stopColor="#2e6d9e" />
+            <stop offset="1" stopColor="#b6fdfb" />
           </linearGradient>
           <linearGradient
             id="b"
@@ -41,8 +41,8 @@ export const LogoPanthora = ({
             y1="185.558"
             y2="122.983"
           >
-            <stop offset="0" stop-color="#5493bf" />
-            <stop offset="1" stop-color="#f1ffff" />
+            <stop offset="0" stopColor="#5493bf" />
+            <stop offset="1" stopColor="#f1ffff" />
           </linearGradient>
           <linearGradient
             id="c"
@@ -52,8 +52,8 @@ export const LogoPanthora = ({
             y1="191.51"
             y2="59.7637"
           >
-            <stop offset=".154073" stop-color="#5493bf" stop-opacity="0" />
-            <stop offset=".619161" stop-color="#f1ffff" />
+            <stop offset=".154073" stopColor="#5493bf" stop-opacity="0" />
+            <stop offset=".619161" stopColor="#f1ffff" />
           </linearGradient>
           <linearGradient
             id="d"
@@ -63,8 +63,8 @@ export const LogoPanthora = ({
             y1="97.418"
             y2="151.354"
           >
-            <stop offset="0" stop-color="#f2ffff" />
-            <stop offset="1" stop-color="#3271a1" />
+            <stop offset="0" stopColor="#f2ffff" />
+            <stop offset="1" stopColor="#3271a1" />
           </linearGradient>
           <clipPath id="e">
             <path d="m33.2102 40.1384h164.723v164.723h-164.723z" />
@@ -131,8 +131,8 @@ export const LogoPanthora = ({
             y1="584.976"
             y2="219.799"
           >
-            <stop offset="0" stop-color="#2e6d9e" />
-            <stop offset="1" stop-color="#b6fdfb" />
+            <stop offset="0" stopColor="#2e6d9e" />
+            <stop offset="1" stopColor="#b6fdfb" />
           </linearGradient>
           <linearGradient
             id="b"
@@ -142,8 +142,8 @@ export const LogoPanthora = ({
             y1="601.427"
             y2="407.497"
           >
-            <stop offset="0" stop-color="#5493bf" />
-            <stop offset="1" stop-color="#f1ffff" />
+            <stop offset="0" stopColor="#5493bf" />
+            <stop offset="1" stopColor="#f1ffff" />
           </linearGradient>
           <linearGradient
             id="c"
@@ -153,8 +153,8 @@ export const LogoPanthora = ({
             y1="619.873"
             y2="211.573"
           >
-            <stop offset=".154073" stop-color="#5493bf" stop-opacity="0" />
-            <stop offset=".619161" stop-color="#f1ffff" />
+            <stop offset=".154073" stopColor="#5493bf" stop-opacity="0" />
+            <stop offset=".619161" stopColor="#f1ffff" />
           </linearGradient>
           <linearGradient
             id="d"
@@ -164,8 +164,8 @@ export const LogoPanthora = ({
             y1="328.269"
             y2="495.424"
           >
-            <stop offset="0" stop-color="#f2ffff" />
-            <stop offset="1" stop-color="#3271a1" />
+            <stop offset="0" stopColor="#f2ffff" />
+            <stop offset="1" stopColor="#3271a1" />
           </linearGradient>
           <clipPath id="e">
             <path d="m256.75 150.752h510.5v510.5h-510.5z" />
