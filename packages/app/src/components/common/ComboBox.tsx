@@ -22,6 +22,11 @@ import {
   InputLeftElement,
   Icon,
   Text,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { FiCheck, FiSearch } from "react-icons/fi";
 
@@ -49,6 +54,8 @@ export const ComboBox = <T extends number>({
   values = [],
   onChange,
   placeholder = "Select",
+  min,
+  max,
 }: ComboBoxProps<T>) => {
   const {
     getDropdownProps,
@@ -63,6 +70,8 @@ export const ComboBox = <T extends number>({
       }
     },
   });
+  const maximumReached = max && selectedItems.length >= max;
+  const minimumReached = min && selectedItems.length >= min;
 
   const items = Children.toArray(children).map((child) =>
     cloneElement(child as React.ReactElement<ComboBoxItemProps<T>>, {
@@ -97,7 +106,7 @@ export const ComboBox = <T extends number>({
       const value = selectedItem.props.value;
       if (selectedItems.includes(value)) {
         removeSelectedItem(value);
-      } else {
+      } else if (!maximumReached) {
         addSelectedItem(value);
       }
       setInputValue("");
@@ -107,70 +116,86 @@ export const ComboBox = <T extends number>({
   const inputProps = getInputProps(
     getDropdownProps({ preventKeyAction: isOpen })
   );
-
   const focusInput = () => {
-    (inputProps.ref as RefObject<HTMLInputElement>).current?.focus();
     openMenu();
+    (inputProps.ref as RefObject<HTMLInputElement>).current?.focus();
   };
   const itemHoverBackgroundColor = useColorModeValue("gray.100", "gray.600");
   const menuBackgroundColor = useColorModeValue("white", "gray.700");
 
   return (
-    <Box position="relative" onClick={focusInput}>
-      <Box borderWidth={1} rounded={"md"} p={2} overflow="hidden">
-        <Flex gap={2} alignItems={"flex-start"} flexWrap="wrap">
-          {selectedItems.map((value) => (
-            <Tag key={value} p={1} px={2} maxW={"none"} whiteSpace={"nowrap"}>
-              <TagLabel>
-                {
-                  items.find((item) => item.props.value === value)?.props
-                    .children
+    <FormControl isInvalid={!minimumReached}>
+      <Box position="relative" onClick={focusInput}>
+        <Box
+          borderWidth={1}
+          rounded={"md"}
+          p={2}
+          overflow="hidden"
+          borderColor={!minimumReached ? "red.500" : undefined}
+        >
+          <Flex gap={2} alignItems={"flex-start"} flexWrap="wrap">
+            {selectedItems.map((value) => (
+              <Tag key={value} p={1} px={2} maxW={"none"} whiteSpace={"nowrap"}>
+                <TagLabel>
+                  {
+                    items.find((item) => item.props.value === value)?.props
+                      .children
+                  }
+                </TagLabel>
+                <TagCloseButton onClick={() => removeSelectedItem(value)} />
+              </Tag>
+            ))}
+          </Flex>
+          {selectedItems.length === 0 && (
+            <Text ml={1} color={"gray.500"}>
+              {placeholder}
+            </Text>
+          )}
+        </Box>
+        <Box
+          p={2}
+          borderWidth={1}
+          rounded={"md"}
+          mt={1}
+          bg={menuBackgroundColor}
+          hidden={!isOpen}
+        >
+          {maximumReached && (
+            <Alert status="warning" mb={2}>
+              <AlertIcon />
+              <AlertTitle>Maximum number of items reached</AlertTitle>
+            </Alert>
+          )}
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <Icon as={FiSearch} color="gray.500" />
+            </InputLeftElement>
+            <Input {...inputProps} variant={"flushed"} placeholder="Search" />
+          </InputGroup>
+          <List {...getMenuProps()} mt={2} maxH={64} overflowY={"scroll"}>
+            {filteredItems.map((item, index) => (
+              <ListItem
+                key={`${item.props.value}${index}`}
+                {...getItemProps({ item, index })}
+                bg={
+                  highlightedIndex === index
+                    ? itemHoverBackgroundColor
+                    : undefined
                 }
-              </TagLabel>
-              <TagCloseButton onClick={() => removeSelectedItem(value)} />
-            </Tag>
-          ))}
-        </Flex>
-        {selectedItems.length === 0 && (
-          <Text ml={1} color={"gray.500"}>
-            {placeholder}
-          </Text>
-        )}
+                rounded={"md"}
+                p={2}
+                px={4}
+              >
+                {item.props._selected && <ListIcon as={FiCheck} />}
+                {item.props.children}
+              </ListItem>
+            ))}
+          </List>
+        </Box>
       </Box>
-      <Box
-        p={2}
-        borderWidth={1}
-        rounded={"md"}
-        mt={1}
-        bg={menuBackgroundColor}
-        hidden={!isOpen}
-      >
-        <InputGroup>
-          <InputLeftElement pointerEvents="none">
-            <Icon as={FiSearch} color="gray.500" />
-          </InputLeftElement>
-          <Input {...inputProps} variant={"flushed"} placeholder="Search" />
-        </InputGroup>
-        <List {...getMenuProps()} mt={2} maxH={64} overflowY={"scroll"}>
-          {filteredItems.map((item, index) => (
-            <ListItem
-              key={`${item.props.value}${index}`}
-              {...getItemProps({ item, index })}
-              bg={
-                highlightedIndex === index
-                  ? itemHoverBackgroundColor
-                  : undefined
-              }
-              rounded={"md"}
-              p={2}
-              px={4}
-            >
-              {item.props._selected && <ListIcon as={FiCheck} />}
-              {item.props.children}
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    </Box>
+      {!minimumReached && (
+        <FormErrorMessage>Select at least {min} items</FormErrorMessage>
+      )}
+    </FormControl>
   );
 };
