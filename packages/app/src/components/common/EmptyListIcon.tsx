@@ -2,15 +2,17 @@ import { type As, Heading, Icon, VStack, Button, Box } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FiPlus } from "react-icons/fi";
 
+export type EmptyListIconProps = {
+  icon: As;
+  label?: string;
+  createHref?: string;
+};
+
 export const EmptyListIcon = ({
   icon,
   label = "Not found",
   createHref,
-}: {
-  icon: As;
-  label?: string;
-  createHref?: string;
-}) => {
+}: EmptyListIconProps) => {
   const { push } = useRouter();
   return (
     <VStack my={8} gap={8}>

@@ -1,43 +1,31 @@
-import React from "react";
-import {
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Button,
-  Stack,
-  Flex,
-} from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import React, { useMemo } from "react";
+import { Button, Stack } from "@chakra-ui/react";
+import { FiFolder, FiPlus } from "react-icons/fi";
 import { useRouter } from "next/router";
 import { AssetTypeExplanation } from "./AssetTypeExplanation";
-import { AssetTypeRow, EmptyAssetTypeRow } from "./AssetTypeRow";
+import { AssetTypeActionsCell, AssetTypeCell } from "./AssetTypeRow";
 import { api } from "@/utils/api";
 import { type AssetType } from "@/server/lib/asset-types/assetType";
 import { useTeam } from "@/lib/SelectedTeamProvider";
+import { createColumnHelper } from "@tanstack/react-table";
+import { DataTable } from "~/components/common/DataTable";
 
-const renderNestedAssetTypes = (
+type FlattenedAssetType = AssetType & { level: number };
+
+const flattenAssetTypes = (
   assetTypes: AssetType[],
-  refetchAssetTypes: VoidFunction,
   level = 0
-) => {
-  return assetTypes.map((assetType) => (
-    <React.Fragment key={assetType.id}>
-      <AssetTypeRow
-        assetType={assetType}
-        level={level}
-        refetchAssetTypes={refetchAssetTypes}
-      />
-      {assetType.children &&
-        renderNestedAssetTypes(
-          assetType.children,
-          refetchAssetTypes,
-          level + 1
-        )}
-    </React.Fragment>
-  ));
+): FlattenedAssetType[] => {
+  return assetTypes.reduce<FlattenedAssetType[]>((acc, assetType) => {
+    acc.push({ ...assetType, level });
+    if (assetType.children) {
+      acc.push(...flattenAssetTypes(assetType.children, level + 1));
+    }
+    return acc;
+  }, []);
 };
+
+const columnHelper = createColumnHelper<FlattenedAssetType>();
 
 export const AssetTypeTable: React.FC = () => {
   const { push } = useRouter();
@@ -46,37 +34,60 @@ export const AssetTypeTable: React.FC = () => {
     { teamId: team?.id ?? "" },
     { enabled: !!team }
   );
+  const assetTypes = useMemo(
+    () => (assetTypeQuery.data ? flattenAssetTypes(assetTypeQuery.data) : []),
+    [assetTypeQuery.data]
+  );
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("name", {
+        id: "name",
+        header: "Name",
+        cell: (cell) => (
+          <AssetTypeCell
+            assetType={cell.row.original}
+            level={cell.row.original.level}
+          />
+        ),
+      }),
+      columnHelper.display({
+        header: "Actions",
+        meta: { isNumeric: true },
+        cell: (cell) => (
+          <AssetTypeActionsCell
+            assetType={cell.row.original}
+            onDelete={assetTypeQuery.refetch}
+          />
+        ),
+      }),
+    ],
+    [assetTypeQuery.refetch]
+  );
 
   return (
     <Stack gap={6}>
       <AssetTypeExplanation />
-      <Flex justify="end">
-        <Button
-          leftIcon={<FiPlus />}
-          colorScheme="green"
-          onClick={() => push("/asset-types/create")}
-        >
-          Create
-        </Button>
-      </Flex>
       {!assetTypeQuery.isLoading && (
-        <Table variant="simple" size={"sm"}>
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th textAlign="right">Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {assetTypeQuery?.data?.length === 0 && <EmptyAssetTypeRow />}
-            {assetTypeQuery?.data &&
-              renderNestedAssetTypes(
-                assetTypeQuery.data,
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                assetTypeQuery.refetch
-              )}
-          </Tbody>
-        </Table>
+        <DataTable
+          columns={columns}
+          data={assetTypes}
+          variant={"simple"}
+          size={"sm"}
+          emptyList={{
+            icon: FiFolder,
+            label: "No asset types found",
+            createHref: "/asset-types/create",
+          }}
+          tableActions={
+            <Button
+              leftIcon={<FiPlus />}
+              colorScheme="green"
+              onClick={() => push("/asset-types/create")}
+            >
+              Create
+            </Button>
+          }
+        />
       )}
     </Stack>
   );

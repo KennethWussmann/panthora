@@ -1,5 +1,5 @@
-import { Box, Flex, IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { FiEdit, FiTag } from "react-icons/fi";
+import { Box, Flex, IconButton, Tooltip } from "@chakra-ui/react";
+import { FiEdit } from "react-icons/fi";
 import { BiSubdirectoryRight } from "react-icons/bi";
 import { type Tag } from "@prisma/client";
 import { DeleteIconButton } from "@/components/common/DeleteIconButton";
@@ -7,9 +7,8 @@ import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import { useErrorHandlingMutation } from "@/lib/useErrorHandling";
 import { useTeam } from "@/lib/SelectedTeamProvider";
-import { EmptyListIcon } from "@/components/common/EmptyListIcon";
 
-const TagActions = ({
+export const TagActionsCell = ({
   tag,
   onDelete,
 }: {
@@ -44,43 +43,12 @@ const TagActions = ({
   );
 };
 
-export const TagRow = ({
-  tag,
-  level,
-  refetchTags,
-}: {
-  tag: Tag;
-  level: number;
-  refetchTags: VoidFunction;
-}) => {
+export const TagCell = ({ tag, level }: { tag: Tag; level: number }) => {
   return (
-    <>
-      <Tr key={tag.id}>
-        <Td>
-          <Box pl={`${(level - 1) * 20}px`}>
-            <Flex alignItems={"center"} gap={2}>
-              {level > 0 && <BiSubdirectoryRight size={"20px"} />} {tag.name}
-            </Flex>
-          </Box>
-        </Td>
-        <Td textAlign="right">
-          <TagActions tag={tag} onDelete={refetchTags} />
-        </Td>
-      </Tr>
-    </>
-  );
-};
-
-export const EmptyTagRow = () => {
-  return (
-    <Tr>
-      <Td colSpan={2}>
-        <EmptyListIcon
-          icon={FiTag}
-          label={"No tags found"}
-          createHref="/tags/create"
-        />
-      </Td>
-    </Tr>
+    <Box pl={`${(level - 1) * 20}px`}>
+      <Flex alignItems={"center"} gap={2}>
+        {level > 0 && <BiSubdirectoryRight size={"20px"} />} {tag.name}
+      </Flex>
+    </Box>
   );
 };
