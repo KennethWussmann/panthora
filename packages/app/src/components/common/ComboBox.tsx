@@ -29,7 +29,7 @@ import {
   Checkbox,
   useOutsideClick,
 } from "@chakra-ui/react";
-import { FiSearch } from "react-icons/fi";
+import { FiChevronDown, FiSearch } from "react-icons/fi";
 
 type ComboBoxProps<T> = {
   values?: T[];
@@ -135,7 +135,12 @@ export const ComboBox = <T extends number | string>({
   }, [isOpen]);
 
   return (
-    <FormControl isInvalid={!minimumReached}>
+    <FormControl
+      isInvalid={!minimumReached}
+      onFocus={focusInput}
+      onClick={focusInput}
+      ref={comboBoxRef}
+    >
       <Box position="relative">
         <Box
           borderWidth={1}
@@ -144,9 +149,6 @@ export const ComboBox = <T extends number | string>({
           overflow="hidden"
           borderColor={!minimumReached ? "red.500" : undefined}
           tabIndex={0}
-          onFocus={focusInput}
-          onClick={focusInput}
-          ref={comboBoxRef}
         >
           <Flex gap={2} alignItems={"flex-start"} flexWrap="wrap">
             {selectedItems.map((value) => (
@@ -162,9 +164,13 @@ export const ComboBox = <T extends number | string>({
             ))}
           </Flex>
           {selectedItems.length === 0 && (
-            <Text ml={1} color={"gray.500"}>
-              {placeholder}
-            </Text>
+            <Flex alignItems={"center"} justifyContent={"space-between"} px={1}>
+              <Text ml={1} color={"gray.500"}>
+                {placeholder}
+              </Text>
+
+              <Icon as={FiChevronDown} />
+            </Flex>
           )}
         </Box>
         <Box
