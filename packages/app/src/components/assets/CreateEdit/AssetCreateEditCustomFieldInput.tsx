@@ -171,7 +171,7 @@ export const AssetCreateEditCustomFieldInput = ({
                 }}
                 max={customField.inputMax ?? undefined}
                 min={customField.inputMin ?? undefined}
-                placeholder="Select Tag"
+                placeholder="Select Tags"
               >
                 {tags?.map((tag) => (
                   <ComboBoxItem key={tag.id} value={tag.id}>

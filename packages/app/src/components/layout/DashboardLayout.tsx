@@ -10,7 +10,10 @@ import { NavTopbar } from "../nav/NavTopbar";
 export const DashboardLayout = ({ children }: { children: ReactNode }) => (
   <Restricted>
     <OnboardingRedirect />
-    <Flex minH="100vh" flexDirection={{ base: "column", md: "row" }}>
+    <Flex
+      flexDirection={{ base: "column", md: "row" }}
+      minH={{ base: undefined, md: "100vh" }}
+    >
       <Show above="md">
         <Flex position="sticky" top="0" maxH="100vh" zIndex="1">
           <NavSidebar />
