@@ -8,8 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Td,
-  Tr,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -17,7 +15,7 @@ import {
   type UserTeamMembership,
   UserTeamMembershipRole,
 } from "@prisma/client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DeleteIconButton } from "@/components/common/DeleteIconButton";
 import { useTeam } from "@/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "@/lib/useErrorHandling";
@@ -25,13 +23,7 @@ import { type Member } from "@/server/lib/team/member";
 import { api } from "@/utils/api";
 import { roleLabels } from "./roleLabels";
 
-type TeamMemberRowProps = {
-  member: Member;
-  ownMembership: UserTeamMembership;
-  refetchMembers: VoidFunction;
-};
-
-const TeamMemberActions = ({
+export const TeamMemberActionsCell = ({
   member,
   onDelete,
   canModify,
@@ -74,16 +66,10 @@ const TeamMemberActions = ({
   );
 };
 
-export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
-  member,
-  ownMembership,
-  refetchMembers,
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [newRole, setNewRole] = useState<UserTeamMembershipRole>(member.role);
-  const updateMemberRole = useErrorHandlingMutation(api.team.updateMemberRole);
-  const toast = useToast();
-
+export const canModifyMember = (
+  ownMembership: UserTeamMembership,
+  member: Member
+) => {
   const adminsCanModifyMembers =
     ownMembership.role === UserTeamMembershipRole.ADMIN &&
     member.role === UserTeamMembershipRole.MEMBER;
@@ -92,6 +78,26 @@ export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
     member.role !== UserTeamMembershipRole.OWNER;
   const canModify = adminsCanModifyMembers || ownersCanModifyAdminsMembers;
 
+  return canModify;
+};
+
+export const TeamMemberRoleCell = ({
+  ownMembership,
+  member,
+  onRoleChanged,
+}: {
+  ownMembership: UserTeamMembership;
+  member: Member;
+  onRoleChanged: VoidFunction;
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [newRole, setNewRole] = useState<UserTeamMembershipRole>(member.role);
+  const updateMemberRole = useErrorHandlingMutation(api.team.updateMemberRole);
+  const toast = useToast();
+  const canModify = useMemo(
+    () => canModifyMember(ownMembership, member),
+    [ownMembership, member]
+  );
   const onRoleChange = async () => {
     await updateMemberRole.mutateAsync({
       teamId: ownMembership.teamId,
@@ -106,49 +112,36 @@ export const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
       duration: 5000,
       isClosable: true,
     });
-    refetchMembers();
+    onRoleChanged();
     onClose();
   };
-
   return (
     <>
-      <Tr>
-        <Td>{member.email}</Td>
-        <Td>
-          <Select
-            value={member.role}
-            isDisabled={!canModify}
-            minW={"120px"}
-            onChange={(e) => {
-              setNewRole(
-                Object.values(UserTeamMembershipRole).find(
-                  (role) => role === e.target.value
-                ) ?? member.role
-              );
-              onOpen();
-            }}
-          >
-            {Object.values(UserTeamMembershipRole)
-              .filter((role) =>
-                member.role === UserTeamMembershipRole.OWNER
-                  ? true
-                  : role !== UserTeamMembershipRole.OWNER
-              )
-              .map((role) => (
-                <option key={role} value={role}>
-                  {roleLabels[role]}
-                </option>
-              ))}
-          </Select>
-        </Td>
-        <Td textAlign="right">
-          <TeamMemberActions
-            member={member}
-            canModify={canModify}
-            onDelete={refetchMembers}
-          />
-        </Td>
-      </Tr>
+      <Select
+        value={member.role}
+        isDisabled={!canModify}
+        minW={"120px"}
+        onChange={(e) => {
+          setNewRole(
+            Object.values(UserTeamMembershipRole).find(
+              (role) => role === e.target.value
+            ) ?? member.role
+          );
+          onOpen();
+        }}
+      >
+        {Object.values(UserTeamMembershipRole)
+          .filter((role) =>
+            member.role === UserTeamMembershipRole.OWNER
+              ? true
+              : role !== UserTeamMembershipRole.OWNER
+          )
+          .map((role) => (
+            <option key={role} value={role}>
+              {roleLabels[role]}
+            </option>
+          ))}
+      </Select>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

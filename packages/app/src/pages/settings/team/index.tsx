@@ -6,7 +6,7 @@ import { useTeamMembershipRole } from "@/lib/useTeamMembershipRole";
 export default function Settings() {
   const { team, refetch, isLoading, isAdminOrOwner } = useTeamMembershipRole();
   if (isLoading || !team) {
-    return <Progress isIndeterminate />;
+    return <Progress size={"xs"} isIndeterminate rounded={"full"} />;
   }
 
   if (!isAdminOrOwner) {
