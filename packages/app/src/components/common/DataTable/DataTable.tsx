@@ -17,6 +17,7 @@ import {
   InputLeftElement,
   Input,
   TableContainer,
+  Progress,
 } from "@chakra-ui/react";
 import {
   useReactTable,
@@ -26,17 +27,20 @@ import {
   type SortingState,
   getSortedRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
-import { EmptyListIcon, type EmptyListIconProps } from "./EmptyListIcon";
+import { EmptyListIcon, type EmptyListIconProps } from "../EmptyListIcon";
 import { FiFile, FiSearch } from "react-icons/fi";
-import { ComboBox, ComboBoxItem } from "./ComboBox";
+import { ComboBox, ComboBoxItem } from "../ComboBox";
 import { useState } from "react";
+import { Pagination } from "./Pagination";
 
 export type DataTableProps<Data extends object> = {
   data: Data[];
   columns: ColumnDef<Data, any>[];
   emptyList?: EmptyListIconProps | null;
   tableActions?: React.ReactNode;
+  isLoading?: boolean;
 } & TableProps;
 
 export function DataTable<Data extends object>({
@@ -47,13 +51,16 @@ export function DataTable<Data extends object>({
     label: "No data found",
   },
   tableActions,
+  isLoading,
   ...tableProps
 }: DataTableProps<Data>) {
+  const filterableColumns = columns.filter((c) => !!c.id);
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    columns.filter((c) => !!c.id).map((column) => column.id!)
+    filterableColumns.map((column) => column.id!)
   );
   const [searchValue, setSearchValue] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const table = useReactTable({
     columns,
     data,
@@ -61,12 +68,15 @@ export function DataTable<Data extends object>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnVisibility: Object.fromEntries(
         columns.map((c) => [c.id, visibleColumns.includes(c.id!)])
       ),
       globalFilter: searchValue,
+      pagination,
     },
   });
 
@@ -89,14 +99,13 @@ export function DataTable<Data extends object>({
             onChange={setVisibleColumns}
             variant="grouped"
             itemName={{ singular: "Column", plural: "Columns" }}
+            isSearchable={filterableColumns.length >= 5}
           >
-            {columns
-              .filter((c) => !!c.id)
-              .map((column) => (
-                <ComboBoxItem key={column.id} value={column.id}>
-                  {column.header?.toString()}
-                </ComboBoxItem>
-              ))}
+            {filterableColumns.map((column) => (
+              <ComboBoxItem key={column.id} value={column.id}>
+                {column.header?.toString()}
+              </ComboBoxItem>
+            ))}
           </ComboBox>
         </Flex>
         {tableActions}
@@ -145,7 +154,7 @@ export function DataTable<Data extends object>({
             ))}
           </Thead>
           <Tbody>
-            {table.getRowModel().rows.length === 0 && emptyList && (
+            {!isLoading && table.getRowCount() === 0 && emptyList && (
               <Tr>
                 <Td
                   colSpan={
@@ -153,6 +162,17 @@ export function DataTable<Data extends object>({
                   }
                 >
                   <EmptyListIcon {...emptyList} />
+                </Td>
+              </Tr>
+            )}
+            {isLoading && table.getRowCount() === 0 && (
+              <Tr>
+                <Td
+                  colSpan={
+                    table.getHeaderGroups().flatMap((g) => g.headers).length
+                  }
+                >
+                  <Progress size="xs" isIndeterminate rounded={"full"} />
                 </Td>
               </Tr>
             )}
@@ -175,6 +195,19 @@ export function DataTable<Data extends object>({
           </Tbody>
         </Table>
       </TableContainer>
+      <Flex justifyContent={"end"}>
+        <Pagination
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          pageCount={table.getPageCount()}
+          rowCount={table.getRowCount()}
+          hasNextPage={table.getCanNextPage()}
+          hasPreviousPage={table.getCanPreviousPage()}
+          nextPage={table.nextPage}
+          previousPage={table.previousPage}
+          setPageSize={table.setPageSize}
+        />
+      </Flex>
     </>
   );
 }

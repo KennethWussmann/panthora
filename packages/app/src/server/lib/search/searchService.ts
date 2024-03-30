@@ -20,6 +20,7 @@ import { type SearchResults } from "./searchResponse";
 import { convertQueryToMeiliSearchQuery } from "./queryParser";
 import { type TeamService } from "../team/teamService";
 import { type AssetWithFields } from "../assets/asset";
+import { type SearchTask } from "./getFailedSearchTasks";
 
 export class SearchService {
   private initialized = false;
@@ -114,11 +115,14 @@ export class SearchService {
     await this.rebuildIndexes(teamId);
   };
 
-  public getTasks = async (userId: string, teamId: string) => {
+  public getTasks = async (
+    userId: string,
+    teamId: string
+  ): Promise<SearchTask[]> => {
     await this.waitForInitialization();
     await this.teamService.requireTeamMembershipAdmin(userId, teamId);
     const { results: tasks } = await this.meiliSearch.getTasks({
-      limit: 20,
+      limit: 50,
       indexUids: [
         this.assetSearchService.getIndexName(teamId),
         this.assetTypeSearchService.getIndexName(teamId),
@@ -126,7 +130,13 @@ export class SearchService {
       ],
     });
 
-    return tasks;
+    return tasks.map((task) => ({
+      enqueuedAt: task.enqueuedAt,
+      indexUid: task.indexUid,
+      type: task.type,
+      status: task.status,
+      errorMessage: task.error?.message,
+    }));
   };
 
   public search = async (

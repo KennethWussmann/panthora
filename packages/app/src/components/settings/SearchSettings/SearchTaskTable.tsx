@@ -1,21 +1,47 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Progress,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, Progress } from "@chakra-ui/react";
 import type { Team } from "@prisma/client";
-import { useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 import { api } from "@/utils/api";
+import { type SearchTask } from "~/server/lib/search/getFailedSearchTasks";
+import { createColumnHelper } from "@tanstack/react-table";
+import { DataTable } from "~/components/common/DataTable/DataTable";
 
-export const SearchTaskTable = ({ team }: { team: Team }) => {
+const columnHelper = createColumnHelper<SearchTask>();
+const columns = [
+  columnHelper.accessor("enqueuedAt", {
+    id: "enqueuedAt",
+    header: "Enqueued at",
+    cell: (cell) => cell.getValue().toISOString(),
+  }),
+  columnHelper.accessor("indexUid", {
+    id: "index",
+    header: "Index",
+    cell: (cell) => cell.getValue(),
+  }),
+  columnHelper.accessor("type", {
+    id: "type",
+    header: "Type",
+    cell: (cell) => cell.getValue(),
+  }),
+  columnHelper.accessor("status", {
+    id: "status",
+    header: "Status",
+    cell: (cell) => cell.getValue(),
+  }),
+  columnHelper.accessor("errorMessage", {
+    id: "errorMessage",
+    header: "Details",
+    cell: (cell) => cell.getValue(),
+  }),
+];
+
+export const SearchTaskTable = ({
+  team,
+  tableActions,
+}: {
+  team: Team;
+  tableActions: ReactNode;
+}) => {
   const {
     data: tasks,
     isLoading: isLoadingTasks,
@@ -43,32 +69,12 @@ export const SearchTaskTable = ({ team }: { team: Team }) => {
           </AlertDescription>
         </Alert>
       )}
-      {!isLoadingTasks && tasks && tasks.length > 0 && (
-        <TableContainer>
-          <Table variant="simple" size={"sm"}>
-            <Thead>
-              <Tr>
-                <Th>Enqueued at</Th>
-                <Th>Index</Th>
-                <Th>Type</Th>
-                <Th>Status</Th>
-                <Th>Details</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {tasks.map((task) => (
-                <Tr key={task.uid}>
-                  <Td>{String(task.enqueuedAt)}</Td>
-                  <Td>{task.indexUid}</Td>
-                  <Td>{task.type}</Td>
-                  <Td>{task.status}</Td>
-                  <Td>{task.error?.message}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      )}
+      <DataTable
+        columns={columns}
+        data={tasks ?? []}
+        isLoading={isLoadingTasks}
+        tableActions={tableActions}
+      />
     </>
   );
 };

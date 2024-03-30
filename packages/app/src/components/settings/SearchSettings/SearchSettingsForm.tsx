@@ -4,7 +4,6 @@ import {
   AlertIcon,
   Box,
   Button,
-  Flex,
   Heading,
   Stack,
   Text,
@@ -42,23 +41,25 @@ export const SearchSettingsForm = ({ team }: { team: Team }) => {
             </AlertDescription>
           </Alert>
         )}
-        <Text>
+        <Text mb={2}>
           In case you experience issues with searching, you can rebuild the
           search indexes here. This may take a while until all searching
           capabilities are working correctly again. It is intended to be used as
           a last resort, if you experience issues with searching.
         </Text>
-        <SearchTaskTable team={team} />
-        <Flex justifyContent="flex-end">
-          <Button
-            leftIcon={<FiSearch />}
-            variant={"outline"}
-            isLoading={isLoadingRebuildIndexes}
-            onClick={() => void rebuildIndexes({ teamId: team.id })}
-          >
-            Rebuild Search Indexes
-          </Button>
-        </Flex>
+        <SearchTaskTable
+          team={team}
+          tableActions={
+            <Button
+              leftIcon={<FiSearch />}
+              variant={"outline"}
+              isLoading={isLoadingRebuildIndexes}
+              onClick={() => void rebuildIndexes({ teamId: team.id })}
+            >
+              Rebuild Search Indexes
+            </Button>
+          }
+        />
       </Stack>
     </Box>
   );

@@ -40,6 +40,7 @@ type ComboBoxProps<T> = {
   max?: number;
   variant?: "inline" | "grouped";
   itemName?: { singular: string; plural: string };
+  isSearchable?: boolean;
 };
 
 type ComboBoxItemProps<T> = {
@@ -61,6 +62,7 @@ export const ComboBox = <T extends number | string>({
   max,
   variant = "inline",
   itemName = { singular: "Item", plural: "Items" },
+  isSearchable = true,
 }: ComboBoxProps<T>) => {
   const {
     getDropdownProps,
@@ -197,6 +199,7 @@ export const ComboBox = <T extends number | string>({
               justifyContent={"space-between"}
               px={1}
               gap={2}
+              height={"23px"}
             >
               <Flex gap={2}>
                 <Tag rounded={"full"}>
@@ -224,13 +227,13 @@ export const ComboBox = <T extends number | string>({
           zIndex="dropdown"
           boxShadow={"lg"}
         >
-          <InputGroup>
+          <InputGroup hidden={!isSearchable} mb={2}>
             <InputLeftElement pointerEvents="none">
               <Icon as={FiSearch} color="gray.500" />
             </InputLeftElement>
             <Input {...inputProps} variant={"flushed"} placeholder="Search" />
           </InputGroup>
-          <List {...getMenuProps()} mt={2} maxH={64} overflowY={"scroll"}>
+          <List {...getMenuProps()} maxH={64} overflowY={"scroll"}>
             {filteredItems.map((item, index) => (
               <ListItem
                 key={`${item.props.value}${index}`}

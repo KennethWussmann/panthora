@@ -8,7 +8,7 @@ import { api } from "@/utils/api";
 import { type AssetType } from "@/server/lib/asset-types/assetType";
 import { useTeam } from "@/lib/SelectedTeamProvider";
 import { createColumnHelper } from "@tanstack/react-table";
-import { DataTable } from "~/components/common/DataTable";
+import { DataTable } from "~/components/common/DataTable/DataTable";
 
 type FlattenedAssetType = AssetType & { level: number };
 

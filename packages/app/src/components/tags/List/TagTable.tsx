@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import { type Tag } from "@/server/lib/tags/tag";
 import { useTeam } from "@/lib/SelectedTeamProvider";
-import { DataTable } from "~/components/common/DataTable";
+import { DataTable } from "~/components/common/DataTable/DataTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TagActionsCell, TagCell } from "./TagRow";
 
