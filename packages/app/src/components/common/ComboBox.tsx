@@ -38,6 +38,8 @@ type ComboBoxProps<T> = {
   placeholder?: string;
   min?: number;
   max?: number;
+  variant?: "inline" | "grouped";
+  itemName?: { singular: string; plural: string };
 };
 
 type ComboBoxItemProps<T> = {
@@ -57,6 +59,8 @@ export const ComboBox = <T extends number | string>({
   placeholder = "Select",
   min,
   max,
+  variant = "inline",
+  itemName = { singular: "Item", plural: "Items" },
 }: ComboBoxProps<T>) => {
   const {
     getDropdownProps,
@@ -149,26 +153,61 @@ export const ComboBox = <T extends number | string>({
           overflow="hidden"
           borderColor={!minimumReached ? "red.500" : undefined}
           tabIndex={0}
+          minW={"1"}
         >
-          <Flex gap={2} alignItems={"flex-start"} flexWrap="wrap">
-            {selectedItems.map((value) => (
-              <Tag key={value} p={1} px={2} maxW={"none"} whiteSpace={"nowrap"}>
-                <TagLabel>
-                  {
-                    items.find((item) => item.props.value === value)?.props
-                      .children
-                  }
-                </TagLabel>
-                <TagCloseButton onClick={() => removeSelectedItem(value)} />
-              </Tag>
-            ))}
-          </Flex>
-          {selectedItems.length === 0 && (
-            <Flex alignItems={"center"} justifyContent={"space-between"} px={1}>
-              <Text ml={1} color={"gray.500"}>
-                {placeholder}
-              </Text>
+          {variant === "inline" && (
+            <>
+              <Flex gap={2} alignItems={"flex-start"} flexWrap="wrap">
+                {selectedItems.map((value) => (
+                  <Tag
+                    key={value}
+                    p={1}
+                    px={2}
+                    maxW={"none"}
+                    whiteSpace={"nowrap"}
+                  >
+                    <TagLabel>
+                      {
+                        items.find((item) => item.props.value === value)?.props
+                          .children
+                      }
+                    </TagLabel>
+                    <TagCloseButton onClick={() => removeSelectedItem(value)} />
+                  </Tag>
+                ))}
+              </Flex>
+              {selectedItems.length === 0 && (
+                <Flex
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  px={1}
+                >
+                  <Text ml={1} color={"gray.500"}>
+                    {placeholder}
+                  </Text>
 
+                  <Icon as={FiChevronDown} />
+                </Flex>
+              )}
+            </>
+          )}
+          {variant === "grouped" && (
+            <Flex
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              px={1}
+              gap={2}
+            >
+              <Flex gap={2}>
+                <Tag rounded={"full"}>
+                  <TagLabel>{selectedItems.length}</TagLabel>
+                </Tag>
+                <Text>
+                  {selectedItems.length === 1
+                    ? itemName.singular
+                    : itemName.plural}
+                </Text>
+              </Flex>
               <Icon as={FiChevronDown} />
             </Flex>
           )}
