@@ -16,6 +16,7 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  TableContainer,
 } from "@chakra-ui/react";
 import {
   useReactTable,
@@ -100,75 +101,80 @@ export function DataTable<Data extends object>({
         </Flex>
         {tableActions}
       </Flex>
-      <Table {...tableProps}>
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                const meta: any = header.column.columnDef.meta;
-                return (
-                  <Th
-                    key={header.id}
-                    onClick={
-                      meta?.isSortable
-                        ? header.column.getToggleSortingHandler()
-                        : undefined
-                    }
-                    isNumeric={meta?.isNumeric}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+      <TableContainer>
+        <Table {...tableProps}>
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const meta: any = header.column.columnDef.meta;
+                  return (
+                    <Th
+                      key={header.id}
+                      onClick={
+                        meta?.isSortable
+                          ? header.column.getToggleSortingHandler()
+                          : undefined
+                      }
+                      isNumeric={meta?.isNumeric}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
 
-                    <chakra.span pl="4">
-                      {header.column.getIsSorted() ? (
-                        header.column.getIsSorted() === "desc" ? (
-                          <Icon
-                            as={PiSortDescending}
-                            aria-label="sorted descending"
-                          />
-                        ) : (
-                          <Icon
-                            as={PiSortAscending}
-                            aria-label="sorted ascending"
-                          />
-                        )
-                      ) : null}
-                    </chakra.span>
-                  </Th>
-                );
-              })}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.length === 0 && emptyList && (
-            <Tr>
-              <Td
-                colSpan={
-                  table.getHeaderGroups().flatMap((g) => g.headers).length
-                }
-              >
-                <EmptyListIcon {...emptyList} />
-              </Td>
-            </Tr>
-          )}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => {
-                // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
-                const meta: any = cell.column.columnDef.meta;
-                return (
-                  <Td key={cell.id} isNumeric={meta?.isNumeric}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                );
-              })}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+                      <chakra.span pl="4">
+                        {header.column.getIsSorted() ? (
+                          header.column.getIsSorted() === "desc" ? (
+                            <Icon
+                              as={PiSortDescending}
+                              aria-label="sorted descending"
+                            />
+                          ) : (
+                            <Icon
+                              as={PiSortAscending}
+                              aria-label="sorted ascending"
+                            />
+                          )
+                        ) : null}
+                      </chakra.span>
+                    </Th>
+                  );
+                })}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table.getRowModel().rows.length === 0 && emptyList && (
+              <Tr>
+                <Td
+                  colSpan={
+                    table.getHeaderGroups().flatMap((g) => g.headers).length
+                  }
+                >
+                  <EmptyListIcon {...emptyList} />
+                </Td>
+              </Tr>
+            )}
+            {table.getRowModel().rows.map((row) => (
+              <Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => {
+                  // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
+                  const meta: any = cell.column.columnDef.meta;
+                  return (
+                    <Td key={cell.id} isNumeric={meta?.isNumeric}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </Td>
+                  );
+                })}
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
