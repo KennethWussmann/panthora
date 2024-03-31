@@ -103,7 +103,7 @@ export function DataTable<Data extends object>({
           >
             {filterableColumns.map((column) => (
               <ComboBoxItem key={column.id} value={column.id}>
-                {column.header?.toString()}
+                {(column.meta as any)?.filterLabel ?? column.header?.toString()}
               </ComboBoxItem>
             ))}
           </ComboBox>
