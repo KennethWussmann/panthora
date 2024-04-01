@@ -17,8 +17,17 @@ import {
   MenuItem,
   Divider,
   Progress,
+  TagLabel,
+  TagLeftIcon,
 } from "@chakra-ui/react";
-import { FiBox, FiChevronDown, FiPlus, FiPrinter } from "react-icons/fi";
+import {
+  FiBox,
+  FiCheck,
+  FiChevronDown,
+  FiPlus,
+  FiPrinter,
+  FiX,
+} from "react-icons/fi";
 import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
 import { AssetActionsCell } from "./AssetRow";
@@ -125,22 +134,47 @@ export const AssetTable: React.FC = () => {
             const fieldValue = asset.fieldValues.find(
               (fv) => fv.customFieldId === field.id
             );
-            if (fieldValue?.customField.fieldType === FieldType.TAG) {
-              return fieldValue?.tagsValue?.map((tag) => (
-                <Tag
-                  key={tag.id}
-                  mr={2}
-                  _hover={{
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  }}
-                  onClick={() => push(`/tags/edit/${tag.id}`)}
-                >
-                  {tag.name}
-                </Tag>
-              ));
+            switch (
+              fieldValue?.customField?.fieldType as FieldType | undefined
+            ) {
+              case FieldType.STRING:
+                return fieldValue?.stringValue;
+              case FieldType.TAG:
+                return fieldValue?.tagsValue?.map((tag) => (
+                  <Tag
+                    key={tag.id}
+                    mr={2}
+                    _hover={{
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => push(`/tags/edit/${tag.id}`)}
+                  >
+                    {tag.name}
+                  </Tag>
+                ));
+              case FieldType.BOOLEAN:
+                return (
+                  <Tag>
+                    <TagLeftIcon
+                      as={fieldValue?.booleanValue ? FiCheck : FiX}
+                    />
+                    <TagLabel>
+                      {fieldValue?.booleanValue ? "Yes" : "No"}
+                    </TagLabel>
+                  </Tag>
+                );
+              case FieldType.NUMBER:
+                return fieldValue?.intValue ?? fieldValue?.decimalValue;
+              case FieldType.DATE:
+                return fieldValue?.dateTimeValue?.toISOString().split("T")[0];
+              case FieldType.TIME:
+                return fieldValue?.dateTimeValue?.toISOString().split("T")[1];
+              case FieldType.DATETIME:
+                return fieldValue?.dateTimeValue?.toISOString();
+              default:
+                return null;
             }
-            return fieldValue?.stringValue ?? "";
           },
         })
       ),
