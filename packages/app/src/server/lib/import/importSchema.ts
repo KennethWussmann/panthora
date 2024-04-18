@@ -2,6 +2,7 @@ import { z } from "zod";
 import { FieldType } from "@prisma/client";
 
 const baseCustomFieldCreateEditRequest = {
+  id: z.string().optional(),
   name: z.string(),
   inputRequired: z.boolean(),
   showInTable: z.boolean(),
@@ -66,13 +67,14 @@ const tagBase = z.object({
   name: z.string().min(1).max(250),
 });
 type Tag = z.infer<typeof tagBase> & {
-  children: Tag[];
+  children?: Tag[];
 };
 const tag: z.ZodType<Tag> = tagBase.extend({
-  children: z.lazy(() => z.array(tag)),
+  children: z.lazy(() => z.array(tag)).optional(),
 });
 
 const assetTypeBase = z.object({
+  id: z.string().optional(),
   name: z.string().min(1).max(250),
   fields: z.array(field),
 });
@@ -83,6 +85,17 @@ const assetType: z.ZodType<AssetType> = assetTypeBase.extend({
   children: z.lazy(() => z.array(assetType).optional()),
 });
 
+const value = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+
+const fieldValue = z.object({
+  fieldId: z.string(),
+  value: value.or(z.array(z.string())),
+});
+const asset = z.object({
+  assetTypeId: z.string(),
+  values: z.array(fieldValue),
+});
+
 export const importSchema = z.object({
   $schema: z.string().optional(),
   name: z.string().min(1).max(250),
@@ -91,11 +104,13 @@ export const importSchema = z.object({
   author: z.string().min(1).max(250).optional(),
   tags: z.array(tag).optional(),
   assetTypes: z.array(assetType).optional(),
+  assets: z.array(asset).optional(),
 });
 
-export const importSchemaVersion = "0.2.0";
+export const importSchemaVersion = "0.3.0";
 
 export type ImportSchema = z.infer<typeof importSchema>;
 export type ImportAssetType = z.infer<typeof assetType>;
 export type ImportField = z.infer<typeof field>;
 export type ImportTag = z.infer<typeof tag>;
+export type ImportAsset = z.infer<typeof asset>;

@@ -11,6 +11,11 @@ import { type Logger } from "winston";
 import type { AssetSearchService } from "../search/assetSearchService";
 import { type AssetDeleteRequest } from "./assetDeleteRequest";
 import { type TeamService } from "../team/teamService";
+import {
+  type AssetSearchResponse,
+  type AssetSearchRequest,
+} from "./assetSearchRequest";
+import { TRPCClientError } from "@trpc/client";
 
 export class AssetService {
   constructor(
@@ -348,6 +353,80 @@ export class AssetService {
     );
   };
 
+  private findAssets = async (userId: string, ids: string[]) => {
+    const assets = await this.prisma.asset.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      include: {
+        fieldValues: {
+          include: {
+            tagsValue: true,
+            customField: true,
+          },
+        },
+        team: true,
+      },
+    });
+    return Promise.all(
+      assets.map(async (asset) => ({
+        ...asset,
+        fieldValues: asset.fieldValues.map((fieldValue) => ({
+          ...fieldValue,
+          decimalValue: fieldValue.decimalValue?.toNumber() ?? null,
+        })),
+        assetType:
+          await this.assetTypeService.getByIdWithFieldsAndChildrenByUser(
+            userId,
+            asset.assetTypeId
+          ),
+      }))
+    );
+  };
+
+  public searchAssets = async (
+    userId: string,
+    request: AssetSearchRequest
+  ): Promise<AssetSearchResponse> => {
+    await this.teamService.requireTeamMembership(userId, request.teamId);
+    const searchableFields =
+      await this.assetTypeService.getSearchableCustomFields([request.teamId]);
+    try {
+      const searchResults = await this.assetSearchService.search(
+        request.teamId,
+        null,
+        {
+          limit: request.limit,
+          offset: request.offset,
+          facets: [
+            "assetTypeName",
+            ...searchableFields.map((field) => field.slug),
+          ],
+          filter: request.filter,
+        }
+      );
+
+      const assets = await this.findAssets(
+        userId,
+        searchResults.hits.map((hit) => hit.id)
+      );
+      return {
+        assets,
+        facetStats: searchResults.facetStats,
+        facetDistribution: searchResults.facetDistribution,
+      };
+    } catch (e) {
+      this.logger.error("Error searching assets", {
+        error: e,
+        userId,
+        request,
+      });
+      throw new TRPCClientError("Error searching assets");
+    }
+  };
+
   public getSearchableAssets = async (teamId: string) => {
     const assets = await this.prisma.asset.findMany({
       where: {
@@ -356,6 +435,7 @@ export class AssetService {
       include: {
         fieldValues: {
           include: {
+            tagsValue: true,
             customField: true,
           },
         },

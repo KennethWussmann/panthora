@@ -18,6 +18,9 @@ import {
   Input,
   TableContainer,
   Progress,
+  HStack,
+  Spacer,
+  VStack,
 } from "@chakra-ui/react";
 import {
   useReactTable,
@@ -39,6 +42,7 @@ export type DataTableProps<Data extends object> = {
   data: Data[];
   columns: ColumnDef<Data, any>[];
   emptyList?: EmptyListIconProps | null;
+  filterActions?: React.ReactNode;
   tableActions?: React.ReactNode;
   isLoading?: boolean;
 } & TableProps;
@@ -50,6 +54,7 @@ export function DataTable<Data extends object>({
     icon: FiFile,
     label: "No data found",
   },
+  filterActions,
   tableActions,
   isLoading,
   ...tableProps
@@ -81,35 +86,35 @@ export function DataTable<Data extends object>({
   });
 
   return (
-    <>
-      <Flex justify="space-between">
-        <Flex gap={2}>
-          <InputGroup>
-            <InputLeftElement>
-              <Icon as={FiSearch} color="gray.500" />
-            </InputLeftElement>
-            <Input
-              placeholder="Search"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.currentTarget.value)}
-            />
-          </InputGroup>
-          <ComboBox
-            values={visibleColumns}
-            onChange={setVisibleColumns}
-            variant="grouped"
-            itemName={{ singular: "Column", plural: "Columns" }}
-            isSearchable={filterableColumns.length >= 5}
-          >
-            {filterableColumns.map((column) => (
-              <ComboBoxItem key={column.id} value={column.id}>
-                {(column.meta as any)?.filterLabel ?? column.header?.toString()}
-              </ComboBoxItem>
-            ))}
-          </ComboBox>
-        </Flex>
-        {tableActions}
-      </Flex>
+    <VStack align={"stretch"} gap={6}>
+      <HStack>
+        <InputGroup maxW={"180px"}>
+          <InputLeftElement>
+            <Icon as={FiSearch} color="gray.500" />
+          </InputLeftElement>
+          <Input
+            placeholder="Search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.currentTarget.value)}
+          />
+        </InputGroup>
+        <ComboBox
+          values={visibleColumns}
+          onChange={setVisibleColumns}
+          variant="grouped"
+          itemName={{ singular: "Column", plural: "Columns" }}
+          isSearchable={filterableColumns.length >= 5}
+        >
+          {filterableColumns.map((column) => (
+            <ComboBoxItem key={column.id} value={column.id}>
+              {(column.meta as any)?.filterLabel ?? column.header?.toString()}
+            </ComboBoxItem>
+          ))}
+        </ComboBox>
+        {filterActions}
+        <Spacer />
+        <Flex justifyContent={"flex-end"}>{tableActions}</Flex>
+      </HStack>
       <TableContainer>
         <Table {...tableProps}>
           <Thead>
@@ -195,7 +200,7 @@ export function DataTable<Data extends object>({
           </Tbody>
         </Table>
       </TableContainer>
-      <Flex justifyContent={"end"}>
+      <Flex justifyContent={"end"} mt={2}>
         <Pagination
           pageIndex={pagination.pageIndex}
           pageSize={pagination.pageSize}
@@ -208,6 +213,6 @@ export function DataTable<Data extends object>({
           setPageSize={table.setPageSize}
         />
       </Flex>
-    </>
+    </VStack>
   );
 }

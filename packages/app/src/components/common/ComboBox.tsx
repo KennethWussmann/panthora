@@ -70,7 +70,7 @@ export const ComboBox = <T extends number | string>({
     removeSelectedItem,
     selectedItems,
   } = useMultipleSelection<T>({
-    initialSelectedItems: values,
+    selectedItems: values,
     onSelectedItemsChange: ({ selectedItems }) => {
       if (selectedItems) {
         onChange?.(selectedItems);
@@ -146,6 +146,7 @@ export const ComboBox = <T extends number | string>({
       onFocus={focusInput}
       onClick={focusInput}
       ref={comboBoxRef}
+      w={"auto"}
     >
       <Box position="relative">
         <Box
@@ -155,7 +156,6 @@ export const ComboBox = <T extends number | string>({
           overflow="hidden"
           borderColor={!minimumReached ? "red.500" : undefined}
           tabIndex={0}
-          minW={"1"}
         >
           {variant === "inline" && (
             <>
@@ -199,7 +199,7 @@ export const ComboBox = <T extends number | string>({
               justifyContent={"space-between"}
               px={1}
               gap={2}
-              height={"23px"}
+              height={"22px"}
             >
               <Flex gap={2}>
                 <Tag rounded={"full"}>
@@ -226,6 +226,7 @@ export const ComboBox = <T extends number | string>({
           width="full"
           zIndex="dropdown"
           boxShadow={"lg"}
+          w={"max-content"}
         >
           <InputGroup hidden={!isSearchable} mb={2}>
             <InputLeftElement pointerEvents="none">

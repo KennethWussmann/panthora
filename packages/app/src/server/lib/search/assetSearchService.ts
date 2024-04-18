@@ -17,6 +17,7 @@ const baseAttributes: string[] = [
   "id",
   "createdAt",
   "assetTypeId",
+  "assetTypeName",
   "teamId",
   "teamName",
 ];
@@ -38,9 +39,9 @@ export class AssetSearchService extends AbstractSearchService<
   };
 
   public syncFilterableAttributes = async (teamIds: TeamId[]) => {
-    const customFields = await this.assetTypeService.getSearchableCustomFields(
-      teamIds
-    );
+    this.logger.info("Syncing filterable attributes", { teamIds });
+    const customFields =
+      await this.assetTypeService.getSearchableCustomFields(teamIds);
 
     await Promise.all(
       teamIds.map(async (teamId) => {
@@ -57,17 +58,17 @@ export class AssetSearchService extends AbstractSearchService<
 
         const currentlyFilterableAttributes =
           await index.getFilterableAttributes();
-        const notYetFilterableAttributes = customFieldsForTeam.filter(
+        const notYetFilterableAttributes = customFieldsAndBaseAttributes.filter(
           (field) =>
-            !currentlyFilterableAttributes.includes(field.slug) &&
-            !baseAttributes.includes(field.slug)
+            !currentlyFilterableAttributes.includes(field) &&
+            !baseAttributes.includes(field)
         );
 
         const currentlySortableAttributes = await index.getSortableAttributes();
-        const notYetSortableAttributes = customFieldsForTeam.filter(
+        const notYetSortableAttributes = customFieldsAndBaseAttributes.filter(
           (field) =>
-            !currentlySortableAttributes.includes(field.slug) &&
-            !baseAttributes.includes(field.slug)
+            !currentlySortableAttributes.includes(field) &&
+            !baseAttributes.includes(field)
         );
 
         if (notYetFilterableAttributes.length > 0) {
@@ -79,7 +80,7 @@ export class AssetSearchService extends AbstractSearchService<
           );
           this.logger.debug("New filterable attributes", {
             teamId,
-            attributes: notYetFilterableAttributes.map((attr) => attr.slug),
+            attributes: notYetFilterableAttributes,
           });
           await index.updateFilterableAttributes(customFieldsAndBaseAttributes);
           this.logger.info("Applying filterable attributes done", {
@@ -96,7 +97,7 @@ export class AssetSearchService extends AbstractSearchService<
           );
           this.logger.debug("New sortable attributes", {
             teamId,
-            attributes: notYetSortableAttributes.map((attr) => attr.slug),
+            attributes: notYetSortableAttributes,
           });
           await index.updateSortableAttributes(customFieldsAndBaseAttributes);
           this.logger.info("Applying sortable attributes done", {
