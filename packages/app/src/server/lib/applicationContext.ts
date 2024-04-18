@@ -21,12 +21,6 @@ import { TeamCreationService } from "./team/TeamCreationService";
 import { ImportService } from "./import/importService";
 
 export class ApplicationContext {
-  public readonly prismaClient = new PrismaClient({
-    log:
-      process.env.LOG_LEVEL === "debug"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  });
   public readonly logger = createLogger({});
   private readonly meiliSearch = new MeiliSearch({
     host: process.env.MEILI_URL ?? "http://127.0.0.1:7700",
@@ -114,6 +108,7 @@ export class ApplicationContext {
     this.logger.child({ name: "ImportService" }),
     this.teamService,
     this.assetTypeService,
+    this.assetService,
     this.tagService
   );
   public readonly teamCreationService = new TeamCreationService(
@@ -122,6 +117,27 @@ export class ApplicationContext {
     this.searchService,
     this.importService
   );
+
+  constructor(public readonly prismaClient: PrismaClient) {}
 }
 
-export const defaultApplicationContext = new ApplicationContext();
+const instanceKey = Symbol.for("app.panthora.prisma");
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const globalSymbols = Object.getOwnPropertySymbols(global as any);
+const hasInstance = globalSymbols.includes(instanceKey);
+
+if (!hasInstance) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+  (global as any)[instanceKey] = new PrismaClient({
+    log:
+      process.env.LOG_LEVEL === "debug"
+        ? ["query", "error", "warn"]
+        : ["error"],
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const defaultApplicationContext = new ApplicationContext(
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+  (global as any)[instanceKey] as PrismaClient
+);

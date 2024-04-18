@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { assetCreateEditRequest } from "@/server/lib/assets/assetCreateEditRequest";
 import { assetDeleteRequest } from "@/server/lib/assets/assetDeleteRequest";
 import { assetListRequest } from "@/server/lib/assets/assetListRequest";
+import { assetSearchRequest } from "~/server/lib/assets/assetSearchRequest";
 
 export const assetRouter = createTRPCRouter({
   create: protectedProcedure
@@ -33,6 +34,14 @@ export const assetRouter = createTRPCRouter({
     .input(assetListRequest)
     .query(async ({ ctx, input }) => {
       return ctx.applicationContext.assetService.getAssets(
+        ctx.session.user.id,
+        input
+      );
+    }),
+  search: protectedProcedure
+    .input(assetSearchRequest)
+    .query(async ({ ctx, input }) => {
+      return ctx.applicationContext.assetService.searchAssets(
         ctx.session.user.id,
         input
       );

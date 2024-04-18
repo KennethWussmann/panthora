@@ -29,7 +29,6 @@ import { type LabelTemplateCreateEditRequest } from "@/server/lib/label-template
 import { api } from "@/utils/api";
 import { LabelTemplatePrintPreview } from "./LabelTemplatePrintPreview";
 import { LabelComponents } from "@prisma/client";
-import { useEffect } from "react";
 import { useTeam } from "@/lib/SelectedTeamProvider";
 
 export const LabelTemplateCreateEditForm = ({
@@ -122,10 +121,6 @@ export const LabelTemplateCreateEditForm = ({
     });
     refetch?.();
   };
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
 
   return (
     <Stack gap={2}>

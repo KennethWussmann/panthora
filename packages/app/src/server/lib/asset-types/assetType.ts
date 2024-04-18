@@ -7,3 +7,4 @@ export type AssetType = AssetTypeRelation & {
   children: AssetType[];
   fields: CustomFieldRelation[];
 };
+export type AssetTypeField = AssetType["fields"][0];

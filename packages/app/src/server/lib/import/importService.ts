@@ -5,12 +5,14 @@ import { importSchema, type ImportSchema } from "./importSchema";
 import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type TagService } from "../tags/tagService";
 import { ImportJob } from "./importJob";
+import { type AssetService } from "../assets/assetService";
 
 export class ImportService {
   constructor(
     private readonly logger: Logger,
     private readonly teamService: TeamService,
     private readonly assetTypeService: AssetTypeService,
+    private readonly assetService: AssetService,
     private readonly tagService: TagService
   ) {}
 
@@ -32,6 +34,7 @@ export class ImportService {
       this.logger.child({ name: "ImportJob" }),
       this.assetTypeService,
       this.tagService,
+      this.assetService,
       userId,
       importRequest.teamId
     ).execute(importData);

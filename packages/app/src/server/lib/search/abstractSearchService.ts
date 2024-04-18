@@ -1,7 +1,7 @@
 import type MeiliSearch from "meilisearch";
 import { type Logger } from "winston";
 import { type TeamId } from "../team/team";
-import { type Index } from "meilisearch";
+import { type SearchParams, type Index } from "meilisearch";
 import { waitForTasks } from "../utils/meiliSearchUtils";
 import { isError } from "@/utils/errorUtils";
 
@@ -12,7 +12,7 @@ type TeamOwnedIdentifiable = {
 
 export abstract class AbstractSearchService<
   TDoc extends object,
-  TEntity extends TeamOwnedIdentifiable
+  TEntity extends TeamOwnedIdentifiable,
 > {
   private initialized = false;
   constructor(
@@ -61,6 +61,15 @@ export abstract class AbstractSearchService<
   protected abstract onInitialize: (teamIds: TeamId[]) => Promise<void>;
 
   public getIndexName = (teamId: TeamId) => `${this.indexBaseName}_${teamId}`;
+
+  public search = async (
+    teamId: TeamId,
+    query: string | null,
+    options: SearchParams
+  ) =>
+    this.meilisearch
+      .index<TDoc>(this.getIndexName(teamId))
+      .search(query, options);
 
   public deleteIndex = async (teamId: TeamId) => {
     this.logger.info("Deleting search index", { teamId });

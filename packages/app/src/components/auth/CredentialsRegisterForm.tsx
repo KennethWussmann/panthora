@@ -50,7 +50,6 @@ export const CredentialsRegisterForm = () => {
     } catch (e) {
       if (e instanceof Error) {
         setRegisterError.on();
-        console.log(e.message);
         setError("email", { message: "Invalid credentials" });
         setError("password", { message: "Invalid credentials" });
       }
