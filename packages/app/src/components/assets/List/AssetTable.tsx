@@ -31,7 +31,6 @@ import {
   FiPrinter,
   FiX,
 } from "react-icons/fi";
-import { AssetExplanation } from "./AssetExplanation";
 import { useRouter } from "next/router";
 import { AssetActionsCell } from "./AssetRow";
 import { api } from "@/utils/api";
@@ -208,7 +207,6 @@ export const AssetTable: React.FC = () => {
 
   return (
     <Stack gap={6}>
-      <AssetExplanation />
       {showAssetTypeMissingNotice && (
         <Alert status="info">
           <AlertIcon />

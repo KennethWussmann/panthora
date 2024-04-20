@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { Button, Stack } from "@chakra-ui/react";
 import { FiFolder, FiPlus } from "react-icons/fi";
 import { useRouter } from "next/router";
-import { AssetTypeExplanation } from "./AssetTypeExplanation";
 import { AssetTypeActionsCell, AssetTypeCell } from "./AssetTypeRow";
 import { api } from "@/utils/api";
 import { type AssetType } from "@/server/lib/asset-types/assetType";
@@ -66,7 +65,6 @@ export const AssetTypeTable: React.FC = () => {
 
   return (
     <Stack gap={6}>
-      <AssetTypeExplanation />
       {!assetTypeQuery.isLoading && (
         <DataTable
           columns={columns}
