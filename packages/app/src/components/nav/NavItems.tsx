@@ -71,6 +71,15 @@ export const navigationItems: (NavigationItem | NavCollapsableButtonProps)[] = [
   },
 ];
 
+export const pageDescriptions: Record<string, string> = {
+  Dashboard: "The dashboard shows a summary of your assets and asset types.",
+  Assets:
+    "Assets are the things you want to keep track of. They can be anything and can have any number of custom fields. You can assign tags to them and search by them. To get started with creating assets you first need to create an asset type. They are the basis for your assets and define which fields assets have.",
+  "Asset Types":
+    "With Asset Types you can create a template for your assets and define custom fields for them. You can then create assets based on these templates.",
+  Tags: "Tags allow you to organise your assets. You can assign tags to assets, create custom fields for tags and search by them. They are the basis for a good inventory and allow you to structure your storage in a way that makes sense to you.",
+};
+
 export const NavItems = () => {
   const { user } = useUser();
   const { role } = useTeamMembershipRole();

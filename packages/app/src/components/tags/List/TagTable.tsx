@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { Button, Stack } from "@chakra-ui/react";
 import { FiPlus, FiTag } from "react-icons/fi";
-import { TagExplanation } from "./TagExplanation";
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import { type Tag } from "@/server/lib/tags/tag";
@@ -57,7 +56,6 @@ export const TagTable: React.FC = () => {
 
   return (
     <Stack gap={6}>
-      <TagExplanation />
       {!tagQuery.isLoading && (
         <DataTable
           columns={columns}

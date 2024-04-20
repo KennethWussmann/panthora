@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { FiChevronRight } from "react-icons/fi";
+import { BreadcrumbPageDescription } from "./BreadcrumbPageDescription";
 
 const formatSegment = (segment: string): string => {
   if (segment === "create" || segment === "edit") {
@@ -46,9 +47,11 @@ export const Breadcrumbs = () => {
                 {readablePath}
               </BreadcrumbLink>
             ) : (
-              <BreadcrumbLink href="#" aria-current="page">
-                {readablePath}
-              </BreadcrumbLink>
+              <BreadcrumbPageDescription page={readablePath}>
+                <BreadcrumbLink href="#" aria-current="page">
+                  {readablePath}
+                </BreadcrumbLink>
+              </BreadcrumbPageDescription>
             )}
           </BreadcrumbItem>
         ))}
