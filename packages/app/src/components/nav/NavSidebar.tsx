@@ -2,8 +2,20 @@ import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { NavItems } from "./NavItems";
 import { NavSearchBar } from "./search/NavSearchBar";
 import { NavLogout } from "./NavLogout";
-import Link from "next/link";
 import { NavLogoTeamSelector } from "./logo-team-selector/NavLogoTeamSelector";
+import { Link } from "@chakra-ui/next-js";
+
+const repoUrl = "https://github.com/KennethWussmann/panthora";
+const version = process.env.NEXT_PUBLIC_VERSION ?? "unknown";
+const linkTarget = ((version: string) => {
+  if (version.includes(".")) {
+    return `${repoUrl}/releases/tag/${version}`;
+  } else if (version.length === 8) {
+    return `${repoUrl}/commit/${version}`;
+  } else {
+    return repoUrl;
+  }
+})(version);
 
 export const NavSidebar = () => {
   return (
@@ -18,8 +30,8 @@ export const NavSidebar = () => {
         </Stack>
         <Box>
           <Text fontSize="sm" color="gray.500">
-            <Link href="https://github.com/KennethWussmann/panthora">
-              Version {process.env.NEXT_PUBLIC_VERSION ?? "unknown"}
+            <Link href={linkTarget} target="_blank">
+              Version: {version}
             </Link>
           </Text>
           <NavLogout />
