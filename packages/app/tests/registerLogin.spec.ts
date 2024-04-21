@@ -37,10 +37,9 @@ test.describe("Register / Login", () => {
 
     test.describe.configure({ mode: "serial" });
 
-    test("registers new account", async ({ page, panthora }) => {
+    test("registers new account", async ({ page }) => {
       // THEN
       await page.goto("/auth/signin");
-      await panthora.enableDarkMode();
 
       await page.getByRole("button", { name: "Create Account" }).click();
 
