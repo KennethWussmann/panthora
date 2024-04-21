@@ -22,7 +22,18 @@ jobs:
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm test
-      - run: pnpm test:e2e
+      - env:
+          DATABASE_URL: postgresql://panthora:panthora@127.0.0.1:5432/panthora
+          NEXTAUTH_SECRET: "e2e-test"
+          NEXTAUTH_URL: "http://localhost:3000"
+          NEXTAUTH_URL_INTERNAL: "http://localhost:3000"
+          PASSWORD_AUTH_ENABLED: "true"
+          VERSION: "e2e"
+          DISABLE_RATE_LIMIT: true
+        run: |
+          docker-compose up -d search database
+          pnpm --filter @panthora/app db:push
+          pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
