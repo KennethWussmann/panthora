@@ -28,6 +28,8 @@ test.describe("Register / Login", () => {
     await expect(
       page.getByRole("button", { name: "Create Account" })
     ).toBeVisible();
+
+    await expect(page).toHaveScreenshot();
   });
 
   test.describe("Registration Flow", () => {
@@ -65,6 +67,8 @@ test.describe("Register / Login", () => {
       await expect(
         page.getByText("Registration complete! You can now login.")
       ).toBeVisible();
+
+      await expect(page).toHaveScreenshot();
     });
     test("logs in with new account", async ({ page }) => {
       // THEN
@@ -74,6 +78,8 @@ test.describe("Register / Login", () => {
       // ASSERT that user is redirected to onboarding
       await expect(page.getByText("Dashboard")).not.toBeVisible();
       await expect(page.getByText("What is Panthora?")).toBeVisible();
+
+      await expect(page).toHaveScreenshot();
     });
     test("completes onboarding", async ({ page }) => {
       // WHEN
