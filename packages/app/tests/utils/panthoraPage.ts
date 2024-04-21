@@ -1,19 +1,12 @@
 import { type APIRequestContext, type Page } from "@playwright/test";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { type AppRouter } from "~/server/api/root";
-import { faker } from "@faker-js/faker";
 import { z } from "zod";
 import superjson from "superjson";
 import { Cookie } from "cookiejar";
-import { e2eBaseUrl } from "./constants";
+import { e2eBaseUrl, e2eUser } from "./constants";
 
 export class PanthoraPage {
-  private readonly e2eTestUser = {
-    email:
-      `${faker.person.firstName()}.${faker.person.lastName()}@panthora.io`.toLowerCase(),
-    password: "e2eTestPassword!",
-    teamName: "E2E Test",
-  };
   private cookies: Cookie[] | undefined = undefined;
   private readonly client = createTRPCProxyClient<AppRouter>({
     transformer: superjson,
@@ -46,8 +39,8 @@ export class PanthoraPage {
 
   public async register() {
     await this.client.user.register.mutate({
-      email: this.e2eTestUser.email,
-      password: this.e2eTestUser.password,
+      email: e2eUser.email,
+      password: e2eUser.password,
     });
   }
 
@@ -65,7 +58,7 @@ export class PanthoraPage {
 
   public async createTeam() {
     const response = await this.client.team.create.mutate({
-      name: this.e2eTestUser.teamName,
+      name: e2eUser.teamName,
     });
     this.teamId = response.id;
   }
@@ -75,8 +68,8 @@ export class PanthoraPage {
     const csrfToken = await this.getCsrfToken();
     const response = await this.apiContext.post("/api/auth/callback/password", {
       form: {
-        email: this.e2eTestUser.email,
-        password: this.e2eTestUser.password,
+        email: e2eUser.email,
+        password: e2eUser.password,
         csrfToken,
         json: "true",
         redirect: "false",
@@ -112,11 +105,11 @@ export class PanthoraPage {
       },
     ]);
 
-    console.log("Signed in as", this.e2eTestUser.email);
+    console.log("Signed in as", e2eUser.email);
   }
 
   public async setupUserWithTeam() {
-    console.log("Registering user", this.e2eTestUser.email);
+    console.log("Registering user", e2eUser.email);
     await this.register();
     await this.signIn();
 
@@ -130,7 +123,7 @@ export class PanthoraPage {
     await this.page.waitForSelector("body");
 
     return {
-      ...this.e2eTestUser,
+      ...e2eUser,
       teamId: this.teamId,
     };
   }
