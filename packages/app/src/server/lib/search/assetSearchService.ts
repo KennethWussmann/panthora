@@ -117,6 +117,13 @@ export class AssetSearchService extends AbstractSearchService<
     return value;
   };
 
+  public getFacets = async (teamId: TeamId) => {
+    const index = this.meilisearch.index<AssetSearchDocument>(
+      this.getIndexName(teamId)
+    );
+    return await index.getSearchableAttributes();
+  };
+
   protected mapToSearchDocument = (asset: AssetWithFields) => ({
     id: asset.id,
     createdAt: asset.createdAt.getTime(),

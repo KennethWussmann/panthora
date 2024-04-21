@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { resolve } from "path";
 import userWithSeedSeed from "tests/seeds/user-with-seed.seed";
+import screenshotSeed from "tests/seeds/screenshot.seed";
 import { type ImportSchema } from "~/server/lib/import/importSchema";
 
 export const e2eBaseUrl = "http://localhost:3000";
@@ -36,7 +37,8 @@ export const e2eUsers: Record<E2EUserType, E2EUser> = {
   },
   "user-screenshots": {
     ...baseUser("user-screenshots"),
-    seed: userWithSeedSeed,
+    teamName: "Food Tracker",
+    seed: screenshotSeed,
   },
 };
 

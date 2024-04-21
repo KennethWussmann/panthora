@@ -16,7 +16,6 @@ import {
   MenuList,
   MenuItem,
   Divider,
-  Progress,
   TagLabel,
   TagLeftIcon,
   Box,
@@ -220,127 +219,119 @@ export const AssetTable: React.FC = () => {
         </Alert>
       )}
 
-      {isLoadingAssets && (
-        <Progress size="xs" isIndeterminate rounded={"full"} />
-      )}
       <Flex gap={4} w="full">
         <Box flex={1} minW={0}>
-          {!isLoadingAssets && !isLoadingAssetTypes && assetsResponse && (
-            <DataTable
-              columns={columns}
-              data={assets ?? []}
-              size={"sm"}
-              isLoading={
-                isLoadingAssets ||
-                isLoadingAssetTypes ||
-                isLoadingLabelTemplates
-              }
-              emptyList={{
-                icon: FiBox,
-                label: "No assets found",
-                createHref: "/assets/create",
-              }}
-              filterActions={
-                <Flex gap={2}>
-                  <Box borderLeftWidth={1} />
+          <DataTable
+            columns={columns}
+            data={assets ?? []}
+            size={"sm"}
+            isLoading={
+              isLoadingAssets || isLoadingAssetTypes || isLoadingLabelTemplates
+            }
+            emptyList={{
+              icon: FiBox,
+              label: "No assets found",
+              createHref: "/assets/create",
+            }}
+            filterActions={
+              <Flex gap={2}>
+                <Box borderLeftWidth={1} />
+                <Button
+                  leftIcon={<FiPlusCircle />}
+                  variant={"outline"}
+                  onClick={toggleFilters}
+                >
+                  Add Filter
+                </Button>
+                {filters.length > 0 && (
                   <Button
-                    leftIcon={<FiPlusCircle />}
-                    variant={"outline"}
-                    onClick={toggleFilters}
+                    leftIcon={<FiX />}
+                    variant={"ghost"}
+                    onClick={clearFilters}
                   >
-                    Add Filter
+                    Clear
                   </Button>
-                  {filters.length > 0 && (
-                    <Button
-                      leftIcon={<FiX />}
-                      variant={"ghost"}
-                      onClick={clearFilters}
-                    >
-                      Clear
-                    </Button>
-                  )}
-                </Flex>
-              }
-              tableActions={
-                <Flex gap={2}>
-                  <ButtonGroup
-                    isAttached
-                    variant="outline"
-                    isDisabled={selectedAssets.length === 0}
+                )}
+              </Flex>
+            }
+            tableActions={
+              <Flex gap={2}>
+                <ButtonGroup
+                  isAttached
+                  variant="outline"
+                  isDisabled={selectedAssets.length === 0}
+                >
+                  <Button
+                    leftIcon={<FiPrinter />}
+                    onClick={() => {
+                      setSelectedLabelTemplate(undefined);
+                      void push("/assets/print");
+                      setLoadingPrintView.on();
+                    }}
+                    isLoading={
+                      isLoadingAssetTypes ||
+                      isLoadingPrintView ||
+                      isLoadingLabelTemplates
+                    }
                   >
-                    <Button
-                      leftIcon={<FiPrinter />}
-                      onClick={() => {
-                        setSelectedLabelTemplate(undefined);
-                        void push("/assets/print");
-                        setLoadingPrintView.on();
-                      }}
+                    {selectedAssets.length === 0
+                      ? "Print"
+                      : `Print ${selectedAssets.length} ${
+                          selectedAssets.length === 1 ? "label" : "labels"
+                        }`}
+                  </Button>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<FiChevronDown />}
                       isLoading={
                         isLoadingAssetTypes ||
                         isLoadingPrintView ||
                         isLoadingLabelTemplates
                       }
-                    >
-                      {selectedAssets.length === 0
-                        ? "Print"
-                        : `Print ${selectedAssets.length} ${
-                            selectedAssets.length === 1 ? "label" : "labels"
-                          }`}
-                    </Button>
-                    <Menu>
-                      <MenuButton
-                        as={IconButton}
-                        icon={<FiChevronDown />}
-                        isLoading={
-                          isLoadingAssetTypes ||
-                          isLoadingPrintView ||
-                          isLoadingLabelTemplates
-                        }
-                      />
-                      <MenuList>
-                        {labelTemplates?.map((labelTemplate) => (
-                          <MenuItem
-                            key={labelTemplate.id}
-                            flex={1}
-                            justifyContent={"space-between"}
-                            onClick={() => {
-                              setSelectedLabelTemplate(labelTemplate);
-                              void push("/assets/print");
-                              setLoadingPrintView.on();
-                            }}
-                          >
-                            {labelTemplate.name}{" "}
-                            <Tag ml={4}>
-                              {labelTemplate.width} mm x {labelTemplate.height}{" "}
-                              mm
-                            </Tag>
-                          </MenuItem>
-                        ))}
-                        <Divider />
+                    />
+                    <MenuList>
+                      {labelTemplates?.map((labelTemplate) => (
                         <MenuItem
+                          key={labelTemplate.id}
+                          flex={1}
+                          justifyContent={"space-between"}
                           onClick={() => {
-                            void push("/settings/team/label-templates/create");
+                            setSelectedLabelTemplate(labelTemplate);
+                            void push("/assets/print");
+                            setLoadingPrintView.on();
                           }}
-                          gap={4}
                         >
-                          <FiPlus /> Create template
+                          {labelTemplate.name}{" "}
+                          <Tag ml={4}>
+                            {labelTemplate.width} mm x {labelTemplate.height} mm
+                          </Tag>
                         </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </ButtonGroup>
-                  <Button
-                    leftIcon={<FiPlus />}
-                    colorScheme="green"
-                    onClick={() => push("/assets/create")}
-                    isLoading={isLoadingAssetTypes}
-                    isDisabled={showAssetTypeMissingNotice}
-                  >
-                    Create
-                  </Button>
-                </Flex>
-              }
-            />
-          )}
+                      ))}
+                      <Divider />
+                      <MenuItem
+                        onClick={() => {
+                          void push("/settings/team/label-templates/create");
+                        }}
+                        gap={4}
+                      >
+                        <FiPlus /> Create template
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </ButtonGroup>
+                <Button
+                  leftIcon={<FiPlus />}
+                  colorScheme="green"
+                  onClick={() => push("/assets/create")}
+                  isLoading={isLoadingAssetTypes}
+                  isDisabled={showAssetTypeMissingNotice}
+                >
+                  Create
+                </Button>
+              </Flex>
+            }
+          />
         </Box>
         <Box flex="none">
           <FilterOptions

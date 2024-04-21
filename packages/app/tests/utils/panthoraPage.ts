@@ -5,7 +5,10 @@ import { z } from "zod";
 import superjson from "superjson";
 import { Cookie } from "cookiejar";
 import { e2eBaseUrl, type E2EUser } from "./constants";
+import cookie from "cookie";
 import { type ImportSchema } from "~/server/lib/import/importSchema";
+
+const nextAuthSessionTokenCookieName = "next-auth.session-token";
 
 export class PanthoraPage {
   private cookies: Cookie[] | undefined = undefined;
@@ -25,12 +28,46 @@ export class PanthoraPage {
       }),
     ],
   });
-  private teamId: string | null = null;
+  public teamId: string | null = null;
   constructor(
     private readonly apiContext: APIRequestContext,
     private readonly page: Page,
     private readonly e2eUser: E2EUser
   ) {}
+
+  public async loadCookiesFromContext() {
+    const hasSessionCookie = this.cookies?.some(
+      (c) => c.name === nextAuthSessionTokenCookieName
+    );
+    if (hasSessionCookie) {
+      return;
+    }
+    this.cookies = (await this.page.context().cookies())
+      .filter((c) => c.name === nextAuthSessionTokenCookieName)
+      .map(
+        (c) =>
+          new Cookie(
+            cookie.serialize(c.name, c.value, {
+              domain: c.domain,
+              path: c.path,
+              secure: c.secure,
+              httpOnly: c.httpOnly,
+            })
+          )
+      );
+    console.log("Loaded cookies from context");
+    await this.loadTeamIdFromApi();
+  }
+
+  async loadTeamIdFromApi() {
+    const response = await this.client.team.list.query();
+    const team = response?.find((t) => t.name === this.e2eUser.teamName);
+    if (!team) {
+      throw new Error("Team not found");
+    }
+    this.teamId = team.id;
+    console.log("Loaded team ID from API", this.teamId);
+  }
 
   public async enableDarkMode() {
     await this.page.evaluate(() => {
@@ -87,7 +124,7 @@ export class PanthoraPage {
     }
     const cookies = cookieHeader.split("\n").map((c) => new Cookie(c));
     const sessionCookie = cookies.find(
-      (c) => c.name === "next-auth.session-token"
+      (c) => c.name === nextAuthSessionTokenCookieName
     );
     if (!sessionCookie) {
       throw new Error("No session cookie found");

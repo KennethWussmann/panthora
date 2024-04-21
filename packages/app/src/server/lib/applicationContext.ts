@@ -106,6 +106,7 @@ export class ApplicationContext {
   );
   public readonly importService = new ImportService(
     this.logger.child({ name: "ImportService" }),
+    this.searchService,
     this.teamService,
     this.assetTypeService,
     this.assetService,

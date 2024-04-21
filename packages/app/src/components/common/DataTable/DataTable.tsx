@@ -35,7 +35,7 @@ import {
 import { EmptyListIcon, type EmptyListIconProps } from "../EmptyListIcon";
 import { FiFile, FiSearch } from "react-icons/fi";
 import { ComboBox, ComboBoxItem } from "../ComboBox";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 
 export type DataTableProps<Data extends object> = {
@@ -59,7 +59,10 @@ export function DataTable<Data extends object>({
   isLoading,
   ...tableProps
 }: DataTableProps<Data>) {
-  const filterableColumns = columns.filter((c) => !!c.id);
+  const filterableColumns = useMemo(
+    () => columns.filter((c) => !!c.id),
+    [columns]
+  );
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     filterableColumns.map((column) => column.id!)
   );
@@ -84,6 +87,10 @@ export function DataTable<Data extends object>({
       pagination,
     },
   });
+
+  useEffect(() => {
+    setVisibleColumns(filterableColumns.map((column) => column.id!));
+  }, [filterableColumns]);
 
   return (
     <VStack align={"stretch"} gap={6}>
