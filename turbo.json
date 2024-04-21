@@ -7,7 +7,11 @@
     "test": {},
     "test:e2e": {},
     "test:e2e:install": {
-      "outputs": ["$HOME/.cache/ms-playwright", "$HOME/Library/Caches/ms-playwright"]
+      "inputs": ["pnpm-lock.yaml"],
+      "outputs": [
+        "$HOME/.cache/ms-playwright",
+        "$HOME/Library/Caches/ms-playwright"
+      ]
     },
     "start": {
       "cache": false,
