@@ -5,6 +5,7 @@
       "outputs": [".next/**", "!.next/cache/**", "dist"]
     },
     "test": {},
+    "test:e2e": {},
     "start": {
       "cache": false,
       "persistent": true

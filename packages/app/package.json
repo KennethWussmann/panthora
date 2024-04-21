@@ -9,6 +9,7 @@
     "lint": "next lint",
     "start": "next start",
     "test": "vitest --passWithNoTests",
+    "test:e2e": "playwright test",
     "generate-schema": "tsx scripts/generate-import-schema.ts"
   },
   "prisma": {
