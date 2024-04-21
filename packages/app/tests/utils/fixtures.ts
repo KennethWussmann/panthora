@@ -1,12 +1,7 @@
 import { test as base } from "@playwright/test";
-import { type PanthoraPage } from "./panthoraPage";
 import { e2eUsers, type E2EUserType } from "./constants";
 
-type Fixutres = {
-  panthora: PanthoraPage;
-};
-
-export const test = base.extend<Fixutres>({
+export const test = base.extend({
   page: async ({ browser }, use) => {
     const context = await browser.newContext({
       colorScheme:

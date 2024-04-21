@@ -5,6 +5,7 @@ import { z } from "zod";
 import superjson from "superjson";
 import { Cookie } from "cookiejar";
 import { e2eBaseUrl, type E2EUser } from "./constants";
+import { readFile } from "fs/promises";
 
 export class PanthoraPage {
   private cookies: Cookie[] | undefined = undefined;
@@ -120,6 +121,10 @@ export class PanthoraPage {
       throw new Error("Team ID not set");
     }
 
+    if (this.e2eUser.seed) {
+      await this.importSeed();
+    }
+
     await this.page.reload();
     await this.page.waitForSelector("body");
 
@@ -127,5 +132,22 @@ export class PanthoraPage {
       ...this.e2eUser,
       teamId: this.teamId,
     };
+  }
+
+  public async importSeed() {
+    if (!this.e2eUser.seed) {
+      throw new Error("User has no seed assigned");
+    }
+    if (!this.teamId) {
+      throw new Error("User has no team ID assigned");
+    }
+
+    const seed = await readFile(this.e2eUser.seed, "utf-8");
+
+    await this.client.team.import.mutate({
+      teamId: this.teamId,
+      data: seed,
+    });
+    console.log("Imported seed data from", this.e2eUser.seed);
   }
 }

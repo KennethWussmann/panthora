@@ -1,0 +1,59 @@
+{
+  "$schema": "https://panthora.app/import-0.2.0.schema.json",
+  "name": "Home Library",
+  "description": "A structured setup for cataloging books in a personal home library.",
+  "version": "1.0",
+  "author": "Panthora AI",
+  "tags": [],
+  "assetTypes": [
+    {
+      "name": "Book",
+      "fields": [
+        {
+          "type": "STRING",
+          "name": "Title",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Author",
+          "inputRequired": true,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Publisher",
+          "inputRequired": false,
+          "showInTable": true
+        },
+        {
+          "type": "NUMBER",
+          "name": "Publication Year",
+          "inputMin": 1450,
+          "inputMax": 2024,
+          "inputRequired": false,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "ISBN",
+          "inputRequired": false,
+          "showInTable": true
+        },
+        {
+          "type": "STRING",
+          "name": "Genre",
+          "inputRequired": false,
+          "showInTable": true
+        },
+        {
+          "type": "BOOLEAN",
+          "name": "Read",
+          "inputRequired": false,
+          "showInTable": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import {  resolve } from "path";
+import { resolve } from "path";
 
 export const e2eBaseUrl = "http://localhost:3000";
 
@@ -30,7 +30,7 @@ export const e2eUsers: Record<E2EUserType, E2EUser> = {
   },
   "user-with-seed": {
     ...baseUser(),
-    seed: resolve("./tests/seed/user-with-seed.seed.json"),
+    seed: resolve("./tests/seeds/user-with-seed.seed.json"),
     storageState: "./test-results/storage/user-with-seed.state.json",
   },
 };
