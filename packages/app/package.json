@@ -9,6 +9,8 @@
     "lint": "next lint",
     "start": "next start",
     "test": "vitest --passWithNoTests",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps",
     "generate-schema": "tsx scripts/generate-import-schema.ts"
   },
   "prisma": {
@@ -57,6 +59,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@playwright/test": "^1.43.1",
     "@types/bcrypt": "^5.0.2",
     "@types/eslint": "^8.56.2",
     "@types/lodash": "^4.14.202",
