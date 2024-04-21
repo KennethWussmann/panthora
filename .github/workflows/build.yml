@@ -22,13 +22,15 @@ jobs:
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm test
-      - env:
+      - name: Run End-to-End Tests
+        env:
+          VERSION: "e2e"
           DATABASE_URL: postgresql://panthora:panthora@127.0.0.1:5432/panthora
           NEXTAUTH_SECRET: "e2e-test"
           NEXTAUTH_URL: "http://localhost:3000"
           NEXTAUTH_URL_INTERNAL: "http://localhost:3000"
+          APP_BASE_URL: "http://localhost:3000"
           PASSWORD_AUTH_ENABLED: "true"
-          VERSION: "e2e"
           DISABLE_RATE_LIMIT: true
         run: |
           docker-compose up -d search database
