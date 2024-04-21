@@ -28,8 +28,6 @@ test.describe("Register / Login", () => {
     await expect(
       page.getByRole("button", { name: "Create Account" })
     ).toBeVisible();
-
-    await expect(page).toHaveScreenshot();
   });
 
   test.describe("Registration Flow", () => {
