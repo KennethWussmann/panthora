@@ -6,10 +6,12 @@ import { type AssetTypeService } from "../asset-types/assetTypeService";
 import { type TagService } from "../tags/tagService";
 import { ImportJob } from "./importJob";
 import { type AssetService } from "../assets/assetService";
+import { type SearchService } from "../search/searchService";
 
 export class ImportService {
   constructor(
     private readonly logger: Logger,
+    private readonly searchService: SearchService,
     private readonly teamService: TeamService,
     private readonly assetTypeService: AssetTypeService,
     private readonly assetService: AssetService,
@@ -38,6 +40,8 @@ export class ImportService {
       userId,
       importRequest.teamId
     ).execute(importData);
+
+    await this.searchService.rebuildIndexesByUser(userId, importRequest.teamId);
   };
 
   private validateImportData = (json: string): ImportSchema => {

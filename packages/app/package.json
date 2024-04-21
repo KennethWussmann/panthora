@@ -11,7 +11,7 @@
     "test": "vitest --passWithNoTests",
     "test:e2e": "playwright test --project e2e",
     "test:e2e:install": "playwright install --with-deps",
-    "screenshots": "NEXT_PUBLIC_VERSION=screenshots playwright test --project \"screenshots-*\"",
+    "screenshots": "playwright test --project \"screenshots-*\"",
     "generate-schema": "tsx scripts/generate-import-schema.ts"
   },
   "prisma": {
@@ -63,6 +63,7 @@
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.43.1",
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie": "^0.6.0",
     "@types/cookiejar": "^2.1.5",
     "@types/eslint": "^8.56.2",
     "@types/lodash": "^4.14.202",
@@ -75,6 +76,7 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
+    "cookie": "^0.6.0",
     "cookiejar": "^2.1.4",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.1.0",

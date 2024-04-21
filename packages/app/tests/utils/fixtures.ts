@@ -7,6 +7,7 @@ import {
 } from "./constants";
 import { join } from "path";
 import { readFileSync } from "fs";
+import { PanthoraPage } from "./panthoraPage";
 
 export const test = base.extend({
   page: async ({ browser }, use) => {
@@ -22,17 +23,63 @@ export const test = base.extend({
 
 type ScreenshotFixture = {
   takeScreenshot: () => Promise<void>;
+  api: PanthoraPage;
+  addUserAnnotation: string;
 };
 
 export const screenshot = base.extend<ScreenshotFixture>({
-  takeScreenshot: async ({ page, colorScheme }, use) => {
+  takeScreenshot: async ({ page, colorScheme }, use, workerInfo) => {
     const fn = async () => {
+      await page.waitForLoadState("networkidle");
       await page.screenshot({
-        path: join(screenshotPath, `assetTable_${colorScheme ?? "light"}.png`),
+        path: join(
+          screenshotPath,
+          ...workerInfo.titlePath.slice(1, workerInfo.titlePath.length - 1),
+          `${workerInfo.titlePath[workerInfo.titlePath.length - 1]}-${colorScheme ?? "light"}.png`
+        ),
       });
     };
     await use(fn);
   },
+  api: async ({ page, playwright }, use) => {
+    const apiContext = await playwright.request.newContext({
+      baseURL: e2eBaseUrl,
+    });
+    const panthoraPage = new PanthoraPage(
+      apiContext,
+      page,
+      e2eUsers["user-screenshots"]
+    );
+    await panthoraPage.loadCookiesFromContext();
+    await use(panthoraPage);
+  },
+  addUserAnnotation: [
+    async ({ api }, use, workerInfo) => {
+      await use("addUserAnnotation");
+      const user = e2eUsers["user-screenshots"];
+      workerInfo.annotations.push({
+        type: "E-Mail",
+        description: user.email,
+      });
+      workerInfo.annotations.push({
+        type: "Password",
+        description: user.password,
+      });
+      workerInfo.annotations.push({
+        type: "Team Name",
+        description: user.teamName,
+      });
+      workerInfo.annotations.push({
+        type: "Team ID",
+        description: api.teamId ?? "none",
+      });
+      workerInfo.annotations.push({
+        type: "Seed",
+        description: user.seed?.name ?? "none",
+      });
+    },
+    { scope: "test", auto: true },
+  ],
 });
 
 type StorageState = Exclude<

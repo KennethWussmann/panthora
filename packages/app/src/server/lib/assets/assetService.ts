@@ -391,21 +391,21 @@ export class AssetService {
     request: AssetSearchRequest
   ): Promise<AssetSearchResponse> => {
     await this.teamService.requireTeamMembership(userId, request.teamId);
-    const searchableFields =
-      await this.assetTypeService.getSearchableCustomFields([request.teamId]);
+    const searchableFields = await this.assetSearchService.getFacets(
+      request.teamId
+    );
+    const searchOptions = {
+      limit: request.limit,
+      offset: request.offset,
+      facets: searchableFields,
+      filter:
+        (request.filter ?? "").trim().length > 0 ? request.filter : undefined,
+    };
     try {
       const searchResults = await this.assetSearchService.search(
         request.teamId,
         null,
-        {
-          limit: request.limit,
-          offset: request.offset,
-          facets: [
-            "assetTypeName",
-            ...searchableFields.map((field) => field.slug),
-          ],
-          filter: request.filter,
-        }
+        searchOptions
       );
 
       const assets = await this.findAssets(
@@ -422,6 +422,7 @@ export class AssetService {
         error: e,
         userId,
         request,
+        searchOptions,
       });
       throw new TRPCClientError("Error searching assets");
     }
