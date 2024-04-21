@@ -78,7 +78,7 @@ export default function SignIn({
                 <LogoPanthora h={"128px"} w={"128px"} orientation="vertical" />
               </Flex>
               {credentialsForm === "login" && (
-                <Text color="fg.muted">Chick-fil-a</Text>
+                <Text color="fg.muted">Login with your credentials</Text>
               )}
               {credentialsForm === "register" && (
                 <Text color="fg.muted">Register a new account</Text>
