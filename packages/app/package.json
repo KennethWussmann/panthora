@@ -9,8 +9,9 @@
     "lint": "next lint",
     "start": "next start",
     "test": "vitest --passWithNoTests",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --project e2e",
     "test:e2e:install": "playwright install --with-deps",
+    "screenshots": "NEXT_PUBLIC_VERSION=screenshots playwright test --project \"screenshots-*\"",
     "generate-schema": "tsx scripts/generate-import-schema.ts"
   },
   "prisma": {

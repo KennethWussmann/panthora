@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
+import { resolve } from "path";
 import userWithSeedSeed from "tests/seeds/user-with-seed.seed";
 import { type ImportSchema } from "~/server/lib/import/importSchema";
 
 export const e2eBaseUrl = "http://localhost:3000";
 
-export type E2EUserType = "user" | "user-with-seed";
+export type E2EUserType = "user" | "user-with-seed" | "user-screenshots";
 
 export type E2EUser = {
   email: string;
@@ -16,22 +17,30 @@ export type E2EUser = {
 
 const baseUser: (
   type: E2EUserType
-) => Pick<E2EUser, "email" | "password" | "teamName"> = (type) => ({
+) => Pick<E2EUser, "email" | "password" | "teamName" | "storageState"> = (
+  type
+) => ({
   email: faker.internet
     .email({ provider: `${type}.e2e.panthora.io` })
     .toLowerCase(),
+  storageState: `./test-results/storage/${type}.state.json`,
   password: "e2eTestPassword!",
   teamName: "E2E Test",
 });
 
 export const e2eUsers: Record<E2EUserType, E2EUser> = {
-  user: {
-    ...baseUser("user"),
-    storageState: "./test-results/storage/user.state.json",
-  },
+  user: baseUser("user"),
   "user-with-seed": {
     ...baseUser("user-with-seed"),
     seed: userWithSeedSeed,
-    storageState: "./test-results/storage/user-with-seed.state.json",
+  },
+  "user-screenshots": {
+    ...baseUser("user-screenshots"),
+    seed: userWithSeedSeed,
   },
 };
+
+export const screenshotPath = resolve(
+  __dirname,
+  "../../../../docs/assets/screenshots"
+);

@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
-import { test } from "./utils/fixtures";
+import { test } from "../utils/fixtures";
 
 const signIn = async (page: Page, email: string, password: string) => {
   const emailField = page.getByRole("textbox", { name: "E-Mail" });

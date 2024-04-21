@@ -36,10 +36,28 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "e2e",
+      testDir: "./tests/e2e",
       use: {
         ...devices["Desktop Chrome"],
         viewport,
+      },
+    },
+    {
+      name: "screenshots-light",
+      testDir: "./tests/screenshots",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport,
+      },
+    },
+    {
+      name: "screenshots-dark",
+      testDir: "./tests/screenshots",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport,
+        colorScheme: "dark",
       },
     },
 

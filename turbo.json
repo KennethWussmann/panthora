@@ -6,6 +6,10 @@
     },
     "test": {},
     "test:e2e": {},
+    "screenshots": {
+      "inputs": ["tests/screenshots/**", "src/**"],
+      "outputs": ["../../docs/assets/screenshots/**"]
+    },
     "start": {
       "cache": false,
       "persistent": true

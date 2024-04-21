@@ -1,4 +1,4 @@
-import { expect, test, withLogin } from "./utils/fixtures";
+import { expect, test, withLogin } from "../utils/fixtures";
 
 test.describe("AssetType > Table", () => {
   withLogin("user-with-seed");
