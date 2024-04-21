@@ -100,15 +100,6 @@ export class PanthoraPage {
 
     this.cookies = cookies;
 
-    console.log("Setting cookie", {
-      name: sessionCookie.name,
-      value: sessionCookie.value,
-      domain: new URL(e2eBaseUrl).hostname,
-      path: "/",
-      expires: new Date().getTime() / 1000 + 60 * 60 * 24 * 30,
-      secure: sessionCookie.secure,
-      httpOnly: false,
-    });
     await this.page.context().addCookies([
       {
         name: sessionCookie.name,
