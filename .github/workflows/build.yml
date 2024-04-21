@@ -33,7 +33,7 @@ jobs:
           PASSWORD_AUTH_ENABLED: "true"
           DISABLE_RATE_LIMIT: true
         run: |
-          docker-compose up -d search database
+          docker compose up -d search database
           pnpm --filter @panthora/app db:push
           pnpm test:e2e
       - uses: actions/upload-artifact@v4
