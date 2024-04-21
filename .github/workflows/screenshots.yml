@@ -1,9 +1,11 @@
 name: screenshots
 
 on:
-  push:
-    branches:
-      - main
+  pull_request_target:
+    paths:
+      - "packages/app/src/**"
+      - "packages/app/tests/**"
+      - "packages/app/package.json"
   pull_request:
     paths:
       - "packages/app/src/**"
@@ -27,8 +29,14 @@ env:
 jobs:
   screenshots:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: ./.github/actions/pnpm-install
       - name: Install E2E Browsers
         run: pnpm --filter @panthora/app test:e2e:install
@@ -41,12 +49,12 @@ jobs:
           pnpm screenshots
       - name: Commit Screenshots
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add docs/assets/screenshots
           git commit -m "Update screenshots" || echo "No changes to commit"
       - name: Push Changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref }}
