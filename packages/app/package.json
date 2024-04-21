@@ -10,6 +10,7 @@
     "start": "next start",
     "test": "vitest --passWithNoTests",
     "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps",
     "generate-schema": "tsx scripts/generate-import-schema.ts"
   },
   "prisma": {
