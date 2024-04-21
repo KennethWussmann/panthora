@@ -1,18 +1,12 @@
 import { test as base } from "@playwright/test";
-import { PanthoraPage } from "./panthoraPage";
-import { e2eBaseUrl, e2eUser } from "./constants";
+import { type PanthoraPage } from "./panthoraPage";
+import { e2eUsers, type E2EUserType } from "./constants";
 
 type Fixutres = {
   panthora: PanthoraPage;
 };
 
 export const test = base.extend<Fixutres>({
-  panthora: async ({ playwright, page }, use) => {
-    const apiContext = await playwright.request.newContext({
-      baseURL: e2eBaseUrl,
-    });
-    await use(new PanthoraPage(apiContext, page));
-  },
   page: async ({ browser }, use) => {
     const context = await browser.newContext({
       colorScheme:
@@ -24,9 +18,10 @@ export const test = base.extend<Fixutres>({
   },
 });
 
-export const withLogin = () => {
-  test.use({ storageState: e2eUser.storageState });
-  return e2eUser;
+export const withLogin = (type: E2EUserType = "user") => {
+  const user = e2eUsers[type];
+  test.use({ storageState: user.storageState });
+  return user;
 };
 
 export { expect } from "@playwright/test";

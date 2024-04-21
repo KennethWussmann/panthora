@@ -1,5 +1,5 @@
 import { chromium, request } from "@playwright/test";
-import { e2eBaseUrl, e2eUser } from "./constants";
+import { e2eBaseUrl, e2eUsers } from "./constants";
 import { PanthoraPage } from "./panthoraPage";
 
 const globalSetup = async () => {
@@ -7,11 +7,14 @@ const globalSetup = async () => {
   const apiContext = await request.newContext({
     baseURL: e2eBaseUrl,
   });
-  const page = await browser.newPage();
-  const panthoraPage = new PanthoraPage(apiContext, page);
 
-  await panthoraPage.setupUserWithTeam();
-  await page.context().storageState({ path: e2eUser.storageState });
+  for (const user of Object.values(e2eUsers)) {
+    const page = await browser.newPage();
+    const panthoraPage = new PanthoraPage(apiContext, page, user);
+
+    await panthoraPage.setupUserWithTeam();
+    await page.context().storageState({ path: user.storageState });
+  }
 };
 
 export default globalSetup;

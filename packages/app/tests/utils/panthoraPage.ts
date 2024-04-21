@@ -4,7 +4,7 @@ import { type AppRouter } from "~/server/api/root";
 import { z } from "zod";
 import superjson from "superjson";
 import { Cookie } from "cookiejar";
-import { e2eBaseUrl, e2eUser } from "./constants";
+import { e2eBaseUrl, type E2EUser } from "./constants";
 
 export class PanthoraPage {
   private cookies: Cookie[] | undefined = undefined;
@@ -27,7 +27,8 @@ export class PanthoraPage {
   private teamId: string | null = null;
   constructor(
     private readonly apiContext: APIRequestContext,
-    private readonly page: Page
+    private readonly page: Page,
+    private readonly e2eUser: E2EUser
   ) {}
 
   public async enableDarkMode() {
@@ -39,8 +40,8 @@ export class PanthoraPage {
 
   public async register() {
     await this.client.user.register.mutate({
-      email: e2eUser.email,
-      password: e2eUser.password,
+      email: this.e2eUser.email,
+      password: this.e2eUser.password,
     });
   }
 
@@ -58,7 +59,7 @@ export class PanthoraPage {
 
   public async createTeam() {
     const response = await this.client.team.create.mutate({
-      name: e2eUser.teamName,
+      name: this.e2eUser.teamName,
     });
     this.teamId = response.id;
   }
@@ -68,8 +69,8 @@ export class PanthoraPage {
     const csrfToken = await this.getCsrfToken();
     const response = await this.apiContext.post("/api/auth/callback/password", {
       form: {
-        email: e2eUser.email,
-        password: e2eUser.password,
+        email: this.e2eUser.email,
+        password: this.e2eUser.password,
         csrfToken,
         json: "true",
         redirect: "false",
@@ -105,11 +106,11 @@ export class PanthoraPage {
       },
     ]);
 
-    console.log("Signed in as", e2eUser.email);
+    console.log("Signed in as", this.e2eUser.email);
   }
 
   public async setupUserWithTeam() {
-    console.log("Registering user", e2eUser.email);
+    console.log("Registering user", this.e2eUser.email);
     await this.register();
     await this.signIn();
 
@@ -123,7 +124,7 @@ export class PanthoraPage {
     await this.page.waitForSelector("body");
 
     return {
-      ...e2eUser,
+      ...this.e2eUser,
       teamId: this.teamId,
     };
   }
