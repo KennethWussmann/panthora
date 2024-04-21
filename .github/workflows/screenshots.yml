@@ -32,7 +32,7 @@ jobs:
       - uses: ./.github/actions/pnpm-install
       - name: Install E2E Browsers
         run: pnpm --filter @panthora/app test:e2e:install
-      - name: Run End-to-End Tests
+      - name: Take Screenshots
         run: |
           docker-compose up -d search database
           sleep 5
