@@ -22,7 +22,7 @@ services:
       - 7700:7700
     environment:
       #MEILI_ENV: production
-      MEILI_NO_ANALYTICS: true
+      MEILI_NO_ANALYTICS: "true"
       MEILI_MASTER_KEY: rjzMJ0waScOlLGpEjRwy8Zx7fOlN06ZcZXcEhGvnYeFuiJuqPgpxGWv7IK5Gqw9h
   app:
     build:
