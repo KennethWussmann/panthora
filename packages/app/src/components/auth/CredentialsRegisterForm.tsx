@@ -101,7 +101,7 @@ export const CredentialsRegisterForm = () => {
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <PasswordInput
-                  placeholder="Password"
+                  placeholder="Password confirm"
                   value={value ?? undefined}
                   onChange={onChange}
                 />

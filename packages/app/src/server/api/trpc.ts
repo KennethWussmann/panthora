@@ -16,6 +16,7 @@ import { defaultApplicationContext } from "@/server/lib/applicationContext";
 import { getServerAuthSession } from "@/server/auth/auth";
 import { type RateLimitType } from "../lib/rate-limit/rateLimitService";
 import { UserRole } from "@prisma/client";
+import { appRouter } from "./root";
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -163,3 +164,20 @@ export const protectedProcedure = t.procedure
 export const instanceAdminProcedure = t.procedure
   .use(enforceUserIsInstanceAdmin)
   .use(rateLimit("request"));
+
+export const createCaller = () =>
+  t.createCallerFactory(appRouter)({
+    session: {
+      user: {
+        id: "1",
+        email: "test@test.com",
+        image: null,
+        name: null,
+      },
+      expires: new Date(
+        new Date().getTime() + 1000 * 60 * 60 * 24
+      ).toISOString(),
+    },
+    applicationContext: defaultApplicationContext,
+    remoteAddress: "127.0.0.1",
+  });

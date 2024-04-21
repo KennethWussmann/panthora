@@ -22,7 +22,8 @@
       "~/*": ["./src/*"],
       "@/*": ["./src/*"]
     },
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "types": ["cypress", "@testing-library/cypress"]
   },
   "include": [
     ".eslintrc.cjs",
