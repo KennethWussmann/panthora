@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/pnpm-install
       - name: Install E2E Browsers
-        run: pnpm test:e2e:install
+        run: pnpm test:e2e:install --filter @panthora/app
       - name: Run End-to-End Tests
         env:
           VERSION: "e2e"

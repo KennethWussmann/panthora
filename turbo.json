@@ -6,13 +6,6 @@
     },
     "test": {},
     "test:e2e": {},
-    "test:e2e:install": {
-      "inputs": ["pnpm-lock.yaml"],
-      "outputs": [
-        "$HOME/.cache/ms-playwright",
-        "$HOME/Library/Caches/ms-playwright"
-      ]
-    },
     "start": {
       "cache": false,
       "persistent": true
