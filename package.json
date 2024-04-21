@@ -12,6 +12,7 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "test:e2e": "turbo test:e2e",
+    "test:e2e:install": "turbo test:e2e:install",
     "dependency-update": "npm-check-updates -u --filterVersion \"/^[~^<>]| - |\\.x$/\" --deep && pnpm install"
   },
   "engines": {

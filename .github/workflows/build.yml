@@ -21,7 +21,7 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - name: Install E2E Browsers
-        run: pnpm --filter @panthora/app test:e2e:install
+        run: pnpm test:e2e:install
       - name: Run End-to-End Tests
         env:
           VERSION: "e2e"
