@@ -50,6 +50,7 @@ export const screenshot = base.extend<ScreenshotFixture>({
       page,
       e2eUsers["user-screenshots"]
     );
+    await panthoraPage.loadCookiesFromContext();
     await use(panthoraPage);
   },
   addUserAnnotation: [
