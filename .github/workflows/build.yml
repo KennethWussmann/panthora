@@ -34,6 +34,7 @@ jobs:
           DISABLE_RATE_LIMIT: true
         run: |
           docker-compose up -d search database
+          sleep 5
           pnpm --filter @panthora/app db:push
           pnpm test:e2e
       - uses: actions/upload-artifact@v4
