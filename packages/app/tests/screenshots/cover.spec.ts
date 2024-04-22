@@ -27,5 +27,6 @@ screenshot.describe("website", () => {
     await expect(moreCollapse).toBeVisible();
 
     await takeScreenshot();
+    await takeScreenshot("website-assets");
   });
 });
