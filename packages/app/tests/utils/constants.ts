@@ -22,7 +22,7 @@ const baseUser: (
   type
 ) => ({
   email: faker.internet
-    .email({ provider: `${type}.e2e.panthora.io` })
+    .email({ provider: `${type}.e2e.panthora.app` })
     .toLowerCase(),
   storageState: `./test-results/storage/${type}.state.json`,
   password: "e2eTestPassword!",

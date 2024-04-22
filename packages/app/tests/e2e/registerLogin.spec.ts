@@ -32,7 +32,7 @@ test.describe("Register / Login", () => {
 
   test.describe("Registration Flow", () => {
     const email =
-      `${faker.person.firstName()}.${faker.person.lastName()}@panthora.io`.toLowerCase();
+      `${faker.person.firstName()}.${faker.person.lastName()}@panthora.app`.toLowerCase();
     const password = faker.internet.password();
 
     test.describe.configure({ mode: "serial" });
