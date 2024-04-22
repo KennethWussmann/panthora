@@ -3,11 +3,12 @@ import {
   e2eBaseUrl,
   e2eUsers,
   screenshotPath,
+  websiteAssets,
   type E2EUserType,
 } from "./constants";
-import { join } from "path";
 import { readFileSync } from "fs";
 import { PanthoraPage } from "./panthoraPage";
+import { join } from "path";
 
 export const test = base.extend({
   page: async ({ browser }, use) => {
@@ -21,22 +22,29 @@ export const test = base.extend({
   },
 });
 
+type ScreenshotPathType = "screenshots" | "website-assets";
 type ScreenshotFixture = {
-  takeScreenshot: () => Promise<void>;
+  takeScreenshot: (destination?: ScreenshotPathType) => Promise<void>;
   api: PanthoraPage;
   addUserAnnotation: string;
 };
 
 export const screenshot = base.extend<ScreenshotFixture>({
   takeScreenshot: async ({ page, colorScheme }, use, workerInfo) => {
-    const fn = async () => {
+    const fileName = `${workerInfo.titlePath[workerInfo.titlePath.length - 1]}-${colorScheme ?? "light"}.png`;
+    const destinationPathMap: Record<ScreenshotPathType, string> = {
+      screenshots: join(
+        screenshotPath,
+        ...workerInfo.titlePath.slice(1, workerInfo.titlePath.length - 1),
+        fileName
+      ),
+      "website-assets": join(websiteAssets, fileName),
+    };
+
+    const fn = async (path?: ScreenshotPathType) => {
       await page.waitForLoadState("networkidle");
       await page.screenshot({
-        path: join(
-          screenshotPath,
-          ...workerInfo.titlePath.slice(1, workerInfo.titlePath.length - 1),
-          `${workerInfo.titlePath[workerInfo.titlePath.length - 1]}-${colorScheme ?? "light"}.png`
-        ),
+        path: destinationPathMap[path ?? "screenshots"],
       });
     };
     await use(fn);

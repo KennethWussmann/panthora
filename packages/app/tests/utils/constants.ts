@@ -46,3 +46,8 @@ export const screenshotPath = resolve(
   __dirname,
   "../../../../docs/assets/screenshots"
 );
+
+export const websiteAssets = resolve(
+  __dirname,
+  "../../../website/src/assets/images"
+);
