@@ -33,7 +33,13 @@ export const Breadcrumbs = () => {
     return paths.map((path, index) => {
       const href = "/" + paths.slice(0, index + 1).join("/");
       const isCurrentPage = index === paths.length - 1;
-      return { path, href, isCurrentPage, readablePath: formatSegment(path) };
+      const cleanPath = path.includes("?") ? path.split("?")[0]! : path;
+      return {
+        path,
+        href,
+        isCurrentPage,
+        readablePath: formatSegment(cleanPath),
+      };
     });
   }, [asPath]);
 

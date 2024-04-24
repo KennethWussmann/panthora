@@ -3,9 +3,6 @@
   "hosting": "Hosting",
   "usage": "Usage",
   "templates": "Templates",
-  "theme": {
-    "layout": "full"
-  },
   "home": {
     "title": "Back to panthora.app",
     "type": "page",

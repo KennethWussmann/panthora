@@ -32,18 +32,18 @@ export const env = createEnv({
       .default("false")
       .transform((val) => val?.toLowerCase() === "true"),
 
-    PASSWORD_AUTH_ENABLED: z
-      .string()
-      .optional()
-      .default("false")
-      .transform((val) => val?.toLowerCase() === "true"),
-
     DEMO_MODE: z
       .string()
       .optional()
       .default("false")
       .transform((val) => val?.toLowerCase() === "true"),
     DEMO_TEAM_BOOTSTRAP_FILE: z.string().optional(),
+
+    PASSWORD_AUTH_ENABLED: z
+      .string()
+      .optional()
+      .default("false")
+      .transform((val) => val?.toLowerCase() === "true"),
 
     OAUTH_CLIENT_ID: z.string().optional(),
     OAUTH_CLIENT_SECRET: z.string().optional(),

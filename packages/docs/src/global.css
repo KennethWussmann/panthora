@@ -1,0 +1,12 @@
+.dark-image {
+  display: none;
+}
+
+/* Dark mode */
+html.dark .light-image {
+  display: none;
+}
+
+html.dark .dark-image {
+  display: block;
+}
