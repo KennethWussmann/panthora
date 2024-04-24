@@ -33,6 +33,7 @@ import {
   type AssetTypeCreateRequestWithTemporaryFields,
   type TemporaryCustomField,
 } from "./types";
+import { Annotation } from "~/components/onboarding/annotation/Annotation";
 
 export const CustomFieldCreationForm = ({
   fields,
@@ -84,9 +85,14 @@ export const CustomFieldCreationForm = ({
         <Heading size={"sx"}>Custom fields</Heading>
         <Spacer />
         <Flex justifyContent={"flex-end"}>
-          <Button leftIcon={<FiPlus />} onClick={() => addField("start")}>
-            Add Custom Field
-          </Button>
+          <Annotation
+            text="Create a custom field"
+            collection="create-asset-type-2"
+          >
+            <Button leftIcon={<FiPlus />} onClick={() => addField("start")}>
+              Add Custom Field
+            </Button>
+          </Annotation>
         </Flex>
       </HStack>
       {fields.length === 0 && (

@@ -21,6 +21,7 @@ import { FormFieldRequiredErrorMessage } from "@/components/common/FormFieldRequ
 import { AssetTypeSelector } from "../AssetTypeSelector";
 import { useErrorHandlingMutation } from "@/lib/useErrorHandling";
 import { useTeam } from "@/lib/SelectedTeamProvider";
+import { Annotation } from "~/components/onboarding/annotation/Annotation";
 
 export const AssetTypeCreateEditForm = ({
   assetType,
@@ -153,17 +154,21 @@ export const AssetTypeCreateEditForm = ({
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={2}>
-          <AssetTypeSelector
-            label="Parent Asset Type"
-            {...register("parentId")}
-          />
+          <Annotation text={"1"} collection="create-asset-type-1">
+            <AssetTypeSelector
+              label="Parent Asset Type"
+              {...register("parentId")}
+            />
+          </Annotation>
           <FormControl isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              autoFocus
-              {...register("name", { required: true })}
-            />
+            <Annotation text={"2"} collection="create-asset-type-1">
+              <Input
+                type="text"
+                autoFocus
+                {...register("name", { required: true })}
+              />
+            </Annotation>
             {errors.name && <FormFieldRequiredErrorMessage />}
           </FormControl>
           <CustomFieldCreationForm

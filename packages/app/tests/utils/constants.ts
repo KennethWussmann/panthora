@@ -51,3 +51,7 @@ export const websiteAssets = resolve(
   __dirname,
   "../../../website/src/assets/images"
 );
+export const docsAssets = resolve(
+  __dirname,
+  "../../../docs/public/assets/images"
+);

@@ -1,5 +1,6 @@
 import { type BrowserContextOptions, test as base } from "@playwright/test";
 import {
+  docsAssets,
   e2eBaseUrl,
   e2eUsers,
   screenshotPath,
@@ -22,7 +23,7 @@ export const test = base.extend({
   },
 });
 
-type ScreenshotPathType = "screenshots" | "website-assets";
+type ScreenshotPathType = "screenshots" | "website-assets" | "docs-assets";
 type ScreenshotFixture = {
   takeScreenshot: (destination?: ScreenshotPathType) => Promise<void>;
   api: PanthoraPage;
@@ -39,6 +40,11 @@ export const screenshot = base.extend<ScreenshotFixture>({
         fileName
       ),
       "website-assets": join(websiteAssets, fileName),
+      "docs-assets": join(
+        docsAssets,
+        ...workerInfo.titlePath.slice(1, workerInfo.titlePath.length - 1),
+        fileName
+      ),
     };
 
     const fn = async (path?: ScreenshotPathType) => {

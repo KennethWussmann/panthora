@@ -37,6 +37,7 @@ import { numberOrNull } from "@/lib/reactHookFormUtils";
 import { FormFieldRequiredErrorMessage } from "@/components/common/FormFieldRequiredErrorMessage";
 import { fieldTypeLabel } from "@/lib/fieldTypeLabel";
 import { TagSelector } from "@/components/common/TagSelector";
+import { Annotation } from "~/components/onboarding/annotation/Annotation";
 
 export const NewCustomFieldForm = ({
   index,
@@ -240,16 +241,23 @@ export const NewCustomFieldForm = ({
           </Box>
         </div>
         <Flex justifyContent={"space-between"}>
-          <Button
-            leftIcon={<BiMoveVertical />}
-            variant={"ghost"}
-            ref={setNodeRef}
-            cursor={"grab"}
-            {...attributes}
-            {...listeners}
+          <Annotation
+            text="Rearrange with drag and drop"
+            size="sm"
+            placement="bottom"
+            collection="create-asset-type-2"
           >
-            Drag to move
-          </Button>
+            <Button
+              leftIcon={<BiMoveVertical />}
+              variant={"ghost"}
+              ref={setNodeRef}
+              cursor={"grab"}
+              {...attributes}
+              {...listeners}
+            >
+              Drag to move
+            </Button>
+          </Annotation>
           <Button
             leftIcon={<FiTrash />}
             colorScheme="red"

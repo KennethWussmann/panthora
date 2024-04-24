@@ -8,6 +8,7 @@ import { ImportModal } from "@/components/import/ImportModal";
 import { SelectedAssetProvider } from "@/lib/SelectedAssetsProvider";
 import { SelectedTeamProvider } from "@/lib/SelectedTeamProvider";
 import { UserProvider } from "@/lib/UserProvider";
+import { AnnotationsProvider } from "~/components/onboarding/annotation/AnnotationProvider";
 
 const theme = extendTheme({
   config: {
@@ -24,21 +25,23 @@ function Providers({
   session: Session | null;
 }) {
   return (
-    <CacheProvider>
-      <ChakraProvider theme={theme}>
-        {/* eslint-disable-next-line */}
-        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <SessionProvider session={session}>
-          <UserProvider>
-            <SelectedTeamProvider>
-              <SelectedAssetProvider>
-                <ImportModal>{children}</ImportModal>
-              </SelectedAssetProvider>
-            </SelectedTeamProvider>
-          </UserProvider>
-        </SessionProvider>
-      </ChakraProvider>
-    </CacheProvider>
+    <AnnotationsProvider>
+      <CacheProvider>
+        <ChakraProvider theme={theme}>
+          {/* eslint-disable-next-line */}
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <SessionProvider session={session}>
+            <UserProvider>
+              <SelectedTeamProvider>
+                <SelectedAssetProvider>
+                  <ImportModal>{children}</ImportModal>
+                </SelectedAssetProvider>
+              </SelectedTeamProvider>
+            </UserProvider>
+          </SessionProvider>
+        </ChakraProvider>
+      </CacheProvider>
+    </AnnotationsProvider>
   );
 }
 
