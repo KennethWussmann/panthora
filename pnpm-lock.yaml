@@ -240,10 +240,6 @@ importers:
       react-icons:
         specifier: ^5.0.1
         version: 5.0.1(react@18.2.0)
-    devDependencies:
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
 
   packages/website:
     dependencies:
