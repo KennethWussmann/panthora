@@ -78,7 +78,7 @@
     "@typescript-eslint/parser": "^7.8.0",
     "cookie": "^0.6.0",
     "cookiejar": "^2.1.4",
-    "eslint": "^9.2.0",
+    "eslint": "8.57.0",
     "eslint-config-next": "^14.2.3",
     "eslint-plugin-unused-imports": "^3.2.0",
     "npm-check-updates": "^16.14.20",
