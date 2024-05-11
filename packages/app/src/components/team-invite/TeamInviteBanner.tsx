@@ -11,7 +11,7 @@ import {
 import { FiCheck, FiTrash } from "react-icons/fi";
 import { useTeam } from "@/lib/SelectedTeamProvider";
 import { useErrorHandlingMutation } from "@/lib/useErrorHandling";
-import { TeamInvite } from "@/server/lib/team/teamInvite";
+import { type TeamInvite } from "@/server/lib/team/teamInvite";
 import { api } from "@/utils/api";
 
 const TeamInvite = ({

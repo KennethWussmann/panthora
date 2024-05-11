@@ -143,7 +143,7 @@ export const AssetTable: React.FC = () => {
               (fv) => fv.customFieldId === field.id
             );
             switch (
-              fieldValue?.customField?.fieldType as FieldType | undefined
+              fieldValue?.customField?.fieldType
             ) {
               case FieldType.STRING:
                 return fieldValue?.stringValue;
