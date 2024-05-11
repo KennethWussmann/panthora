@@ -21,6 +21,7 @@
   },
   "packageManager": "pnpm@8.7.6",
   "devDependencies": {
-    "turbo": "^1.12.5"
+    "npm-check-updates": "^16.14.20",
+    "turbo": "^1.13.3"
   }
 }
