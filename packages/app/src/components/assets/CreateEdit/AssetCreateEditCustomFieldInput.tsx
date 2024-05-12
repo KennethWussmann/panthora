@@ -20,9 +20,7 @@ import { FormFieldRequiredErrorMessage } from "@/components/common/FormFieldRequ
 import { numberOrNull } from "@/lib/reactHookFormUtils";
 import { type AssetCreateEditRequest } from "@/server/lib/assets/assetCreateEditRequest";
 import { DateTimePicker } from "@/components/common/DateTimePicker";
-import { api } from "@/utils/api";
-import { useTeam } from "@/lib/SelectedTeamProvider";
-import { ComboBox, ComboBoxItem } from "~/components/common/ComboBox";
+import { TagComboBox } from "~/components/common/TagComboBox";
 
 const getRegisterOptions = (customField: CustomField) => {
   const registerOptions: RegisterOptions<
@@ -84,16 +82,6 @@ export const AssetCreateEditCustomFieldInput = ({
   const errors = formErrors.customFieldValues?.[index];
   const formFieldName = fieldTypeToFieldPath[customField.fieldType](index);
   const inputProps = register(formFieldName, getRegisterOptions(customField));
-  const { team } = useTeam();
-  const { data: tags } = api.tag.list.useQuery(
-    {
-      teamId: team!.id,
-      parentId: customField.tagId ?? "",
-    },
-    {
-      enabled: team && customField.fieldType === FieldType.TAG,
-    }
-  );
 
   return (
     <>
@@ -164,21 +152,15 @@ export const AssetCreateEditCustomFieldInput = ({
             name={`customFieldValues.${index}.tagsValue`}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <ComboBox
+              <TagComboBox
+                parentTagId={customField.tagId ?? ""}
                 values={value ?? []}
                 onChange={(tagIds) => {
                   onChange(tagIds);
                 }}
                 max={customField.inputMax ?? undefined}
                 min={customField.inputMin ?? undefined}
-                placeholder="Select Tags"
-              >
-                {tags?.map((tag) => (
-                  <ComboBoxItem key={tag.id} value={tag.id}>
-                    {tag.name}
-                  </ComboBoxItem>
-                ))}
-              </ComboBox>
+              />
             )}
           />
         )}
