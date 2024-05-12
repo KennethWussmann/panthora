@@ -7,6 +7,7 @@ import {
   type RefObject,
   useEffect,
   useRef,
+  useMemo,
 } from "react";
 import { useMultipleSelection, useCombobox } from "downshift";
 import {
@@ -34,6 +35,8 @@ import { FiChevronDown, FiSearch } from "react-icons/fi";
 type ComboBoxProps<T> = {
   values?: T[];
   onChange?: (value: T[]) => void;
+  onSearchInputChange?: (value: string) => void;
+  onSearchSuggestionsChange?: (value: T[]) => void;
   children: ReactNode;
   placeholder?: string;
   min?: number;
@@ -63,6 +66,8 @@ export const ComboBox = <T extends number | string>({
   variant = "inline",
   itemName = { singular: "Item", plural: "Items" },
   isSearchable = true,
+  onSearchInputChange,
+  onSearchSuggestionsChange,
 }: ComboBoxProps<T>) => {
   const {
     getDropdownProps,
@@ -81,16 +86,31 @@ export const ComboBox = <T extends number | string>({
   const maximumReached = max && selectedItems.length >= max;
   const minimumReached = min ? selectedItems.length >= min : true;
   const comboBoxRef = useRef<HTMLDivElement>(null);
+  const childs = useMemo(
+    () =>
+      Children.toArray(children).map(
+        (child) => child as React.ReactElement<ComboBoxItemProps<T>>
+      ),
+    [children]
+  );
+  const comboBoxItems = childs.filter(
+    (child) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+      (child.type as any)?.name === "ComboBoxItem"
+  );
+  const appendixItems = childs.filter(
+    (child) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+      (child.type as any)?.name !== "ComboBoxItem"
+  );
   useOutsideClick({
     ref: comboBoxRef,
     handler: () => setOpen(false),
   });
 
-  const items = Children.toArray(children).map((child) =>
-    cloneElement(child as React.ReactElement<ComboBoxItemProps<T>>, {
-      _selected: values.includes(
-        (child as React.ReactElement<ComboBoxItemProps<T>>).props.value
-      ),
+  const items = comboBoxItems.map((child) =>
+    cloneElement(child, {
+      _selected: values.includes(child.props.value),
     })
   );
 
@@ -140,6 +160,11 @@ export const ComboBox = <T extends number | string>({
     setInputValue("");
   }, [isOpen]);
 
+  useEffect(() => {
+    onSearchSuggestionsChange?.(filteredItems.map((item) => item.props.value));
+  }, [filteredItems, onSearchSuggestionsChange]);
+
+  
   return (
     <FormControl
       isInvalid={!minimumReached}
@@ -232,7 +257,15 @@ export const ComboBox = <T extends number | string>({
             <InputLeftElement pointerEvents="none">
               <Icon as={FiSearch} color="gray.500" />
             </InputLeftElement>
-            <Input {...inputProps} variant={"flushed"} placeholder="Search" />
+            <Input
+              {...inputProps}
+              variant={"flushed"}
+              placeholder="Search"
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                onSearchInputChange?.(e.target.value);
+              }}
+            />
           </InputGroup>
           <List {...getMenuProps()} maxH={64} overflowY={"scroll"}>
             {filteredItems.map((item, index) => (
@@ -259,6 +292,11 @@ export const ComboBox = <T extends number | string>({
               </ListItem>
             ))}
           </List>
+          {appendixItems && (
+            <Box mt={2} w="full">
+              {appendixItems}
+            </Box>
+          )}
         </Box>
       </Box>
       {!minimumReached && (
