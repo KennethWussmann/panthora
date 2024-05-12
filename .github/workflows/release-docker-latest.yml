@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: buildjet-2vcpu-ubuntu-2204-arm
+          - runner: [self-hosted, arm64, fargate]
             arch: arm64
           - runner: ubuntu-latest
             arch: amd64
