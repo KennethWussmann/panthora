@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: [self-hosted, arm64, fargate]
+          - runner: [self-hosted, arm64, ecs]
             arch: arm64
           - runner: ubuntu-latest
             arch: amd64
