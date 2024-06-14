@@ -1,25 +1,57 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist"]
+      "outputs": [".next/**", "!.next/cache/**", "dist"],
+      "env": ["SKIP_ENV_VALIDATION"]
     },
-    "test": {},
-    "test:e2e": {},
+    "test": {
+      "env": ["SKIP_ENV_VALIDATION"]
+    },
+    "test:e2e": {
+      "env": [
+        "VERSION",
+        "DATABASE_URL",
+        "APP_BASE_URL",
+        "PASSWORD_AUTH_ENABLED",
+        "DISABLE_RATE_LIMIT",
+        "MEILI_*",
+        "NEXTAUTH_*"
+      ]
+    },
     "screenshots": {
       "inputs": ["tests/screenshots/**", "src/**"],
       "outputs": ["../../docs/assets/screenshots/**"]
     },
     "start": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "VERSION",
+        "DATABASE_URL",
+        "APP_BASE_URL",
+        "PASSWORD_AUTH_ENABLED",
+        "DISABLE_RATE_LIMIT",
+        "MEILI_*",
+        "NEXTAUTH_*"
+      ]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "VERSION",
+        "DATABASE_URL",
+        "APP_BASE_URL",
+        "PASSWORD_AUTH_ENABLED",
+        "DISABLE_RATE_LIMIT",
+        "MEILI_*",
+        "NEXTAUTH_*"
+      ]
     },
     "lint": {
-      "cache": false
+      "cache": false,
+      "env": ["SKIP_ENV_VALIDATION"]
     }
   }
 }

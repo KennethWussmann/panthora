@@ -1,5 +1,5 @@
 import React, { forwardRef, type ForwardedRef } from "react";
-import DatePicker, { type ReactDatePickerProps } from "react-datepicker";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   Input,
@@ -22,7 +22,7 @@ type DateTimePickerProps = {
   onChange: (date: Date | null) => void;
 };
 
-const dateTimeModeProps: Record<DateTimeMode, Partial<ReactDatePickerProps>> = {
+const dateTimeModeProps = {
   date: {
     dateFormat: "dd.MM.yyyy",
   },
@@ -40,7 +40,7 @@ const dateTimeModeProps: Record<DateTimeMode, Partial<ReactDatePickerProps>> = {
     timeIntervals: 1,
     showTimeSelect: true,
   },
-};
+} as const;
 
 export const DateTimePicker = ({
   value,
