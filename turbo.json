@@ -4,7 +4,9 @@
     "build": {
       "outputs": [".next/**", "!.next/cache/**", "dist"]
     },
-    "test": {},
+    "test": {
+      "env": ["SKIP_ENV_VALIDATION"]
+    },
     "test:e2e": {
       "env": [
         "VERSION",
