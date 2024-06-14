@@ -24,14 +24,33 @@
     },
     "start": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "VERSION",
+        "DATABASE_URL",
+        "APP_BASE_URL",
+        "PASSWORD_AUTH_ENABLED",
+        "DISABLE_RATE_LIMIT",
+        "MEILI_*",
+        "NEXTAUTH_*"
+      ]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "VERSION",
+        "DATABASE_URL",
+        "APP_BASE_URL",
+        "PASSWORD_AUTH_ENABLED",
+        "DISABLE_RATE_LIMIT",
+        "MEILI_*",
+        "NEXTAUTH_*"
+      ]
     },
     "lint": {
-      "cache": false
+      "cache": false,
+      "env": ["SKIP_ENV_VALIDATION"]
     }
   }
 }
