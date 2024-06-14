@@ -5,7 +5,17 @@
       "outputs": [".next/**", "!.next/cache/**", "dist"]
     },
     "test": {},
-    "test:e2e": {},
+    "test:e2e": {
+      "env": [
+        "VERSION",
+        "DATABASE_URL",
+        "APP_BASE_URL",
+        "PASSWORD_AUTH_ENABLED",
+        "DISABLE_RATE_LIMIT",
+        "MEILI_*",
+        "NEXTAUTH_*"
+      ]
+    },
     "screenshots": {
       "inputs": ["tests/screenshots/**", "src/**"],
       "outputs": ["../../docs/assets/screenshots/**"]
