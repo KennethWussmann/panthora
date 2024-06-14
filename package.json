@@ -19,9 +19,9 @@
     "node": "20",
     "pnpm": "8"
   },
-  "packageManager": "pnpm@8.7.6",
+  "packageManager": "pnpm@8.15.4",
   "devDependencies": {
     "npm-check-updates": "^16.14.20",
-    "turbo": "^1.13.3"
+    "turbo": "^2.0.4"
   }
 }
