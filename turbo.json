@@ -2,7 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist"]
+      "outputs": [".next/**", "!.next/cache/**", "dist"],
+      "env": ["SKIP_ENV_VALIDATION"]
     },
     "test": {
       "env": ["SKIP_ENV_VALIDATION"]
